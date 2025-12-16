@@ -346,7 +346,7 @@ const InvoiceForDownload = ({
               >
                 <Image
                   src={logoDark}
-                  alt="תמרים בתומר"
+                  alt="MNM - ייבוא שיווק והפצה"
                   style={{
                     width: 90,
                     alignItems: "right",

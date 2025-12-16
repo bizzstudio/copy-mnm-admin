@@ -59,10 +59,10 @@ export default defineConfig({
           scope: ".",
           start_url: ".",
           id: ".",
-          short_name:  "תמרים בתומר - חנות ירקות און ליין",
-          name:  "תמרים בתומר - חנות ירקות און ליין",
+          short_name:  "MNM - ייבוא שיווק והפצה",
+          name:  "MNM - ייבוא שיווק והפצה",
           description:
-             "תמרים בתומר - חנות ירקות און ליין",
+             "MNM - ייבוא שיווק והפצה",
           icons: [
             {
               src: "favicon.ico",
