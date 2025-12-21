@@ -1,3 +1,4 @@
+// src/components/image-uploader/Container.jsx
 import update from "immutability-helper";
 import { useCallback } from "react";
 import Card from "./Card";

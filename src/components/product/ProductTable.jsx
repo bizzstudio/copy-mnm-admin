@@ -29,7 +29,7 @@ const ProductTable = ({
   products: initialProducts,
   isCheck,
   setIsCheck,
-  title, serviceId, handleModalOpen, handleUpdate 
+  title, serviceId, handleModalOpen, handleUpdate
 }) => {
   const { currency, showingTranslateValue, getNumberTwo } = useUtilsFunction();
   const { data: offers, loading, error } = useAsync(() => OfferServices.getAllOffers());
@@ -132,6 +132,7 @@ const ProductTable = ({
                   />
                 ) : (
                   <Avatar
+                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
                     src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
                     alt="product"
                   />

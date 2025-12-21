@@ -18,7 +18,6 @@ import { useTranslation } from "react-i18next";
 
 // Internal import
 
-import de from "@/assets/img/de.svg";
 import en from "@/assets/img/us.svg";
 import he from "@/assets/img/he.svg";
 import { AdminContext } from "@/context/AdminContext";
@@ -115,21 +114,7 @@ const Header = () => {
             {/* <li className="changeLanguage">
               <div className="dropdown">
                 <button className="dropbtn focus:outline-none">
-                  {currentLanguageCode === "de" ? (
-                    <img src={de} width={16} alt="lang" className="mx-2" />
-                  ) : (
-                    <img src={en} className="mx-2" alt="lang" width={16} />
-                  )}
-                  {currentLanguageCode === "de" ? (
-                    <span className="text-gray-700 dark:text-gray-400">
-                      GERMAN
-                    </span>
-                  ) : (
-                    <span className="text-gray-700 dark:text-gray-400">
-                      ENGLISH
-                    </span>
-                    
-                  )}
+                  <img src={en} className="mx-2" alt="lang" width={16} />
                 </button>
 
                 <div className="dropdown-content">
@@ -140,18 +125,14 @@ const Header = () => {
                     <img src={en} width={16} alt="lang" /> English{" "}
                   </div>
                   <div
-                    onClick={() => handleLanguageChange("de")}
+                    onClick={() => handleLanguageChange("en")}
                     className="focus:outline-none cursor-pointer"
                   >
-                    <img src={de} width={16} alt="lang" /> German
+                    <img src={en} width={16} alt="lang" /> English
                   </div>
                   <div
                     onClick={() => handleLanguageChange("he")}
                     className="focus:outline-none cursor-pointer"
-                  >
-                    <img src={he} width={16} alt="lang" /> Hebrew
-                  </div>
-
                 </div>
               </div>
             </li> */}

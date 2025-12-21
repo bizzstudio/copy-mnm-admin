@@ -1,4 +1,5 @@
 import { Select } from "@windmill/react-ui";
+import { t } from "i18next";
 import React from "react";
 // import { CODES } from 'currencies-map';
 
@@ -12,18 +13,12 @@ const SelectProductLimit = ({ register, name, label, required }) => {
         })}
       >
         <option value="" defaultValue hidden>
-          Select Products Limit
+          {t("Select Products Limit")}
         </option>
-        {/* {CODES.map((currency) => (
-          <option key={currency} value={currency}>
-            {currency}{' '}
-          </option>
-        ))} */}
-
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
+        <option value="6">6</option>
+        <option value="12">12</option>
+        <option value="18">18</option>
+        <option value="24">24</option>
       </Select>
     </>
   );

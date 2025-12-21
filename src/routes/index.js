@@ -33,6 +33,7 @@ const DeliveryEdit = lazy(() => import("@/pages/DeliveryEdit"));
 const Popups = lazy(() => import("@/pages/Popups"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const Blogs = lazy(() => import("@/pages/Blogs"));
+const PriceLists = lazy(() => import("@/pages/PriceLists"));
 
 /*
 //  * ⚠ These are internal routes!
@@ -171,6 +172,10 @@ const routes = [
   {
     path: "/blogs",
     component: Blogs,
+  },
+  {
+    path: "/price-lists",
+    component: PriceLists,
   },
 ];
 

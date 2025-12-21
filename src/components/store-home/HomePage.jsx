@@ -1,3 +1,4 @@
+// src/components/store-home/HomePage.jsx
 import ReactTagInput from "@pathofdev/react-tag-input";
 import { Button } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
@@ -19,6 +20,7 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import SelectProductLimit from "@/components/form/selectOption/SelectProductLimit";
+import { TbCarouselHorizontal } from "react-icons/tb";
 
 const HomePage = ({
   register,
@@ -35,6 +37,10 @@ const HomePage = ({
   setSliderImageFour,
   sliderImageFive,
   setSliderImageFive,
+  smallBannerImage,
+  setSmallBannerImage,
+  smallBannerLink,
+  setSmallBannerLink,
   placeholderImage,
   setPlaceHolderImage,
   quickSectionImage,
@@ -107,6 +113,10 @@ const HomePage = ({
   termsConditionsMenuLink,
   couponList,
   setCouponList,
+  allowLogosCarousel,
+  setAllowLogosCarousel,
+  logosCarousel,
+  setLogosCarousel,
 }) => {
   const { t } = useTranslation();
 
@@ -116,7 +126,7 @@ const HomePage = ({
         {/*  ====================================================== Header ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" />
+            <FiSettings className="mt-1 me-2" />
             {t("Header")}
           </div>
 
@@ -181,7 +191,7 @@ const HomePage = ({
                     width={20}
                     height={10}
                   />{" "}
-                  <span className="font-serif ml-2 font-light">
+                  <span className="font-serif me-2 font-light">
                     {" "}
                     {t("Processing")}
                   </span>
@@ -464,7 +474,7 @@ const HomePage = ({
         {/*  ====================================================== Main Slider ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 mt-5">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" /> {t("MainSlider")}
+            <FiSettings className="mt-1 me-2" /> {t("MainSlider")}
           </div>
 
           <hr className="mb-3" />
@@ -479,6 +489,7 @@ const HomePage = ({
                   <Tab>{t("Slider")} 4</Tab>
                   <Tab>{t("Slider")} 5</Tab>
                   <Tab>{t("Options")}</Tab>
+                  <Tab>{t("Small Banner")}</Tab>
                 </TabList>
 
                 <TabPanel className="md:mt-10 mt-3">
@@ -930,6 +941,39 @@ const HomePage = ({
                     </div>
                   </div>
                 </TabPanel>
+
+                {/* באנר קטן */}
+                <TabPanel>
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("Small Banner Image")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <Uploader
+                        imageUrl={smallBannerImage}
+                        setImageUrl={setSmallBannerImage}
+                        folder="HomePage"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("ButtonLink")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <InputAreaTwo
+                        required
+                        register={register}
+                        label="Small Banner Link"
+                        name="small_banner_link"
+                        type="text"
+                        placeholder="/example"
+                      />
+                      <Error errorName={errors.small_banner_link} />
+                    </div>
+                  </div>
+                </TabPanel>
               </Tabs>
             </TabsComponent>
           </div>
@@ -938,7 +982,7 @@ const HomePage = ({
         {/*  ======================================================Discount Coupon Code Box ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 mt-5">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" />
+            <FiSettings className="mt-1 me-2" />
             {t("DiscountCouponTitle1")}
           </div>
 
@@ -1066,7 +1110,7 @@ const HomePage = ({
         {/*  ====================================================== Promotion Banner ===================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3 md:mt-0 mt-10">
-            <FiSettings className="mt-1 ml-2" /> {t("PromotionBanner")}
+            <FiSettings className="mt-1 me-2" /> {t("PromotionBanner")}
           </div>
 
           <hr className="md:mb-12 mb-3" />
@@ -1166,10 +1210,61 @@ const HomePage = ({
           </div>
         </div>
 
+        {/*  ====================================================== logos carousel ===================================================== */}
+        <div className="col-span-12 md:col-span-12 lg:col-span-12">
+          <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3 md:mt-0 mt-10">
+            <TbCarouselHorizontal className="mt-1 me-2" /> {t("logosCarousel")}
+          </div>
+
+          <hr className="md:mb-12 mb-3" />
+
+          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+            <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
+              <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                {t("EnableThisBlock")}
+              </label>
+              <div className="sm:col-span-4">
+                <SwitchToggle
+                  title=""
+                  handleProcess={setAllowLogosCarousel}
+                  processOption={allowLogosCarousel}
+                  name={allowLogosCarousel}
+                />
+              </div>
+            </div>
+
+            <div
+              style={{
+                height: allowLogosCarousel ? "auto" : 0,
+                transition: "all 0.4s",
+                visibility: !allowLogosCarousel ? "hidden" : "visible",
+                opacity: !allowLogosCarousel ? "0" : "1",
+              }}
+            >
+
+              <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                  {t("logosCarousel")}
+                </label>
+                <div className="sm:col-span-4">
+                  <Uploader
+                    imageUrl={logosCarousel}
+                    setImageUrl={setLogosCarousel}
+                    folder="HomePage"
+                    multiple={true}
+                    maxFiles={50}
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
         {/*  ====================================================== Featured Categories ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 md:mt-0 mt-15">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3 relative">
-            <FiSettings className="mt-1 ml-2" /> {t("FeaturedCategories")}
+            <FiSettings className="mt-1 me-2" /> {t("FeaturedCategories")}
           </div>
 
           <hr className="md:mb-12 mb-3" />
@@ -1259,7 +1354,7 @@ const HomePage = ({
         {/*  ====================================================== Popular Products ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 md:mt-0 mt-15">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3 relative">
-            <FiSettings className="mt-1 ml-2" />
+            <FiSettings className="mt-1 me-2" />
             {t("PopularProductsTitle")}
           </div>
 
@@ -1349,7 +1444,7 @@ const HomePage = ({
         {/*  ====================================================== Quick Delivery Section ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 mt-15">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" />{" "}
+            <FiSettings className="mt-1 me-2" />{" "}
             {t("QuickDeliverySectionTitle")}
           </div>
 
@@ -1481,7 +1576,7 @@ const HomePage = ({
         {/*  ====================================================== Latest Discounted Products ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 md:mt-0 mt-10">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" />{" "}
+            <FiSettings className="mt-1 me-2" />{" "}
             {t("LatestDiscountedProductsTitle")}
           </div>
 
@@ -1574,7 +1669,7 @@ const HomePage = ({
             }`}
         >
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" /> {t("GetYourDailyNeedsTitle")}
+            <FiSettings className="mt-1 me-2" /> {t("GetYourDailyNeedsTitle")}
           </div>
 
           <hr className="md:mb-12 mb-3" />
@@ -1731,7 +1826,7 @@ const HomePage = ({
             }`}
         >
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" /> {t("FeaturePromoSectionTitle")}
+            <FiSettings className="mt-1 me-2" /> {t("FeaturePromoSectionTitle")}
           </div>
 
           <hr className="md:mb-12 mb-3" />
@@ -1833,7 +1928,7 @@ const HomePage = ({
         {/*  ====================================================== Footer Section ====================================================== */}
         <div className="col-span-12 md:col-span-12 lg:col-span-12 md:mt-0 mt-10">
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
-            <FiSettings className="mt-1 ml-2" /> {t("FooterTitle")}
+            <FiSettings className="mt-1 me-2" /> {t("FooterTitle")}
           </div>
 
           <hr className="md:mb-12 mb-3" />

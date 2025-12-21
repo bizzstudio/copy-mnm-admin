@@ -216,6 +216,11 @@ const useFilter = (data) => {
             ?.toLowerCase()
             ?.includes(searchText?.toLowerCase())
         );
+      } else if (location.pathname === "/price-lists") {
+        // For price lists - search in name
+        services = services.filter((search) =>
+          search?.name?.toLowerCase().includes(searchText.toLowerCase())
+        );
       } else {
         // For other entities (products, etc.)
         services = services.filter((search) =>

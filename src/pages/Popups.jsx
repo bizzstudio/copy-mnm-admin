@@ -1,3 +1,4 @@
+// src/pages/Popups.jsx
 import {
   Button,
   Card,
@@ -28,7 +29,6 @@ import TableLoading from "@/components/preloader/TableLoading";
 import CheckBox from "@/components/form/others/CheckBox";
 import PopupTable from "@/components/popup/PopupTable";
 import NotFound from "@/components/table/NotFound";
-import UploadManyTwo from "@/components/common/UploadManyTwo";
 import PopupDrawer from "@/components/drawer/PopupDrawer";
 
 const Popups = () => {

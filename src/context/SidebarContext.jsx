@@ -1,6 +1,7 @@
 // src/context/SidebarContext.jsx
 import AdminServices from "@/services/AdminServices";
 import StatusServices from "@/services/StatusService";
+import PriceListServices from "@/services/PriceListServices";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,6 +41,7 @@ export const SidebarProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const [tabIndex, setTabIndex] = useState(0);
   const [serviceId, setServiceId] = useState("");
+  const [priceLists, setPriceLists] = useState([]);
 
   // const { socket } = useNotification();
 
@@ -110,6 +112,19 @@ export const SidebarProvider = ({ children }) => {
       }
     };
     facthStatusesData();
+  }, []);
+
+  useEffect(() => {
+    // טעינת המחירונים בעת עליית המערכת
+    const fetchPriceLists = async () => {
+      try {
+        const data = await PriceListServices.getAllPriceLists();
+        setPriceLists(data || []);
+      } catch (error) {
+        console.error("Error fetching price lists:", error);
+      }
+    };
+    fetchPriceLists();
   }, []);
 
   // ווידוא שהטוקן עדיין תקין
@@ -208,6 +223,8 @@ export const SidebarProvider = ({ children }) => {
         statusesData,
         setCities,
         cities,
+        priceLists,
+        setPriceLists,
       }}
     >
       {children}

@@ -24,6 +24,7 @@ import { notifyError, notifySuccess } from "@/utils/toast";
 import StatusServices from "@/services/StatusService";
 import PopupServices from "@/services/PopupServices";
 import BlogServices from "@/services/BlogServices";
+import PriceListServices from "@/services/PriceListServices";
 
 const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
   const { isModalOpen, closeModal, setIsUpdate } = useContext(SidebarContext);
@@ -327,6 +328,46 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
           setIsSubmitting(false);
         } else {
           const res = await BlogServices.deleteBlog(id);
+          setIsUpdate(true);
+          notifySuccess(res.message);
+          setServiceId();
+          closeModal();
+          setIsSubmitting(false);
+        }
+      }
+
+      if (location.pathname === "/price-lists") {
+        if (ids) {
+          // Check if any of the selected price lists is default
+          const priceLists = await PriceListServices.getAllPriceLists();
+          const selectedPriceLists = priceLists.filter((pl) => ids.includes(pl._id));
+          const hasDefault = selectedPriceLists.some((pl) => pl.isDefault);
+          
+          if (hasDefault) {
+            notifyError("לא ניתן למחוק מחירון ברירת מחדל");
+            setIsSubmitting(false);
+            return;
+          }
+
+          const res = await PriceListServices.deleteManyPriceLists({
+            ids: ids,
+          });
+          setIsUpdate(true);
+          notifySuccess(res.message);
+          setIsCheck([]);
+          setServiceId();
+          closeModal();
+          setIsSubmitting(false);
+        } else {
+          // Check if the price list is default
+          const priceList = await PriceListServices.getPriceListById(id);
+          if (priceList?.isDefault) {
+            notifyError("לא ניתן למחוק מחירון ברירת מחדל");
+            setIsSubmitting(false);
+            return;
+          }
+
+          const res = await PriceListServices.deletePriceList(id);
           setIsUpdate(true);
           notifySuccess(res.message);
           setServiceId();

@@ -36,6 +36,10 @@ const sidebar = [
         name: "Products",
       },
       {
+        path: "/price-lists",
+        name: "PriceLists",
+      },
+      {
         path: "/categories",
         name: "Categories",
       },

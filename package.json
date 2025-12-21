@@ -41,6 +41,7 @@
     "million": "^2.2.1",
     "multiselect-react-dropdown": "^2.0.25",
     "papaparse": "^5.5.3",
+    "pica": "^9.0.1",
     "prismjs": "^1.30.0",
     "qrcode.react": "^4.2.0",
     "rc-drawer": "^4.4.3",
@@ -99,7 +100,7 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "dev": "vite --force --port 4102",
+    "dev": "vite --force --port 4104",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"

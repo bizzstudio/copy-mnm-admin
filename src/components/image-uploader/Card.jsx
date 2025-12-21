@@ -1,7 +1,9 @@
+// src/components/image-uploader/Card.jsx
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { FiXCircle } from "react-icons/fi";
 import { ItemTypes } from "./ItemTypes.js";
+import { t } from "i18next";
 
 const Card = ({ id, image, index, moveCard, handleRemoveImage, slug }) => {
   const ref = useRef(null);
@@ -63,18 +65,23 @@ const Card = ({ id, image, index, moveCard, handleRemoveImage, slug }) => {
 
   drag(drop(ref));
 
+  // פונקציה לבדיקת אם הקישור הוא מאימגור
+  const isImgurLink = (url) => {
+    return url.includes("imgur.com");
+  };
+
   return (
-    <div ref={ref} data-handler-id={handlerId}>
+    <div ref={ref} data-handler-id={handlerId} className="m-1">
       <div className="relative">
         <img
           // className="inline-flex border rounded-md border-gray-100 dark:border-gray-600 w-24 max-h-24 p-2 m-2"
-          className="inline-flex border rounded-md w-24 max-h-24 p-2 border-gray-100 dark:border-gray-600"
+          className={`inline-flex border rounded-md w-24 max-h-24 p-2 border-gray-100 dark:border-gray-600`}
           src={image}
           alt="product"
         />
         {index === 0 && (
           <p className="text-xs absolute py-1 w-full bottom-0 inset-x-0 bg-blue-500 rounded-full text-white text-center ">
-            Default Image
+            {t("Default Image")}
           </p>
         )}
 

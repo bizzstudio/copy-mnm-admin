@@ -1,3 +1,4 @@
+// src/pages/StoreHome.jsx
 import { useContext, useEffect } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useTranslation } from "react-i18next";
@@ -199,6 +200,12 @@ const StoreHome = () => {
     isSubmitting,
     // showChild,
     setTermsConditionsTextEdit,
+    smallBannerImage,
+    setSmallBannerImage,
+    allowLogosCarousel,
+    setAllowLogosCarousel,
+    logosCarousel,
+    setLogosCarousel,
   } = useStoreHomeSubmit();
 
   useEffect(() => {
@@ -273,8 +280,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=home-settings"}
               className={`inline-block w-full px-4 py-3 shadow-md ${tabName === "home-settings" || location.search === ""
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen sm:rounded-l-md rounded-tl-md`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -292,8 +299,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=single-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "single-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -309,8 +316,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=about-us-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "about-us-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen focus:outline-none dark:hover:text-white dark:hover:bg-customGreen sm:rounded-tr-none rounded-tr-md`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -326,8 +333,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=privacy-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "privacy-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -343,8 +350,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=FAQ-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "FAQ-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -360,8 +367,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=offers-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "offers-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -377,8 +384,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=contact-us-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "contact-us-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen sm:rounded-bl-none rounded-bl-md`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -393,8 +400,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=checkout-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "checkout-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen sm:rounded-bl-none rounded-bl-md`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -409,8 +416,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=dashboard-setting"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "dashboard-setting"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen sm:rounded-bl-none rounded-bl-md`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -425,8 +432,8 @@ const StoreHome = () => {
             <Link
               to={"/store/customization?storeTab=seo-settings"}
               className={`inline-block w-full py-3 px-4 shadow-md ${tabName === "seo-settings"
-                  ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
-                  : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
+                ? "bg-customGreen text-white dark:bg-customGreen dark:text-white"
+                : "bg-gray-200 text-gray-800 font-medium dark:bg-gray-600 dark:text-gray-300"
                 } hover:text-white hover:bg-customGreen  focus:outline-none dark:hover:text-white dark:hover:bg-customGreen`}
             >
               <span className="text-sm font-medium font-serif xl:inline-block hidden">
@@ -530,6 +537,12 @@ const StoreHome = () => {
                 couponList={couponList}
                 setCouponList={setCouponList}
                 isSubmitting={isSubmitting}
+                smallBannerImage={smallBannerImage}
+                setSmallBannerImage={setSmallBannerImage}
+                allowLogosCarousel={allowLogosCarousel}
+                setAllowLogosCarousel={setAllowLogosCarousel}
+                logosCarousel={logosCarousel}
+                setLogosCarousel={setLogosCarousel}
               />
             </form>
           </div>
