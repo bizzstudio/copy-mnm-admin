@@ -27,12 +27,11 @@ const CustomTreeItem = ({ children, hideCheckbox, ...props }) => {
 const ParentCategory = ({
   selectedCategory,
   setSelectedCategory,
-  setDefaultCategory,
 }) => {
   const { data, loading } = useAsync(CategoryServices?.getAllCategory);
   const { showingTranslateValue } = useUtilsFunction();
   const { mode } = useContext(WindmillContext);
-  console.log('data :>> ', data);
+  // console.log('data :>> ', data);
 
   // Convert categories to tree structure for @mui/x-tree-view
   const treeNodes = useMemo(() => {
@@ -68,26 +67,26 @@ const ParentCategory = ({
     return obj._id === target
       ? obj
       : obj?.children?.reduce(
-          (acc, obj) => acc ?? findObject(obj, target),
-          undefined
-        );
+        (acc, obj) => acc ?? findObject(obj, target),
+        undefined
+      );
   };
 
   // Handle selection changes (both adding and removing)
   const handleSelectionChange = (event, selectedIds) => {
     if (!data || data.length === 0) return;
-    
+
     const obj = data[0];
     const currentSelectedIds = selectedCategory.map(cat => cat._id);
-    
+
     // Find newly selected items (added)
     const addedIds = selectedIds.filter(id => !currentSelectedIds.includes(id));
-    
+
     // Find deselected items (removed)
     const removedIds = currentSelectedIds.filter(id => !selectedIds.includes(id));
-    
+
     let newSelectedCategories = [...selectedCategory];
-    
+
     // Add new categories
     addedIds.forEach(id => {
       const result = findObject(obj, id);
@@ -98,33 +97,17 @@ const ParentCategory = ({
         });
       }
     });
-    
+
     // Remove deselected categories
     newSelectedCategories = newSelectedCategories.filter(cat => !removedIds.includes(cat._id));
-    
+
     setSelectedCategory(newSelectedCategories);
-    
-    // Update default category
-    if (newSelectedCategories.length > 0) {
-      // Keep current default if it's still selected, otherwise use first selected
-      const currentDefault = selectedCategory.find(cat => cat._id === newSelectedCategories[0]?._id);
-      setDefaultCategory([currentDefault || newSelectedCategories[0]]);
-    } else {
-      setDefaultCategory([]);
-    }
   };
 
   // Handle removing categories from the tag display
   const handleRemove = (categoryToRemove) => {
     const newSelectedCategories = selectedCategory.filter(cat => cat._id !== categoryToRemove._id);
     setSelectedCategory(newSelectedCategories);
-    
-    // Update default category if the removed one was the default
-    if (newSelectedCategories.length > 0) {
-      setDefaultCategory([newSelectedCategories[0]]);
-    } else {
-      setDefaultCategory([]);
-    }
   };
 
   // Get selected IDs for the tree view

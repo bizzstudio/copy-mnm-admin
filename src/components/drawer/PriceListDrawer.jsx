@@ -52,7 +52,7 @@ const PriceListDrawer = ({ id }) => {
                                     label={t("PriceListName")}
                                     name="name"
                                     type="text"
-                                    placeholder={t("PriceListName")}
+                                    placeholder={t("PriceListNamePlaceholder")}
                                 />
                                 <Error errorName={errors.name} />
                             </div>

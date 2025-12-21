@@ -263,10 +263,8 @@ const Products = () => {
                 <TableCell className='text-center'>{t("PriceTbl")}</TableCell>
                 <TableCell className='text-center'>{t("offer")}</TableCell>
                 <TableCell className='text-center'>{t("CategoryTbl")}</TableCell>
-                <TableCell className='text-center'>{t("ProductSerialOrder")}</TableCell>
-                {/* <TableCell className='text-center'>Sale Price</TableCell>
                 <TableCell className='text-center'>{t("StockTbl")}</TableCell>
-                <TableCell className='text-center'>{t("StatusTbl")}</TableCell> */}
+                <TableCell className='text-center'>{t("Barcode")}</TableCell>
                 <TableCell className="text-center">{t("DetailsTbl")}</TableCell>
                 <TableCell className="text-center">{t("ActionsTbl")}</TableCell>
               </tr>
