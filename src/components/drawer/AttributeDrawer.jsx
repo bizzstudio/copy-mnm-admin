@@ -1,7 +1,8 @@
-import { Select } from "@windmill/react-ui";
-import React, { Fragment } from "react";
+// src/components/drawer/AttributeDrawer.jsx
+import { Select, Card, CardBody } from "@windmill/react-ui";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { MdLabel, MdSettings, MdList } from "react-icons/md";
 
 // Internal import
 import Error from "@/components/form/others/Error";
@@ -11,6 +12,7 @@ import InputArea from "@/components/form/input/InputArea";
 import DrawerButton from "@/components/form/button/DrawerButton";
 import TagInputTwo from "@/components/common/TagInputTwo";
 import useAttributeSubmit from "@/hooks/useAttributeSubmit";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const AttributeDrawer = ({ id }) => {
   const {
@@ -47,85 +49,111 @@ const AttributeDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full">
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <LabelArea label={t("DrawerAttributeTitle")} />
-              <div className="col-span-8 sm:col-span-4">
-                {/* <SelectAttribute
-                  register={register}
-                  label="Attribute Title"
-                  name="title"
-                /> */}
-                <InputArea
-                  register={register}
-                  label="Attribute Title"
-                  name="title"
-                  type="text"
-                  placeholder="Color or Size or Dimension or Material or Fabric"
-                />
-                <Error errorName={errors.title} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
-              <LabelArea label={t("DisplayName")} />
-              <div className="col-span-8 sm:col-span-4">
-                <InputArea
-                  register={register}
-                  label="Display Name"
-                  name="name"
-                  type="text"
-                  placeholder="Display Name"
-                />
-                <Error errorName={errors.name} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 relative">
-              <LabelArea label={t("DrawerOptions")} />
-              <div className="col-span-8 sm:col-span-4 ">
-                <Select
-                  name="option"
-                  {...register(`option`, {
-                    required: `Option is required!`,
-                  })}
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטים בסיסיים */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Basic Details")}
+                  icon={<MdLabel size={20} className="mt-1" />}
+                  defaultOpen
                 >
-                  <option value="" defaultValue hidden>
-                    {t("DrawerSelecttype")}
-                  </option>
-                  <option value="Dropdown">{t("Dropdown")}</option>
-                  <option value="Radio">{t("Radio")}</option>
-                  {/* <option value="Checkbox">Checkbox</option> */}
-                </Select>
-                <Error errorName={errors.option} />
-              </div>
-            </div>
-          </div>
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* כותרת תכונה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("DrawerAttributeTitle")} />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          label="Attribute Title"
+                          name="title"
+                          type="text"
+                          placeholder="Color or Size or Dimension or Material or Fabric"
+                        />
+                        <Error errorName={errors.title} />
+                      </div>
+                    </div>
 
-          <DrawerButton id={id} title="Attribute" isSubmitting={isSubmitting} />
-        </form>
-        <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40 ">
-          {!id && (
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
-              <LabelArea label={t("Variants")} />
-              <div className="col-span-8 sm:col-span-4">
-                <TagInputTwo
-                  notes={variants}
-                  addNote={addVariant}
-                  removeNote={removeVariant}
-                />
-                {/* <ReactTagInput
-                    placeholder="White or S or Cotton or 40X60 or Premium...(Write then press enter to add new color)"
-                    tags={variants}
-                    onChange={(variant) => setVariants(variant)}
-                  /> */}
+                    {/* שם תצוגה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("DisplayName")} />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          label="Display Name"
+                          name="name"
+                          type="text"
+                          placeholder="Display Name"
+                        />
+                        <Error errorName={errors.name} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
+
+              {/* אפשרויות */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Options")}
+                  icon={<MdSettings size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* סוג אפשרות */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("DrawerOptions")} />
+                      <div className="col-span-6">
+                        <Select
+                          name="option"
+                          {...register(`option`, {
+                            required: `Option is required!`,
+                          })}
+                        >
+                          <option value="" defaultValue hidden>
+                            {t("DrawerSelecttype")}
+                          </option>
+                          <option value="Dropdown">{t("Dropdown")}</option>
+                          <option value="Radio">{t("Radio")}</option>
+                        </Select>
+                        <Error errorName={errors.option} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* וריאנטים */}
+              {!id && (
+                <div className="col-span-12">
+                  <CollapsibleSection
+                    title={t("Variants")}
+                    icon={<MdList size={20} className="mt-1" />}
+                    defaultOpen
+                  >
+                    <div className="grid grid-cols-12 gap-5 mt-2">
+                      <div className="flex flex-col gap-1 col-span-12">
+                        <LabelArea label={t("Variants")} />
+                        <div className="col-span-12">
+                          <TagInputTwo
+                            notes={variants}
+                            addNote={addVariant}
+                            removeNote={removeVariant}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CollapsibleSection>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </Scrollbars>
+
+            <DrawerButton id={id} title="Attribute" isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

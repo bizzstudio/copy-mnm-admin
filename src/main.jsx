@@ -1,3 +1,4 @@
+// src/main.jsx
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { registerSW } from "virtual:pwa-register";
@@ -9,8 +10,8 @@ import { persistStore } from "redux-persist";
 // Internal import
 import "rc-tree/assets/index.css";
 import "react-loading-skeleton/dist/skeleton.css";
-import "@/assets/css/custom.css";
 import "@/assets/css/tailwind.css";
+import "@/assets/css/custom.css";
 import App from "@/App";
 import myTheme from "@/assets/theme/myTheme";
 import { AdminProvider } from "@/context/AdminContext";
@@ -44,7 +45,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </Provider>
   </AdminProvider>
 );
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.register();

@@ -1,7 +1,8 @@
-import { Input, Button } from "@windmill/react-ui";
+// src/components/drawer/CouponDrawer.jsx
+import { Input, Button, Card, CardBody } from "@windmill/react-ui";
 import { t } from "i18next";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import voucherCodes from 'voucher-code-generator';
+import { MdLocalOffer, MdPercent } from "react-icons/md";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -9,11 +10,10 @@ import Error from "@/components/form/others/Error";
 import InputArea from "@/components/form/input/InputArea";
 import InputValue from "@/components/form/input/InputValue";
 import LabelArea from "@/components/form/selectOption/LabelArea";
-import Uploader from "@/components/image-uploader/Uploader";
 import useCouponSubmit from "@/hooks/useCouponSubmit";
 import DrawerButton from "@/components/form/button/DrawerButton";
-import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import SwitchToggleFour from "@/components/form/switch/SwitchToggleFour";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const CouponDrawer = ({ id }) => {
   const {
@@ -21,10 +21,6 @@ const CouponDrawer = ({ id }) => {
     handleSubmit,
     onSubmit,
     errors,
-    setImageUrl,
-    imageUrl,
-    published,
-    setPublished,
     currency,
     discountType,
     setDiscountType,
@@ -63,139 +59,102 @@ const CouponDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("CouponBannerImage")} />
-              <div className="col-span-6">
-                <Uploader
-                  imageUrl={imageUrl}
-                  setImageUrl={setImageUrl}
-                  folder="coupon"
-                />
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטי קופון */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Coupon Details")}
+                  icon={<MdLocalOffer size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+
+                    {/* קוד קופון */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t("CampaignCode")} />
+                      <div className="col-span-12 flex gap-3">
+                        <div className="w-full relative">
+                          <InputArea
+                            register={register}
+                            label="Coupon Code"
+                            name="couponCode"
+                            type="text"
+                            placeholder={t("CampaignCode")}
+                          />
+                          <Error errorName={errors.couponCode} />
+                        </div>
+                        <Button onClick={generateCouponCode} className="whitespace-nowrap" >
+                          {t("Generate")}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* ספירת שימושים (רק בעדכון) */}
+                    {id && (
+                      <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                        <LabelArea label={t("Coupon Usage Count")} oneLine />
+                        <div className="col-span-6">
+                          <Input
+                            {...register(`usageCount`, {})}
+                            disabled={true}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CollapsibleSection>
               </div>
-            </div> */}
 
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("CampaignName")} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  label="Coupon title"
-                  name="title"
-                  type="text"
-                  placeholder={t("CampaignName")}
-                />
-                <Error errorName={errors.title} />
-              </div>
-            </div> */}
+              {/* הנחה */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Discount")}
+                  icon={<MdPercent size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* סוג הנחה */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t("DiscountType")} />
+                      <div className="col-span-12">
+                        <SwitchToggleFour
+                          handleProcess={setDiscountType}
+                          processOption={discountType}
+                        />
+                        <Error errorName={errors.discountType} />
+                      </div>
+                    </div>
 
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("CampaignCode")} />
-              <div className="col-span-6 flex gap-3">
-                <div className="w-full relative">
-                  <InputArea
-                    register={register}
-                    label="Coupon Code"
-                    name="couponCode"
-                    type="text"
-                    placeholder={t("CampaignCode")}
-                  />
-                  <Error errorName={errors.couponCode} />
-                </div>
-                <Button onClick={generateCouponCode} className="whitespace-nowrap" >
-                  {t("Generate")}
-                </Button>
-              </div>
-            </div>
-
-            {/* תוקף הקופון - כרגע מוגדר על 2100 */}
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("CouponValidityTime")} />
-              <div className="col-span-6">
-                <Input
-                  {...register(`endTime`, {
-                    required: "Coupon Validation End Time",
-                  })}
-                  label="Coupon Validation End Time"
-                  name="endTime"
-                  type="datetime-local"
-                  placeholder={t("CouponValidityTime")}
-                />
-
-                <Error errorName={errors.endTime} />
-              </div>
-            </div> */}
-
-            <div className="grid grid-cols-6 gap-1 mb-3.5">
-              <LabelArea label={t("DiscountType")} />
-              <div className="col-span-6">
-                <SwitchToggleFour
-                  handleProcess={setDiscountType}
-                  processOption={discountType}
-                />
-                <Error errorName={errors.discountType} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("Discount")} />
-              <div className="col-span-6">
-                <InputValue
-                  product
-                  register={register}
-                  maxValue={discountType ? 99 : 1000}
-                  minValue={1}
-                  label="Discount"
-                  name="discountPercentage"
-                  type="number"
-                  placeholder={discountType ? t("Percentage") : t("Fixed Amount")}
-                  currency={discountType ? "%" : currency}
-                />
-
-                <Error errorName={errors.discountPercentage} />
+                    {/* סכום הנחה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("Discount")} />
+                      <div className="col-span-6">
+                        <InputValue
+                          product
+                          register={register}
+                          maxValue={discountType ? 99 : 1000}
+                          minValue={1}
+                          label="Discount"
+                          name="discountPercentage"
+                          type="number"
+                          placeholder={discountType ? t("Percentage") : t("Fixed Amount")}
+                          currency={discountType ? "%" : currency}
+                        />
+                        <Error errorName={errors.discountPercentage} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
 
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("minimumAmount")} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  name="minimumAmount"
-                  type="number"
-                  placeholder={t("minimumAmount")}
-                />
-                <Error errorName={errors.minimumAmount} />
-              </div>
-            </div> */}
-
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("Published")} />
-              <div className="col-span-6">
-                <SwitchToggle
-                  handleProcess={setPublished}
-                  processOption={published}
-                />
-                <Error errorName={errors.productType} />
-              </div>
-            </div> */}
-
-            {id && <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("Coupon Usage Count")} oneLine />
-              <div className="col-span-6">
-                <Input
-                  {...register(`usageCount`, {})}
-                  disabled={true}
-                />
-              </div>
-            </div>}
-          </div>
-
-          <DrawerButton id={id} title={t("Coupon")} isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title={t("Coupon")} isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

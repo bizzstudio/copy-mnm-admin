@@ -1,7 +1,9 @@
+// src/components/drawer/LanguageDrawer.jsx
 import React from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { Card, CardBody } from "@windmill/react-ui";
 import ReactFlagsSelect from "react-flags-select";
 import { useTranslation } from "react-i18next";
+import { HiLanguage } from "react-icons/hi";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -12,8 +14,7 @@ import SelectISOCode from "@/components/form/selectOption/SelectISOCode";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import useLanguageSubmit from "@/hooks/useLanguageSubmit";
 import DrawerButton from "@/components/form/button/DrawerButton";
-
-// Internal import
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const LanguageDrawer = ({ id }) => {
   const {
@@ -43,60 +44,77 @@ const LanguageDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="p-6 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <LabelArea label={t("AddLanguageName")} />
-              <div className="col-span-8 sm:col-span-4">
-                <InputArea
-                  register={register}
-                  label="Language name"
-                  name="name"
-                  type="text"
-                  placeholder="Language name"
-                />
-                <Error errorName={errors.name} />
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטי שפה */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Language Details")}
+                  icon={<HiLanguage size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* שם שפה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("AddLanguageName")} />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          label="Language name"
+                          name="name"
+                          type="text"
+                          placeholder="Language name"
+                        />
+                        <Error errorName={errors.name} />
+                      </div>
+                    </div>
+
+                    {/* קוד ISO */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12 relative">
+                      <LabelArea label={t("AddLanguagesIsoCode")} />
+                      <div className="col-span-6">
+                        <SelectISOCode
+                          register={register}
+                          label="ISO code"
+                          name={"iso_code"}
+                        />
+                        <Error errorName={errors.iso_code} />
+                      </div>
+                    </div>
+
+                    {/* דגל */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("AddLanguagesFlag")} />
+                      <div className="col-span-6">
+                        <ReactFlagsSelect
+                          selected={flagAndName}
+                          onSelect={(code) => setFlagAndName(code)}
+                        />
+                      </div>
+                    </div>
+
+                    {/* מצב פרסום */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("AddLanguagesPublished")} />
+                      <div className="col-span-6">
+                        <SwitchToggle
+                          title={""}
+                          handleProcess={setLanguagePublished}
+                          processOption={languagePublished}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
 
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
-              <LabelArea label={t("AddLanguagesIsoCode")} />
-              <div className="col-span-8 sm:col-span-4">
-                <SelectISOCode
-                  register={register}
-                  label="ISO code"
-                  name={"iso_code"}
-                />
-                <Error errorName={errors.iso_code} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <LabelArea label={t("AddLanguagesFlag")} />
-              <div className="col-span-8 sm:col-span-4">
-                <ReactFlagsSelect
-                  selected={flagAndName}
-                  onSelect={(code) => setFlagAndName(code)}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-              <LabelArea label={t("AddLanguagesPublished")} />
-              <div className="col-span-8 sm:col-span-4">
-                <SwitchToggle
-                  title={""}
-                  handleProcess={setLanguagePublished}
-                  processOption={languagePublished}
-                />
-              </div>
-            </div>
-          </div>
-
-          <DrawerButton id={id} title="Language" isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title="Language" isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

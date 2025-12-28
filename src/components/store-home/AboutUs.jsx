@@ -89,7 +89,7 @@ const AboutUs = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full">
             <div className="inline-flex md:text-base text-sm mb-3 text-gray-500 dark:text-gray-400">
               <strong>{t("PageHeader")}</strong>
             </div>

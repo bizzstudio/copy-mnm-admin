@@ -1,8 +1,9 @@
+// src/hooks/useLoginSubmit.js
 import Cookies from "js-cookie";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Internal import
 import { AdminContext } from "@/context/AdminContext";
@@ -14,7 +15,7 @@ const useLoginSubmit = () => {
   const reduxDispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { dispatch } = useContext(AdminContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const {
     register,
@@ -40,7 +41,7 @@ const useLoginSubmit = () => {
               sameSite: "None",
               secure: true,
             });
-            history.replace("/");
+            navigate("/", { replace: true });
           }
         })
         .catch((err) => {
@@ -62,7 +63,7 @@ const useLoginSubmit = () => {
               sameSite: "None",
               secure: true,
             });
-            history.replace("/");
+            navigate("/", { replace: true });
           }
         })
         .catch((err) => {

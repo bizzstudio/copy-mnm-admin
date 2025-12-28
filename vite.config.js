@@ -1,3 +1,4 @@
+// vite.config.js
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
@@ -10,9 +11,6 @@ import path from "path";
 dns.setDefaultResultOrder("verbatim");
 
 export default defineConfig({
-  // root: "./", // Set the root directory of your project
-  // base: "/", // Set the base URL path for your application
-
   build: {
     outDir: "dist", // Set the output directory for the build files
     assetsDir: "@/assets", // Set the directory for the static assets
@@ -59,10 +57,10 @@ export default defineConfig({
           scope: ".",
           start_url: ".",
           id: ".",
-          short_name:  "MNM - ייבוא שיווק והפצה",
-          name:  "MNM - ייבוא שיווק והפצה",
+          short_name: "MNM - ייבוא שיווק והפצה",
+          name: "MNM - ייבוא שיווק והפצה",
           description:
-             "MNM - ייבוא שיווק והפצה",
+            "MNM - ייבוא שיווק והפצה",
           icons: [
             {
               src: "favicon.ico",
@@ -104,10 +102,6 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-  },
-  define: {
-    "process.env": process.env,
-    // global: {}, //enable this when running on dev/local mode
   },
 
   resolve: {

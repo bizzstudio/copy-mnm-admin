@@ -14,7 +14,6 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { LiaTruckPickupSolid } from "react-icons/lia";
 import { BsQrCode } from "react-icons/bs";
 import { io } from "socket.io-client";
-import Countdown from "react-countdown";
 import { QRCodeCanvas } from "qrcode.react";
 import axios from "axios";
 
@@ -244,9 +243,9 @@ const Messages = () => {
               </button>}
           </div>
           <hr className="md:mb-6 mb-3" />
-          <div className="flex-grow scrollbar-hide w-full max-h-full xl:px-10">
+          <div className="grow scrollbar-hide w-full max-h-full xl:px-10">
             {!isConnected ? (
-              <Card className="flex md:flex-row flex-col flex-grow w-full justify-center gap-10 items-center shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5 text-center p-6">
+              <Card className="flex md:flex-row flex-col grow w-full justify-center gap-10 items-center shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5 text-center p-6">
                 {isAuthenticating ? (
                   <div>
                     <Loading />
@@ -292,7 +291,7 @@ const Messages = () => {
             {t("Messages")}
           </div>
           <hr className="md:mb-6 mb-3" />
-          <div className="flex-grow scrollbar-hide w-full max-h-full xl:px-10">
+          <div className="grow scrollbar-hide w-full max-h-full xl:px-10">
             <div className="md:mb-6 mb-3">
               <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
                 <TbTruckDelivery className="mt-1 ml-2 w-5 h-5" />

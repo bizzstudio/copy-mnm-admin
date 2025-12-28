@@ -1,13 +1,15 @@
-import React, { lazy } from "react";
+// src/App.jsx
+import React, { lazy, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
-  Redirect,
+  Navigate,
 } from "react-router-dom";
 import AccessibleNavigationAnnouncer from "@/components/AccessibleNavigationAnnouncer";
 import PrivateRoute from "@/components/login/PrivateRoute";
+import ThemeSuspense from "@/components/theme/ThemeSuspense";
 const Layout = lazy(() => import("@/layout/Layout"));
 const Login = lazy(() => import("@/pages/Login"));
 const SignUp = lazy(() => import("@/pages/SignUp"));
@@ -20,17 +22,24 @@ const App = () => {
       <ToastContainer />
       <Router>
         <AccessibleNavigationAnnouncer />
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/forgot-password" component={ForgetPassword} />
-          <Route path="/reset-password/:token" component={ResetPassword} />
+        <Suspense fallback={<ThemeSuspense />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgetPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          <PrivateRoute>
-            <Route path="/" component={Layout} />
-          </PrivateRoute>
-          <Redirect exact from="/" to="/login" />
-        </Switch>
+            <Route
+              path="/*"
+              element={
+                <PrivateRoute>
+                  <Layout />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Suspense>
       </Router>
     </>
   );

@@ -1,3 +1,4 @@
+// src/components/form/others/Error.jsx
 import React from "react";
 
 const Error = ({ errorName, className = '' }) => {

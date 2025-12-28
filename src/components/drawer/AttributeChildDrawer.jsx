@@ -1,5 +1,7 @@
+// src/components/drawer/AttributeChildDrawer.jsx
 import React from "react";
-import Scrollbars from "react-custom-scrollbars-2";
+import { Card, CardBody } from "@windmill/react-ui";
+import { MdLabel } from "react-icons/md";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -9,6 +11,7 @@ import LabelArea from "@/components/form/selectOption/LabelArea";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import DrawerButton from "@/components/form/button/DrawerButton";
 import useAttributeSubmit from "@/hooks/useAttributeSubmit";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const AttributeChildDrawer = ({ id }) => {
   const {
@@ -42,39 +45,53 @@ const AttributeChildDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmits)}>
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 items-center">
-              <LabelArea label="Display Name" />
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmits)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטי ערך תכונה */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title="Attribute Value Details"
+                  icon={<MdLabel size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* שם תצוגה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label="Display Name" />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          label="Display Name"
+                          name="name"
+                          type="text"
+                          placeholder="Color or Size or Dimension or Material or Fabric"
+                        />
+                        <Error errorName={errors.name} />
+                      </div>
+                    </div>
 
-              <div className="col-span-8 sm:col-span-4">
-                <InputArea
-                  register={register}
-                  label="Display Name"
-                  name="name"
-                  type="text"
-                  placeholder="Color or Size or Dimension or Material or Fabric"
-                />
-                <Error errorName={errors.name} />
+                    {/* מצב פרסום */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label="Published" />
+                      <div className="col-span-6">
+                        <SwitchToggle
+                          handleProcess={setPublished}
+                          processOption={published}
+                        />
+                        <Error errorName={errors.published} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
-            <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 items-center">
-              <LabelArea label="Published" />
 
-              <div className="col-span-8 sm:col-span-4">
-                <SwitchToggle
-                  handleProcess={setPublished}
-                  processOption={published}
-                />
-                <Error errorName={errors.published} />
-              </div>
-            </div>
-          </div>
-
-          <DrawerButton id={id} title="Attribute" isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title="Attribute" isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

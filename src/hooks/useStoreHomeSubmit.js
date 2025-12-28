@@ -1,7 +1,4 @@
 // src/hooks/useStoreHomeSubmit.js
-import { EditorState, convertToRaw } from "draft-js";
-import { stateFromHTML } from "draft-js-import-html";
-import draftToHtml from "draftjs-to-html";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -11,11 +8,6 @@ import SettingServices from "@/services/SettingServices";
 import useUtilsFunction from "./useUtilsFunction";
 import notifyApiResponse from "@/utils/notifyApiResponse";
 // import useNotification from "./useNotification";
-
-const createEditorState = (text) => {
-  const contentState = stateFromHTML(text);
-  return EditorState.createWithContent(contentState);
-};
 
 const useStoreHomeSubmit = () => {
   const { setIsUpdate, lang } = useContext(SidebarContext);
@@ -119,10 +111,8 @@ const useStoreHomeSubmit = () => {
     useState("");
   const [getYourDailyNeedImageRight, setGetYourDailyNeedImageRight] =
     useState("");
-  const [textEdit, setTextEdit] = useState(createEditorState(""));
-  const [termsConditionsTextEdit, setTermsConditionsTextEdit] = useState(
-    createEditorState("")
-  );
+  const [textEdit, setTextEdit] = useState("");
+  const [termsConditionsTextEdit, setTermsConditionsTextEdit] = useState("");
   const [aboutTopContentRightImage, setAboutTopContentRightImage] =
     useState("");
   const [termsConditionsHeaderBg, setTermsConditionsHeaderBg] = useState("");
@@ -519,9 +509,7 @@ const useStoreHomeSubmit = () => {
 
             description: {
               ...resData?.privacy_policy?.description,
-              [language]: textEdit
-                ? draftToHtml(convertToRaw(textEdit.getCurrentContent()))
-                : "",
+              [language]: textEdit || "",
             },
           },
           term_and_condition: {
@@ -534,11 +522,7 @@ const useStoreHomeSubmit = () => {
 
             description: {
               ...resData?.term_and_condition?.description,
-              [language]: termsConditionsTextEdit
-                ? draftToHtml(
-                  convertToRaw(termsConditionsTextEdit.getCurrentContent())
-                )
-                : "",
+              [language]: termsConditionsTextEdit || "",
             },
           },
           faq: {
@@ -1818,9 +1802,7 @@ const useStoreHomeSubmit = () => {
           );
 
           setTextEdit(
-            createEditorState(
-              showingTranslateValue(res?.privacy_policy?.description)
-            )
+            showingTranslateValue(res?.privacy_policy?.description) || ""
           );
 
           //term and condition
@@ -1832,9 +1814,7 @@ const useStoreHomeSubmit = () => {
           );
 
           setTermsConditionsTextEdit(
-            createEditorState(
-              showingTranslateValue(res?.term_and_condition?.description)
-            )
+            showingTranslateValue(res?.term_and_condition?.description) || ""
           );
 
           //faq

@@ -59,7 +59,7 @@ const StoreSetting = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-12 font-sans">
             <div className="col-span-12 md:col-span-12 lg:col-span-12 mr-3">
-              <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 flex-grow scrollbar-hide w-full max-h-full pb-0">
+              <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 grow scrollbar-hide w-full max-h-full pb-0">
 
                 <div className="grid md:grid-cols-5 items-center sm:grid-cols-12 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">

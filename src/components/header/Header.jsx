@@ -1,7 +1,6 @@
 import { Avatar, Badge, WindmillContext } from "@windmill/react-ui";
 import Cookies from "js-cookie";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import {
   IoClose,
   IoGridOutline,
@@ -168,7 +167,7 @@ const Header = () => {
               {/* {notificationOpen && (
                 <div className="origin-top-left absolute left-0 mt-2 rounded-md shadow-lg bg-white dark:bg-gray-800 focus:outline-none">
                   <div className="notification-box">
-                    <Scrollbars>
+                    <div className="overflow-auto">
                       <ul className="block text-sm border-t border-gray-100 dark:border-gray-700 rounded-md">
                         <li className="flex justify-between items-center font-serif font-normal text-sm py-3 border-b border-gray-100 dark:border-gray-700 px-3 transition-colors duration-150 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-gray-900 dark:hover:text-gray-100 cursor-pointer">
                           <div className="flex items-center">
@@ -342,7 +341,7 @@ const Header = () => {
                           </span>
                         </li>
                       </ul>
-                    </Scrollbars>
+                    </div>
                   </div>
                 </div>
               )}

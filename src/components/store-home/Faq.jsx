@@ -62,7 +62,7 @@ const Faq = ({
         </div>
         <hr className="md:mb-10 mb-3" />
 
-        <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+        <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
           <div className="inline-flex md:text-md text-sm mb-3 text-gray-500 dark:text-gray-400">
             <strong>{t("FAQPageHeader")}</strong>
           </div>

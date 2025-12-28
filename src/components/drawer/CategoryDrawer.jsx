@@ -1,13 +1,13 @@
 // src/components/drawer/CategoryDrawer.jsx
-import { Input, WindmillContext } from '@windmill/react-ui';
+import { Input, WindmillContext, Card, CardBody } from '@windmill/react-ui';
 import {
   SimpleTreeView,
   TreeItem,
 } from '@mui/x-tree-view';
 import { FiFolder } from 'react-icons/fi';
 import React, { useContext, useMemo } from 'react';
-import Scrollbars from 'react-custom-scrollbars-2';
 import { useTranslation } from 'react-i18next';
+import { MdCategory, MdImage, MdSettings } from 'react-icons/md';
 
 // Internal imports
 import { notifyError } from '@/utils/toast';
@@ -23,6 +23,7 @@ import CategoryServices from '@/services/CategoryServices';
 import DrawerButton from '@/components/form/button/DrawerButton';
 import useUtilsFunction from '@/hooks/useUtilsFunction';
 import { GoDotFill } from 'react-icons/go';
+import CollapsibleSection from '@/components/common/CollapsibleSection';
 
 const CategoryDrawer = ({ id, data }) => {
   const { t } = useTranslation();
@@ -121,115 +122,160 @@ const CategoryDrawer = ({ id, data }) => {
       </div>
 
       {/* ---------- Body ---------- */}
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            {/* --- Name --- */}
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t('Name')} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  label="Category title"
-                  name="name"
-                  type="text"
-                  placeholder={t('ParentCategoryPlaceholder')}
-                />
-                <Error errorName={errors.name} />
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטים בסיסיים */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t('Basic Details')}
+                  icon={<MdCategory size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* שם */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t('Name')} />
+                      <div className="col-span-12">
+                        <InputArea
+                          register={register}
+                          label="Category title"
+                          name="name"
+                          type="text"
+                          placeholder={t('ParentCategoryPlaceholder')}
+                        />
+                        <Error errorName={errors.name} />
+                      </div>
+                    </div>
+
+                    {/* Slug */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t('Slug')} />
+                      <div className="col-span-12">
+                        <InputArea
+                          register={register}
+                          name="slug"
+                          type="text"
+                          placeholder={t('Slug')}
+                        />
+                        <Error errorName={errors.slug} />
+                      </div>
+                    </div>
+
+                    {/* תיאור */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t('Description')} />
+                      <div className="col-span-12">
+                        <TextAreaCom
+                          required
+                          register={register}
+                          label="Description"
+                          name="description"
+                          type="text"
+                          placeholder="Category Description"
+                        />
+                        <Error errorName={errors.description} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* קטגוריית אב */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t('Parent Category')}
+                  icon={<FiFolder size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    <div className="flex flex-col gap-1 col-span-12 relative">
+                      <LabelArea label={t('ParentCategory')} />
+                      <div className="col-span-12">
+                        <Input
+                          readOnly
+                          {...register('parent')}
+                          value={selectCategoryName || 'Home'}
+                          placeholder={t('ParentCategory')}
+                          type="text"
+                        />
+
+                        <div className="vsc-tree mt-2 rounded-lg p-2 bg-gray-800/5 dark:bg-gray-100/5">
+                          <SimpleTreeView
+                            selectedItems={checked ? [checked] : []}
+                            onSelectedItemsChange={handleSelect}
+                            expansionTrigger="content"
+                          >
+                            {treeNodes}
+                          </SimpleTreeView>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* אייקונים */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t('Icons')}
+                  icon={<MdImage size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* אייקון רגיל */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t('CategoryIcon')} />
+                      <div className="h-1" />
+                      <Uploader
+                        imageUrl={imageUrl}
+                        setImageUrl={setImageUrl}
+                        folder="category"
+                      />
+                    </div>
+
+                    {/* אייקון צבעוני */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t('CategoryColoredIcon')} />
+                      <div className="h-1" />
+                      <Uploader
+                        imageUrl={coloredImageUrl}
+                        setImageUrl={setColoredImageUrl}
+                        folder="category"
+                      />
+                    </div>
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* הגדרות */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t('Settings')}
+                  icon={<MdSettings size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* מצב פרסום */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t('Published')} />
+                      <div className="col-span-6">
+                        <SwitchToggle
+                          handleProcess={setPublished}
+                          processOption={published}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
 
-            {/* --- Slug --- */}
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t('Slug')} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  name="slug"
-                  type="text"
-                  placeholder={t('Slug')}
-                />
-                <Error errorName={errors.slug} />
-              </div>
-            </div>
-
-            {/* --- Description --- */}
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t('Description')} />
-              <div className="col-span-6">
-                <TextAreaCom
-                  required
-                  register={register}
-                  label="Description"
-                  name="description"
-                  type="text"
-                  placeholder="Category Description"
-                />
-                <Error errorName={errors.description} />
-              </div>
-            </div>
-
-            {/* --- Parent category picker --- */}
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t('ParentCategory')} />
-              <div className="col-span-6 relative">
-                <Input
-                  readOnly
-                  {...register('parent')}
-                  value={selectCategoryName || 'Home'}
-                  placeholder={t('ParentCategory')}
-                  type="text"
-                />
-
-                <div className="vsc-tree mt-2 rounded-lg p-2 bg-gray-800/5 dark:bg-gray-100/5">
-                  <SimpleTreeView
-                    selectedItems={checked ? [checked] : []}
-                    onSelectedItemsChange={handleSelect}
-                    expansionTrigger="content"
-                  >
-                    {treeNodes}
-                  </SimpleTreeView>
-                </div>
-              </div>
-            </div>
-
-            {/* --- Icons --- */}
-            <div className="w-full flex flex-col gap-3 mb-6">
-              <div className="w-full">
-                <LabelArea label={t('CategoryIcon')} />
-                <div className="h-1" />
-                <Uploader
-                  imageUrl={imageUrl}
-                  setImageUrl={setImageUrl}
-                  folder="category"
-                />
-              </div>
-              <div className="w-full">
-                <LabelArea label={t('CategoryColoredIcon')} />
-                <div className="h-1" />
-                <Uploader
-                  imageUrl={coloredImageUrl}
-                  setImageUrl={setColoredImageUrl}
-                  folder="category"
-                />
-              </div>
-            </div>
-
-            {/* --- Published --- */}
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t('Published')} />
-              <div className="col-span-6">
-                <SwitchToggle
-                  handleProcess={setPublished}
-                  processOption={published}
-                />
-              </div>
-            </div>
-          </div>
-
-          <DrawerButton id={id} title={t("category")} isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title={t("category")} isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
 
       {/* ---------- VS-Code-like look & feel ---------- */}
       <style>{`
@@ -238,7 +284,7 @@ const CategoryDrawer = ({ id, data }) => {
           border-radius: 4px;
           font-size: 0.875rem;
         }
-        .vsc-tree .MuiTreeItem-content:hover {
+        .vsc-tree .MuiTreeItem-conFtent:hover {
           background: #094771;
           color: #fff;
         }

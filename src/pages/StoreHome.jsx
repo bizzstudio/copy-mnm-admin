@@ -1,6 +1,5 @@
 // src/pages/StoreHome.jsx
 import { useContext, useEffect } from "react";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import "react-tabs/style/react-tabs.css";

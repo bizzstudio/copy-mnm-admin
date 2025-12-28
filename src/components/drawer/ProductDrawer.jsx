@@ -81,10 +81,10 @@ const ProductDrawer = ({ id }) => {
         )}
       </div>
 
-      <Card className="overflow-y-auto flex-grow w-full max-h-full px-3 py-1">
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} id="block">
-            <div className="flex-grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
 
               {/* שם המוצר */}
               <div className="flex flex-col gap-1 md:col-span-6 col-span-12">

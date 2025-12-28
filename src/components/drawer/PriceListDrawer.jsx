@@ -1,7 +1,8 @@
 // src/components/drawer/PriceListDrawer.jsx
 import React from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { Card, CardBody } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
+import { MdListAlt } from "react-icons/md";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -10,6 +11,7 @@ import InputArea from "@/components/form/input/InputArea";
 import DrawerButton from "@/components/form/button/DrawerButton";
 import usePriceListSubmit from "@/hooks/usePriceListSubmit";
 import LabelArea from "../form/selectOption/LabelArea";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const PriceListDrawer = ({ id }) => {
     const { t } = useTranslation();
@@ -40,28 +42,42 @@ const PriceListDrawer = ({ id }) => {
                 )}
             </div>
 
-            <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-                <form onSubmit={handleSubmit(onSubmit)} id="block">
-                    <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-                        <div className="grid grid-cols-6 gap-1 mb-6">
-                            <LabelArea label={t("PriceListName")} />
-                            <div className="col-span-6">
-                                <InputArea
-                                    register={register}
-                                    required={true}
-                                    label={t("PriceListName")}
-                                    name="name"
-                                    type="text"
-                                    placeholder={t("PriceListNamePlaceholder")}
-                                />
-                                <Error errorName={errors.name} />
+            <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+                <CardBody>
+                    <form onSubmit={handleSubmit(onSubmit)} id="block">
+                        <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+                            {/* פרטי רשימת מחירים */}
+                            <div className="col-span-12">
+                                <CollapsibleSection
+                                    title={t("Price List Details")}
+                                    icon={<MdListAlt size={20} className="mt-1" />}
+                                    defaultOpen
+                                >
+                                    <div className="grid grid-cols-12 gap-5 mt-2">
+                                        {/* שם רשימת מחירים */}
+                                        <div className="flex flex-col gap-1 col-span-12">
+                                            <LabelArea label={t("PriceListName")} />
+                                            <div className="col-span-12">
+                                                <InputArea
+                                                    register={register}
+                                                    required={true}
+                                                    label={t("PriceListName")}
+                                                    name="name"
+                                                    type="text"
+                                                    placeholder={t("PriceListNamePlaceholder")}
+                                                />
+                                                <Error errorName={errors.name} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CollapsibleSection>
                             </div>
                         </div>
-                    </div>
 
-                    <DrawerButton id={id} title={t("PriceListTitle")} isSubmitting={isSubmitting} />
-                </form>
-            </Scrollbars>
+                        <DrawerButton id={id} title={t("PriceListTitle")} isSubmitting={isSubmitting} />
+                    </form>
+                </CardBody>
+            </Card>
         </>
     );
 };

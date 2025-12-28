@@ -111,7 +111,7 @@ const Attributes = () => {
               />
             </div>
 
-            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start grow-0">
               {/* <div className="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
                 <Button
                   disabled={isCheck.length < 1}
@@ -158,14 +158,14 @@ const Attributes = () => {
             onSubmit={handleSubmitAttribute}
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
           >
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <Input
                 ref={attributeRef}
                 type="search"
                 placeholder={t("SearchAttributePlaceholder")}
               />
             </div>
-            <div className="flex items-center gap-2 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="flex items-center gap-2 grow-0 md:grow lg:grow xl:grow">
               <div className="w-full mx-1">
                 <Button type="submit" className="h-12 w-full bg-customGreen-dark">
                   {t("Filter")}

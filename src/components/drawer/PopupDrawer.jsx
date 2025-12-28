@@ -1,10 +1,11 @@
-import { Input } from "@windmill/react-ui";
-import React, { useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+// src/components/drawer/PopupDrawer.jsx
+import { Input, Card, CardBody } from "@windmill/react-ui";
+import React from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { useTranslation } from "react-i18next";
 import { FiX } from "react-icons/fi";
+import { MdImage, MdArticle, MdLink, MdSettings } from "react-icons/md";
 import ReactQuill from "react-quill-new";
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -17,6 +18,7 @@ import Uploader from "@/components/image-uploader/Uploader";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import usePopupSubmit from "@/hooks/usePopupSubmit";
 import LabelArea from "../form/selectOption/LabelArea";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const PopupDrawer = ({ id }) => {
   const { t } = useTranslation();
@@ -63,7 +65,7 @@ const PopupDrawer = ({ id }) => {
       ],
     },
   };
-  
+
 
   return (
     <>
@@ -103,167 +105,207 @@ const PopupDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)} id="block">
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupImage")} />
-              <div className="col-span-6">
-                <Uploader
-                  imageUrl={imageUrl}
-                  setImageUrl={setImageUrl}
-                  handleSelectImage={handleSelectImage}
-                  folder='popup'
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("ImageHeight")} />
-              <div className="col-span-6">
-                <Input
-                  {...register("imageHeight", {
-                    required: imageUrl ? t("ImageHeightRequired") : false,
-                  })}
-                  name="imageHeight"
-                  type="number"
-                  placeholder={t("ImageHeight")}
-                />
-                <Error errorName={errors.imageHeight} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupTitle")} />
-              <div className="col-span-6">
-                <Input
-                  {...register("title")}
-                  name="title"
-                  type="text"
-                  placeholder={t("PopupTitle")}
-                />
-                <Error errorName={errors.title} />
-              </div>
-            </div>
-
-            {/* <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupSubTitle")} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  required={true}
-                  label={t("PopupSubTitle")}
-                  name="subTitle"
-                  type="text"
-                  placeholder={t("PopupSubTitle")}
-                />
-                <Error errorName={errors.subTitle} />
-              </div>
-            </div> */}
-
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupDescription")} />
-              <div className="col-span-6" dir="ltr">
-                <ReactQuill
-                  value={description}
-                  onChange={handleDescriptionChange}
-                  className="text-black dark:text-white"
-                  theme="snow"
-                  modules={modules}
-                />
-                <Error errorName={errors.description} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("HasLink")} />
-              <div className="col-span-6">
-                <SwitchToggle
-                  id="hasLink"
-                  handleProcess={(checked) => setHasLink(checked)}
-                  processOption={hasLink}
-                />
-              </div>
-            </div>
-
-            {hasLink && (
-              <>
-                <div className="grid grid-cols-6 gap-1 mb-6">
-                  <div className="col-span-6 flex gap-5">
-                    <div className="flex-grow">
-                      <LabelArea label={t("PopupLink")} />
-                      <Input
-                        className='mt-1'
-                        {...register("link", {
-                          required: hasLink ? t("LinkRequired") : false,
-                        })}
-                        label={t("PopupLink")}
-                        name="link"
-                        type="text"
-                        placeholder={t("PopupLink")}
-                      />
-                      <Error errorName={errors.link} />
-                    </div>
-                    <div className="flex-grow">
-                      <LabelArea label={t("PopupLinkName")} />
-                      <Input
-                        className='mt-1'
-                        {...register("linkName", {
-                          required: hasLink ? t("LinkRequired") : false,
-                        })}
-                        label={t("PopupLinkName")}
-                        name="linkName"
-                        type="text"
-                        placeholder={t("PopupLinkName")}
-                      />
-                      <Error errorName={errors.linkName} />
-                    </div>
-
-                    <div className="h-full">
-                      <LabelArea label={t("OpenInNewTab")} />
-                      <div className="mt-3 flex justify-center">
-                        <SwitchToggle
-                          id="targetBlank"
-                          handleProcess={(checked) => setTargetBlank(checked)}
-                          processOption={targetBlank}
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)} id="block">
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* תמונה */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Image")}
+                  icon={<MdImage size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* תמונת פופאפ */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t("PopupImage")} />
+                      <div className="col-span-12">
+                        <Uploader
+                          imageUrl={imageUrl}
+                          setImageUrl={setImageUrl}
+                          handleSelectImage={handleSelectImage}
+                          folder='popup'
                         />
                       </div>
                     </div>
+
+                    {/* גובה תמונה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("ImageHeight")} />
+                      <div className="col-span-6">
+                        <Input
+                          {...register("imageHeight", {
+                            required: imageUrl ? t("ImageHeightRequired") : false,
+                          })}
+                          name="imageHeight"
+                          type="number"
+                          placeholder={t("ImageHeight")}
+                        />
+                        <Error errorName={errors.imageHeight} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                </CollapsibleSection>
+              </div>
 
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupPageToShow")} />
-              <div className="col-span-6">
-                <InputArea
-                  register={register}
-                  label={t("PopupPageToShow")}
-                  name="pageToShow"
-                  type="text"
-                  placeholder={t("Paste link here")}
-                />
-                <Error errorName={errors.pageToShow} />
+              {/* תוכן */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Content")}
+                  icon={<MdArticle size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* כותרת */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("PopupTitle")} />
+                      <div className="col-span-6">
+                        <Input
+                          {...register("title")}
+                          name="title"
+                          type="text"
+                          placeholder={t("PopupTitle")}
+                        />
+                        <Error errorName={errors.title} />
+                      </div>
+                    </div>
+
+                    {/* תיאור */}
+                    <div className="flex flex-col gap-1 col-span-12" dir="ltr">
+                      <LabelArea label={t("PopupDescription")} />
+                      <div className="col-span-12">
+                        <ReactQuill
+                          value={description}
+                          onChange={handleDescriptionChange}
+                          className="text-black dark:text-white"
+                          theme="snow"
+                          modules={modules}
+                        />
+                        <Error errorName={errors.description} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* קישור */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Link Settings")}
+                  icon={<MdLink size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* יש קישור */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t("HasLink")} />
+                      <div className="col-span-12">
+                        <SwitchToggle
+                          id="hasLink"
+                          handleProcess={(checked) => setHasLink(checked)}
+                          processOption={hasLink}
+                        />
+                      </div>
+                    </div>
+
+                    {/* פרטי קישור */}
+                    {hasLink && (
+                      <>
+                        <div className="flex flex-col gap-1 md:col-span-4 col-span-12">
+                          <LabelArea label={t("PopupLink")} />
+                          <div className="col-span-12">
+                            <Input
+                              className='mt-1'
+                              {...register("link", {
+                                required: hasLink ? t("LinkRequired") : false,
+                              })}
+                              label={t("PopupLink")}
+                              name="link"
+                              type="text"
+                              placeholder={t("PopupLink")}
+                            />
+                            <Error errorName={errors.link} />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1 md:col-span-4 col-span-12">
+                          <LabelArea label={t("PopupLinkName")} />
+                          <div className="col-span-12">
+                            <Input
+                              className='mt-1'
+                              {...register("linkName", {
+                                required: hasLink ? t("LinkRequired") : false,
+                              })}
+                              label={t("PopupLinkName")}
+                              name="linkName"
+                              type="text"
+                              placeholder={t("PopupLinkName")}
+                            />
+                            <Error errorName={errors.linkName} />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1 md:col-span-4 col-span-12">
+                          <LabelArea label={t("OpenInNewTab")} />
+                          <div className="col-span-12 mt-3 flex justify-center">
+                            <SwitchToggle
+                              id="targetBlank"
+                              handleProcess={(checked) => setTargetBlank(checked)}
+                              processOption={targetBlank}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </CollapsibleSection>
+              </div>
+
+              {/* הגדרות */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Settings")}
+                  icon={<MdSettings size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* דף להצגה */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("PopupPageToShow")} />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          label={t("PopupPageToShow")}
+                          name="pageToShow"
+                          type="text"
+                          placeholder={t("Paste link here")}
+                        />
+                        <Error errorName={errors.pageToShow} />
+                      </div>
+                    </div>
+
+                    {/* מצב פרסום */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("PopupPublished")} />
+                      <div className="col-span-6">
+                        <SwitchToggle
+                          id="isActive"
+                          handleProcess={(checked) => setIsActive(checked)}
+                          processOption={isActive}
+                        />
+                        <Error errorName={errors.isActive} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
 
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("PopupPublished")} />
-              <div className="col-span-6">
-                <SwitchToggle
-                  id="isActive"
-                  handleProcess={(checked) => setIsActive(checked)}
-                  processOption={isActive}
-                />
-                <Error errorName={errors.isActive} />
-              </div>
-            </div>
-          </div>
-
-          <DrawerButton id={id} title={t("Popup")} isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title={t("Popup")} isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

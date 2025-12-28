@@ -1,5 +1,6 @@
+// src/components/sidebar/SidebarSubMenu.jsx
 import React, { useState } from "react";
-import { NavLink, Route } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   IoChevronDownOutline,
@@ -10,6 +11,7 @@ import {
 const SidebarSubMenu = ({ route }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <>
@@ -46,12 +48,12 @@ const SidebarSubMenu = ({ route }) => {
                       // }}
                       rel="noreferrer"
                     >
-                      <Route path={child.path} exact={child.exact}>
+                      {location.pathname === child.path && (
                         <span
                           className="absolute inset-y-0 left-0 w-1 bg-customGreen rounded-tr-lg rounded-br-lg"
                           aria-hidden="true"
                         ></span>
-                      </Route>
+                      )}
                       {/* <route.icon className="w-5 h-5" aria-hidden="true" /> */}
                       <span className="text-xs text-gray-500 pl-1">
                         <IoRemoveSharp />
@@ -69,12 +71,12 @@ const SidebarSubMenu = ({ route }) => {
                       // }}
                       rel="noreferrer"
                     >
-                      <Route path={child.path} exact={child.exact}>
+                      {location.pathname === child.path && (
                         <span
                           className="absolute inset-y-0 left-0 w-1 bg-customGreen rounded-tr-lg rounded-br-lg"
                           aria-hidden="true"
                         ></span>
-                      </Route>
+                      )}
                       {/* <route.icon className="w-5 h-5" aria-hidden="true" /> */}
                       <span className="text-xs text-gray-500 pl-1">
                         <IoRemoveSharp />
@@ -94,12 +96,12 @@ const SidebarSubMenu = ({ route }) => {
                     // }}
                     rel="noreferrer"
                   >
-                    <Route path={child.path} exact={route.exact}>
+                    {location.pathname === child.path && (
                       <span
                         className="absolute inset-y-0 left-0 w-1 bg-customGreen-dark rounded-tr-lg rounded-br-lg"
                         aria-hidden="true"
                       ></span>
-                    </Route>
+                    )}
                     <span className="text-xs text-gray-500 pl-1">
                       <IoRemoveSharp />
                     </span>

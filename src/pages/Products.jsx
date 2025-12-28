@@ -121,7 +121,7 @@ const Products = () => {
             onSubmit={handleSubmitForAll}
             className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6 xl:flex"
           >
-            <div className="flex-grow-0 sm:flex-grow md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 sm:grow md:grow lg:grow xl:grow">
               <UploadManyTwo
                 title="Products"
                 filename={filename}
@@ -133,7 +133,7 @@ const Products = () => {
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              {/* <div className="grow-0 md:grow lg:grow xl:grow">
                 <Button
                   disabled={isCheck.length < 1}
                   onClick={() => handleUpdateMany(isCheck)}
@@ -145,7 +145,7 @@ const Products = () => {
                   {t("BulkAction")}
                 </Button>
               </div> */}
-              <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <div className="grow-0 md:grow lg:grow xl:grow">
                 <Button
                   disabled={isCheck?.length < 1}
                   onClick={() => handleDeleteMany(isCheck, data.products)}
@@ -158,7 +158,7 @@ const Products = () => {
                   {t("Delete")}
                 </Button>
               </div>
-              <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <div className="grow-0 md:grow lg:grow xl:grow">
                 <Button
                   onClick={toggleDrawer}
                   className="w-full rounded-md h-12"
@@ -180,7 +180,7 @@ const Products = () => {
             onSubmit={handleSubmitForAll}
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
           >
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <Input
                 ref={searchRef}
                 type="search"
@@ -193,11 +193,11 @@ const Products = () => {
               ></button>
             </div>
 
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <SelectCategory setCategory={setCategory} lang={lang} />
             </div>
 
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <Select onChange={(e) => setSortedField(e.target.value)}>
                 <option value="All" defaultValue hidden>
                   {t("Price")}
@@ -216,7 +216,7 @@ const Products = () => {
                 </option>
               </Select>
             </div>
-            <div className="flex items-center gap-2 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="flex items-center gap-2 grow-0 md:grow lg:grow xl:grow">
               <div className="w-full mx-1">
                 <Button type="submit" className="h-12 w-full bg-customGreen-dark">
                   {t("Filter")}

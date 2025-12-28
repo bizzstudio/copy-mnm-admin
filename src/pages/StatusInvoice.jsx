@@ -4,8 +4,7 @@ import {
   Textarea,
 } from "@windmill/react-ui";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { useParams, useNavigate } from "react-router-dom";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { useTranslation } from "react-i18next";
@@ -29,7 +28,7 @@ import DeliveryDrawer from "@/components/drawer/DeliveryDrawer"; // צור רכ�
 const DeliveryEdit = () => {
   const { t } = useTranslation();
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { closeDrawer } = useContext(SidebarContext);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,7 +53,7 @@ const DeliveryEdit = () => {
       notifySuccess(t("DeliveryDeletedSuccessfully"));
       setConfirmDelete(false);
       closeDrawer();
-      history.push("/deliveries");
+      navigate("/deliveries");
     } catch (err) {
       notifyError(err?.response?.data?.message || err?.message);
     }
@@ -66,7 +65,7 @@ const DeliveryEdit = () => {
       await DeliveryServices.updateDelivery(id, data);
       notifySuccess(t("DeliveryUpdatedSuccessfully"));
       closeDrawer();
-      history.push("/deliveries");
+      navigate("/deliveries");
     } catch (err) {
       notifyError(err?.response?.data?.message || err?.message);
     } finally {
@@ -96,9 +95,9 @@ const DeliveryEdit = () => {
             />
           </div>
 
-          <Scrollbars className="w-full h-full max-h-full dark:bg-gray-700 dark:text-gray-200">
+          <div className="w-full h-full max-h-full dark:bg-gray-700 dark:text-gray-200 overflow-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-              <div className="px-6 pt-8 flex-grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
+              <div className="px-6 pt-8 grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
                 <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label={t("RegionName")} />
                   <div className="col-span-8 sm:col-span-4">
@@ -170,7 +169,7 @@ const DeliveryEdit = () => {
                 </Button>
               </div>
             </form>
-          </Scrollbars>
+          </div>
         </div>
       )}
 

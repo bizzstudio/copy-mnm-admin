@@ -58,7 +58,7 @@ const OfferDrawer = ({ id }) => {
 
       <div className="w-full relative dark:bg-gray-700 dark:text-gray-200">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-32">
+          <div className="px-6 pt-8 grow scrollbar-hide w-full max-h-full pb-32">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
               {/* Offer Type Selector */}
               <div>

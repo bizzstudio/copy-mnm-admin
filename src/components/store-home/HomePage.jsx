@@ -132,7 +132,7 @@ const HomePage = ({
 
           <hr className="md:mb-6 mb-3" />
 
-          <div className="flex-grow scrollbar-hide w-full max-h-full xl:px-10">
+          <div className="grow scrollbar-hide w-full max-h-full xl:px-10">
             <div className="inline-flex md:text-base text-sm my-3 text-gray-500 dark:text-gray-400">
               <strong>{t("HeaderContacts")}</strong>
             </div>
@@ -479,7 +479,7 @@ const HomePage = ({
 
           <hr className="mb-3" />
 
-          <div className="flex-grow scrollbar-hide w-full max-h-full xl:px-10">
+          <div className="grow scrollbar-hide w-full max-h-full xl:px-10">
             <TabsComponent>
               <Tabs>
                 <TabList>
@@ -988,7 +988,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("ShowHide")}
@@ -1115,7 +1115,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1218,7 +1218,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1269,7 +1269,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1360,7 +1360,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1450,7 +1450,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1582,7 +1582,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1674,7 +1674,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1831,7 +1831,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
                 {t("EnableThisBlock")}
@@ -1933,7 +1933,7 @@ const HomePage = ({
 
           <hr className="md:mb-12 mb-3" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full pb-0">
             <div className="inline-flex md:text-base text-sm mb-3 text-gray-500 dark:text-gray-400 relative">
               <strong>{t("Block")} 1</strong>
             </div>

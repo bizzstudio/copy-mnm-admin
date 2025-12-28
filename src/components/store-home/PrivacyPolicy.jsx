@@ -1,5 +1,6 @@
 import { Button } from "@windmill/react-ui";
-import { Editor } from "react-draft-wysiwyg";
+import ReactQuill from "react-quill-new";
+import 'react-quill-new/dist/quill.snow.css';
 import { useTranslation } from "react-i18next";
 import { FiSettings } from "react-icons/fi";
 
@@ -64,7 +65,7 @@ const PrivacyPolicy = ({
 
         <hr className="md:mb-10 mb-4" />
 
-        <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full">
+        <div className="xl:px-10 grow scrollbar-hide w-full max-h-full">
           <div className="inline-flex md:text-base text-sm md:mb-3 text-gray-500 dark:text-gray-400">
             <strong>{t("PrivacyPolicy")}</strong>
           </div>
@@ -130,15 +131,25 @@ const PrivacyPolicy = ({
                 {t("PageText")}
               </label>
 
-              <div className="sm:col-span-4">
-                <Editor
-                  editorState={textEdit}
-                  wrapperClassName="demo-wrapper"
-                  editorClassName="demo-editor"
-                  onEditorStateChange={setTextEdit}
-                  editorStyle={{
-                    border: "1px solid #F1F1F1",
-                    padding: "0 15px",
+              <div className="sm:col-span-4" dir="ltr">
+                <ReactQuill
+                  value={textEdit}
+                  onChange={setTextEdit}
+                  className="text-black dark:text-white"
+                  theme="snow"
+                  modules={{
+                    toolbar: {
+                      container: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        ['link'],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                      ],
+                    },
                   }}
                 />
               </div>
@@ -148,7 +159,7 @@ const PrivacyPolicy = ({
 
         <hr className="md:mb-12 mb-3" />
 
-        <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full">
+        <div className="xl:px-10 grow scrollbar-hide w-full max-h-full">
           <div className="inline-flex md:text-base text-sm mb-3 text-gray-500 dark:text-gray-400">
             <strong>{t("TermsConditions")}</strong>
           </div>
@@ -210,17 +221,25 @@ const PrivacyPolicy = ({
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
                 {t("PageText")}
               </label>
-              <div className="sm:col-span-4">
-                <Editor
-                  editorState={
-                    termsConditionsTextEdit ? termsConditionsTextEdit : null
-                  }
-                  wrapperClassName="demo-wrapper"
-                  editorClassName="demo-editor"
-                  onEditorStateChange={setTermsConditionsTextEdit}
-                  editorStyle={{
-                    border: "1px solid #F1F1F1",
-                    padding: "0 15px",
+              <div className="sm:col-span-4" dir="ltr">
+                <ReactQuill
+                  value={termsConditionsTextEdit || ""}
+                  onChange={setTermsConditionsTextEdit}
+                  className="text-black dark:text-white"
+                  theme="snow"
+                  modules={{
+                    toolbar: {
+                      container: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        ['link'],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                      ],
+                    },
                   }}
                 />
               </div>

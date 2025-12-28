@@ -29,7 +29,7 @@ const SinglePageSetting = ({
 
           <hr className="md:mb-12 mb-2" />
 
-          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full">
+          <div className="xl:px-10 grow scrollbar-hide w-full max-h-full">
             <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-2">
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
                 {t("EnableThisBlock")}

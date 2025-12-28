@@ -81,7 +81,7 @@ const Currencies = () => {
                 placeholder={t("SearchIsoCode")}
               />
             </div>
-            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start grow-0">
               <div className="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
                 <Button
                   disabled={isCheck.length < 1}

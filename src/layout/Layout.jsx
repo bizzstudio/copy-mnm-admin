@@ -1,5 +1,6 @@
+// src/layout/Layout.jsx
 import React, { useContext, Suspense, useEffect, lazy } from "react";
-import { Switch, Route, Redirect, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 // Internal import
 import Main from "@/layout/Main";
@@ -31,9 +32,8 @@ const Layout = () => {
         </div>
       )}
       <div
-        className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${
-          isSidebarOpen && "overflow-hidden"
-        }`}
+        className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isSidebarOpen && "overflow-hidden"
+          }`}
       >
         {navBar && <Sidebar />}
 
@@ -41,20 +41,19 @@ const Layout = () => {
           <Header />
           <Main>
             <Suspense fallback={<ThemeSuspense />}>
-              <Switch>
+              <Routes>
                 {routes.map((route, i) => {
                   return route.component ? (
                     <Route
                       key={i}
-                      exact={true}
-                      path={`${route.path}`}
-                      render={(props) => <route.component {...props} />}
+                      path={route.path}
+                      element={<route.component />}
                     />
                   ) : null;
                 })}
-                <Redirect exact from="/" to="/dashboard" />
-                <Route component={Page404} />
-              </Switch>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Page404 />} />
+              </Routes>
             </Suspense>
           </Main>
         </div>

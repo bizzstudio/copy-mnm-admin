@@ -1,10 +1,11 @@
-import { Input } from "@windmill/react-ui";
-import React, { useState } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+// src/components/drawer/MessageDrawer.jsx
+import { Input, Card, CardBody } from "@windmill/react-ui";
+import React from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { useTranslation } from "react-i18next";
 import { FiX } from "react-icons/fi";
+import { MdMessage } from "react-icons/md";
 import ReactQuill from "react-quill-new";
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -14,6 +15,7 @@ import Error from "@/components/form/others/Error";
 import DrawerButton from "@/components/form/button/DrawerButton";
 import useMessageSubmit from "@/hooks/useMessageSubmit";
 import LabelArea from "@/components/form/selectOption/LabelArea";
+import CollapsibleSection from "@/components/common/CollapsibleSection";
 
 const MessageDrawer = ({ id }) => {
   const { t } = useTranslation();
@@ -80,44 +82,59 @@ const MessageDrawer = ({ id }) => {
         )}
       </div>
 
-      <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)} id="block">
-          <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("MessageTemplate")} />
-              <div className="col-span-6" dir="ltr">
-                <ReactQuill
-                  value={messageTemplate}
-                  onChange={handleTemplateChange}
-                  className="text-black dark:text-white"
-                  theme="snow"
-                  modules={modules}
-                />
-                <Error errorName={errors.messageTemplate} />
+      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)} id="block">
+            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+              {/* פרטי הודעה */}
+              <div className="col-span-12">
+                <CollapsibleSection
+                  title={t("Message Details")}
+                  icon={<MdMessage size={20} className="mt-1" />}
+                  defaultOpen
+                >
+                  <div className="grid grid-cols-12 gap-5 mt-2">
+                    {/* תבנית הודעה */}
+                    <div className="flex flex-col gap-1 col-span-12" dir="ltr">
+                      <LabelArea label={t("MessageTemplate")} />
+                      <div className="col-span-12">
+                        <ReactQuill
+                          value={messageTemplate}
+                          onChange={handleTemplateChange}
+                          className="text-black dark:text-white"
+                          theme="snow"
+                          modules={modules}
+                        />
+                        <Error errorName={errors.messageTemplate} />
+                      </div>
+                    </div>
+
+                    {/* תפקיד */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("MessageRole")} />
+                      <div className="col-span-6">
+                        <Input
+                          {...register("role", {
+                            required: t("RoleRequired"),
+                          })}
+                          name="role"
+                          type="text"
+                          placeholder={t("MessageRole")}
+                          value={role}
+                          onChange={(e) => setRole(e.target.value)}
+                        />
+                        <Error errorName={errors.role} />
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleSection>
               </div>
             </div>
 
-            <div className="grid grid-cols-6 gap-1 mb-6">
-              <LabelArea label={t("MessageRole")} />
-              <div className="col-span-6">
-                <Input
-                  {...register("role", {
-                    required: t("RoleRequired"),
-                  })}
-                  name="role"
-                  type="text"
-                  placeholder={t("MessageRole")}
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-                <Error errorName={errors.role} />
-              </div>
-            </div>
-          </div>
-
-          <DrawerButton id={id} title={t("Message")} isSubmitting={isSubmitting} />
-        </form>
-      </Scrollbars>
+            <DrawerButton id={id} title={t("Message")} isSubmitting={isSubmitting} />
+          </form>
+        </CardBody>
+      </Card>
     </>
   );
 };

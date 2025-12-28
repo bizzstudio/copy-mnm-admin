@@ -323,7 +323,7 @@ const Orders = () => {
               </div>
 
               {/* כפתורי סינון ואיפוס */}
-              <div className="mt-2 md:mt-0 flex items-center xl:gap-x-4 gap-x-1 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <div className="mt-2 md:mt-0 flex items-center xl:gap-x-4 gap-x-1 grow-0 md:grow lg:grow xl:grow">
                 <div className="w-full mx-1">
                   <Label style={{ visibility: "hidden" }}>{t("Filter")}</Label>
                   <Button type="submit" className="h-12 w-full bg-customGreen-dark">

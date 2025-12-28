@@ -1,10 +1,11 @@
+// src/components/drawer/BulkActionDrawer.jsx
 import ReactTagInput from "@pathofdev/react-tag-input";
 import { Button, Input, Select } from "@windmill/react-ui";
-import Multiselect from "multiselect-react-dropdown";
+import SelectReactSelect from "react-select";
 import Drawer from "rc-drawer";
+import "rc-drawer/assets/index.css";
 import Tree from "rc-tree";
 import React, { useContext } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import { FiX } from "react-icons/fi";
 
 // Internal import
@@ -122,9 +123,8 @@ const BulkActionDrawer = ({
       <Drawer
         open={isBulkDrawerOpen}
         onClose={closeBulkDrawer}
-        parent={null}
-        level={null}
-        placement={"right"}
+        placement="right"
+        getContainer={false}
       >
         <button
           onClick={toggleBulkDrawer}
@@ -139,9 +139,9 @@ const BulkActionDrawer = ({
               description={`Apply changes to the selected ${title} from the list`}
             />
           </div>
-          <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
+          <div className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200 overflow-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="block">
-              <div className="px-6 pt-8 flex-grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
+              <div className="px-6 pt-8 grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
                 {title === "Products" && (
                   <>
                     <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
@@ -159,20 +159,27 @@ const BulkActionDrawer = ({
                     <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                       <LabelArea label="Default Category" />
                       <div className="col-span-8 sm:col-span-4">
-                        <Multiselect
-                          displayValue="name"
-                          isObject={true}
-                          singleSelect={true}
+                        <SelectReactSelect
+                          value={defaultCategory ? {
+                            label: defaultCategory.name || defaultCategory.label || defaultCategory,
+                            value: defaultCategory._id || defaultCategory.value || defaultCategory
+                          } : null}
+                          onChange={(selected) => setDefaultCategory(selected)}
+                          options={selectedCategory?.map((cat) => ({
+                            label: cat.name || cat.label || cat,
+                            value: cat._id || cat.value || cat
+                          }))}
+                          placeholder="Default Category"
+                          isClearable
                           ref={resetRefTwo}
-                          hidePlaceholder={true}
-                          onKeyPressFn={function noRefCheck() { }}
-                          onRemove={function noRefCheck() { }}
-                          onSearch={function noRefCheck() { }}
-                          onSelect={(v) => setDefaultCategory(v)}
-                          selectedValues={defaultCategory}
-                          options={selectedCategory}
-                          placeholder={"Default Category"}
-                        ></Multiselect>
+                          maxMenuHeight={200}
+                          styles={{
+                            control: (base) => ({
+                              ...base,
+                              minHeight: "42px",
+                            }),
+                          }}
+                        />
                       </div>
                     </div>
 
@@ -471,7 +478,7 @@ const BulkActionDrawer = ({
               </div>
 
               <div className="fixed bottom-0 w-full right-0 py-4 lg:py-8 px-6 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex bg-gray-50 border-t border-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+                <div className="grow-0 md:grow lg:grow xl:grow">
                   <Button
                     onClick={toggleBulkDrawer}
                     className=" text-red-500 hover:bg-red-50 hover:border-red-100 hover:text-red-600 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-red-700"
@@ -480,7 +487,7 @@ const BulkActionDrawer = ({
                     Cancel
                   </Button>
                 </div>
-                {/* <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+                {/* <div className="grow-0 md:grow lg:grow xl:grow">
                   <Button type="submit" className="h-12 w-full">
                     {" "}
                     Bulk Update {title}
@@ -488,7 +495,7 @@ const BulkActionDrawer = ({
                 </div> */}
               </div>
             </form>
-          </Scrollbars>
+          </div>
         </div>
       </Drawer>
     </>

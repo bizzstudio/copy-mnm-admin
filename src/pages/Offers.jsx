@@ -89,8 +89,8 @@ const Offers = () => {
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 xl:flex xl:items-center"
           >
             {/* Search Section - Left Side */}
-            <div className="flex flex-col sm:flex-row gap-3 xl:w-1/2 xl:flex-grow">
-              <div className="flex-grow">
+            <div className="flex flex-col sm:flex-row gap-3 xl:w-1/2 xl:grow">
+              <div className="grow">
                 <Input
                   ref={offerRef}
                   type="search"

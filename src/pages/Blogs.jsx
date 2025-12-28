@@ -99,7 +99,7 @@ const Blogs = () => {
                         onSubmit={handleSubmitForAll}
                         className="py-3 grid gap-4 xl:gap-4 md:flex xl:flex"
                     >
-                        <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+                        <div className="grow-0 md:grow lg:grow xl:grow">
                             <Input
                                 ref={searchRef}
                                 type="search"
@@ -112,7 +112,7 @@ const Blogs = () => {
                             ></button>
                         </div>
 
-                        <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+                        <div className="grow-0 md:grow lg:grow xl:grow">
                             <Select onChange={handleStatusChange} value={blogStatus}>
                                 <option value="" defaultValue>
                                     {t("AllStatuses")}
@@ -123,7 +123,7 @@ const Blogs = () => {
                             </Select>
                         </div>
 
-                        <div className="mt-2 md:mt-0 flex items-center xl:gap-x-4 gap-x-1 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+                        <div className="mt-2 md:mt-0 flex items-center xl:gap-x-4 gap-x-1 grow-0 md:grow lg:grow xl:grow">
                             <div className="w-full mx-1">
                                 <Button type="submit" className="h-12 w-full bg-customGreen-dark">
                                     {t("Filter")}
@@ -142,7 +142,7 @@ const Blogs = () => {
                             </div>
                         </div>
 
-                        <div className="flex-grow-0">
+                        <div className="grow-0">
                             <Button
                                 disabled={isCheck.length < 1}
                                 onClick={() => handleDeleteMany(isCheck)}
@@ -155,7 +155,7 @@ const Blogs = () => {
                             </Button>
                         </div>
 
-                        <div className="flex-grow-0">
+                        <div className="grow-0">
                             <Button onClick={toggleDrawer} className="w-full rounded-md h-12">
                                 <span className="me-1">
                                     <FiPlus />

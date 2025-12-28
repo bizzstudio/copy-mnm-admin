@@ -81,7 +81,7 @@ const Customers = () => {
             onSubmit={handleSubmitUser}
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
           >
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <Input
                 ref={userRef}
                 type="search"
@@ -93,7 +93,7 @@ const Customers = () => {
                 className="absolute right-0 top-0 mt-5 mr-1"
               ></button>
             </div>
-            <div className="flex items-center gap-2 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            <div className="flex items-center gap-2 grow-0 md:grow lg:grow xl:grow">
               <div className="w-full mx-1">
                 <Button type="submit" className="h-12 w-full bg-customGreen-dark">
                   {t("Filter")}

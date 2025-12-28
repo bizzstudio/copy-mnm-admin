@@ -1,5 +1,6 @@
+// src/components/attribute/AttributeOptionTwo.jsx
 import React, { useEffect, useState } from "react";
-import { MultiSelect } from "react-multi-select-component";
+import Select from "react-select";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 
 const AttributeOptionTwo = ({
@@ -16,23 +17,22 @@ const AttributeOptionTwo = ({
 
   const handleSelectValue = (items) => {
     // setSelectedValueClear(false);
-    setSelected(items);
+    setSelected(items || []);
     setValues({
       ...values,
-      [attributes._id]: items?.map((el) => el._id),
+      [attributes._id]: items?.map((el) => el.value) || [],
     });
   };
 
   useEffect(() => {
     const options = attributes?.variants?.map((val) => {
       return {
-        ...val,
         label: showingTranslateValue(val?.name),
         value: val?._id,
       };
     });
     setAttributeOptions(options);
-  }, [attributes?.variants]);
+  }, [attributes?.variants, showingTranslateValue]);
 
   useEffect(() => {
     if (selectedValueClear) {
@@ -40,13 +40,27 @@ const AttributeOptionTwo = ({
     }
   }, [selectedValueClear]);
 
+  // Sync selected with values when attributes change
+  useEffect(() => {
+    if (attributes?._id && values?.[attributes._id]) {
+      const selectedIds = values[attributes._id];
+      const selectedOptions = attributeOptions.filter(opt =>
+        selectedIds.includes(opt.value)
+      );
+      setSelected(selectedOptions);
+    }
+  }, [attributes?._id, values, attributeOptions]);
+
   return (
     <div>
-      <MultiSelect
+      <Select
+        isMulti
         options={attributeOptions}
         value={selected}
-        onChange={(v) => handleSelectValue(v)}
-        labelledBy="Select"
+        onChange={handleSelectValue}
+        placeholder="Select"
+        className="react-select-container"
+        classNamePrefix="react-select"
       />
     </div>
   );

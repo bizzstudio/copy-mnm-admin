@@ -90,9 +90,9 @@ const PriceLists = () => {
                         {/* Search Section */}
                         <form
                             onSubmit={handleSubmitForAll}
-                            className="flex flex-col sm:flex-row gap-2 flex-grow lg:flex-grow-0 lg:w-auto"
+                            className="flex flex-col sm:flex-row gap-2 grow lg:grow-0 lg:w-auto"
                         >
-                            <div className="flex-grow">
+                            <div className="grow">
                                 <Input
                                     ref={searchRef}
                                     type="search"

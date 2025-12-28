@@ -26,7 +26,7 @@ const EditProfile = () => {
       <PageTitle> {t("EditProfile")} </PageTitle>
       <div className="container p-6 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="p-6 flex-grow scrollbar-hide w-full max-h-full">
+          <div className="p-6 grow scrollbar-hide w-full max-h-full">
             <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
               <LabelArea label={t("ProfilePicture")} />
               <div className="col-span-8 sm:col-span-4">
