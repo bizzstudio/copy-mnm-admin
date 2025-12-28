@@ -70,11 +70,6 @@ const useProductSubmit = (id) => {
     try {
       setIsSubmitting(true);
 
-      if (!imageUrl || imageUrl.length === 0) {
-        setIsSubmitting(false);
-        return notifyError("תמונה היא שדה חובה!");
-      }
-
       if (selectedCategory.length === 0) {
         setIsSubmitting(false);
         return notifyError("קטגוריה היא שדה חובה!");

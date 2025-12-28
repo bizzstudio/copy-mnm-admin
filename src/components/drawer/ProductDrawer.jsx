@@ -142,7 +142,7 @@ const ProductDrawer = ({ id }) => {
                 <LabelArea label={t("ProductImage")} />
                 <div className="col-span-6">
                   <Uploader
-                    product
+                    multiple
                     folder="products"
                     imageUrl={imageUrl}
                     setImageUrl={setImageUrl}
