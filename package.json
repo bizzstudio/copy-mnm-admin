@@ -65,6 +65,7 @@
   },
   "scripts": {
     "dev": "vite --force --port 4104",
+    "host": "vite --host 0.0.0.0 --port 4104",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"

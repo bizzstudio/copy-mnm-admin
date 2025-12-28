@@ -1,5 +1,5 @@
 // src/pages/Products.jsx
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FiPlus } from "react-icons/fi";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiCamera } from "react-icons/fi";
 
 // Internal import
 import useAsync from "@/hooks/useAsync";
@@ -34,6 +35,7 @@ import DeleteModal from "@/components/modal/DeleteModal";
 import BulkActionDrawer from "@/components/drawer/BulkActionDrawer";
 import TableLoading from "@/components/preloader/TableLoading";
 import SelectCategory from "@/components/form/selectOption/SelectCategory";
+import BarcodeScannerModal from "@/components/modal/BarcodeScannerModal";
 
 const Products = () => {
   const {
@@ -43,6 +45,7 @@ const Products = () => {
     handleDeleteMany,
     handleModalOpen,
     handleUpdate,
+    setServiceId,
   } = useToggleDrawer();
 
   const { t } = useTranslation();
@@ -59,7 +62,13 @@ const Products = () => {
     sortedField,
     setSortedField,
     limitData,
+    isDrawerOpen,
   } = useContext(SidebarContext);
+
+  // State for barcode scanner modal
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  // State for managing barcode from scanner
+  const [pendingBarcode, setPendingBarcode] = useState(null);
 
   const { data, loading, error } = useAsync(() =>
     ProductServices.getAllProducts({
@@ -101,6 +110,31 @@ const Products = () => {
     handleRemoveSelectFile,
   } = useProductFilter(data?.products);
 
+  // Handle product found from barcode scanner
+  const handleProductFound = (product) => {
+    // Open drawer with existing product for adding stock
+    const productId = product._id || product.id;
+    if (productId) {
+      setServiceId(productId);
+      toggleDrawer();
+    }
+  };
+
+  // Handle product not found - open drawer with barcode pre-filled
+  const handleProductNotFound = (barcode) => {
+    // Open drawer for new product with barcode pre-filled
+    setServiceId(null);
+    setPendingBarcode(barcode);
+    toggleDrawer();
+  };
+
+  // Reset pending barcode when drawer closes
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setPendingBarcode(null);
+    }
+  }, [isDrawerOpen]);
+
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("ProductsPage")}</PageTitle>
@@ -112,8 +146,19 @@ const Products = () => {
       )}
 
       <MainDrawer width='700px'>
-        <ProductDrawer id={serviceId} />
+        <ProductDrawer
+         id={serviceId}
+          pendingBarcode={pendingBarcode}
+           onBarcodeUsed={() => setPendingBarcode(null)}
+            />
       </MainDrawer>
+
+      <BarcodeScannerModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onProductFound={handleProductFound}
+        onProductNotFound={handleProductNotFound}
+      />
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
       <CardBody>
@@ -167,6 +212,17 @@ const Products = () => {
                     <FiPlus />
                   </span>
                   {t("AddProduct")}
+                </Button>
+              </div>
+              <div className="grow-0 md:grow lg:grow xl:grow">
+                <Button
+                  onClick={() => setIsScannerOpen(true)}
+                  className="w-full rounded-md h-12 bg-blue-600 hover:bg-blue-700"
+                >
+                  <span className="ml-2">
+                    <FiCamera />
+                  </span>
+                  {t("ScanProduct")}
                 </Button>
               </div>
             </div>

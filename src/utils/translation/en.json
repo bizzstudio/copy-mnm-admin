@@ -1314,5 +1314,13 @@
   "NoPricesAvailable": "No prices available",
   "UnknownPriceList": "Unknown Price List",
   "WarehouseProductOnly": "Warehouse Product Only",
-  "VatFree": "VAT Free"
+  "VatFree": "VAT Free",
+  "ScanProduct": "Scan Product",
+  "ScanBarcodeInstructions": "Position the barcode in front of the camera",
+  "ProductNotFound": "Product Not Found",
+  "ProductNotFoundMessage": "The product with barcode {{barcode}} was not found in the system.",
+  "WouldYouLikeToAddProduct": "Would you like to add the product?",
+  "CheckingProduct": "Checking product...",
+  "BarcodeScanError": "Error scanning barcode. Please try again.",
+  "Error": "Error"
 }

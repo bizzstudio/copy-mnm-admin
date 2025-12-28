@@ -314,7 +314,7 @@ const InvoiceForDownload = ({
                   <Text style={{ color: "#14b8a6" }}>{data?.status?.heName}</Text>
                 )}
                 {data?.status?.name === "Delivered" && (
-                  <Text style={{ color: "#3c6d16" }}>{data?.status?.heName}</Text>
+                  <Text style={{ color: "#3961ce" }}>{data?.status?.heName}</Text>
                 )}
                 {data?.status?.name === "Cancel" && (
                   <Text style={{ color: "#ef4444" }}>{data?.status?.heName}</Text>

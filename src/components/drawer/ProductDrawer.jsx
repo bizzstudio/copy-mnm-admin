@@ -22,7 +22,7 @@ import SwitchToggle from "../form/switch/SwitchToggle";
 import Uploader from "@/components/image-uploader/Uploader";
 import ParentCategory from "@/components/category/ParentCategory";
 
-const ProductDrawer = ({ id }) => {
+const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
   const { t } = useTranslation();
 
   const {
@@ -59,7 +59,7 @@ const ProductDrawer = ({ id }) => {
     prices,
     handlePriceChange,
     priceLists,
-  } = useProductSubmit(id);
+  } = useProductSubmit(id, pendingBarcode, onBarcodeUsed);
 
   return (
     <>

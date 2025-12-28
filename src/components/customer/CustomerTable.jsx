@@ -70,7 +70,7 @@ const CustomerTable = ({ customers }) => {
                       id="view"
                       Icon={FiZoomIn}
                       title={t("ViewOrder")}
-                      bgColor="#3c6d16"
+                      bgColor="#3961ce"
                     />
                   </Link>
                 </div>

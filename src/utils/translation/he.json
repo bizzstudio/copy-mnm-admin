@@ -1352,5 +1352,13 @@
   "NoPricesAvailable": "אין מחירים זמינים",
   "UnknownPriceList": "מחירון לא ידוע",
   "WarehouseProductOnly": "מוצר מחסן בלבד",
-  "VatFree": "פטור ממע\"מ"
+  "VatFree": "פטור ממע\"מ",
+  "ScanProduct": "סריקת מוצר",
+  "ScanBarcodeInstructions": "הצב את הברקוד מול המצלמה",
+  "ProductNotFound": "המוצר לא נמצא",
+  "ProductNotFoundMessage": "המוצר עם הברקוד {{barcode}} לא נמצא במערכת.",
+  "WouldYouLikeToAddProduct": "האם תרצה להוסיף את המוצר?",
+  "CheckingProduct": "בודק מוצר...",
+  "BarcodeScanError": "שגיאה בסריקת הברקוד. אנא נסה שוב.",
+  "Error": "שגיאה"
 }

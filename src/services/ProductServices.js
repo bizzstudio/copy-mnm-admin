@@ -11,6 +11,9 @@ const ProductServices = {
     );
   },
 
+  getProductByBarcode: async (barcode) => {
+    return requests.get(`/products/barcode/${barcode}`);
+  },
   getProductById: async (id) => {
     return requests.post(`/products/${id}`);
   },

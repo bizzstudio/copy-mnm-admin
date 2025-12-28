@@ -9,7 +9,7 @@ import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import useUtilsFunction from "./useUtilsFunction";
 
-const useProductSubmit = (id) => {
+const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const location = useLocation();
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang, priceLists } =
     useContext(SidebarContext);
@@ -151,6 +151,16 @@ const useProductSubmit = (id) => {
       notifyError(err?.response?.data?.message || err?.message);
     }
   };
+
+  // Handle pending barcode from scanner
+  useEffect(() => {
+    if (pendingBarcode && !id && isDrawerOpen) {
+      setValue("barcode", pendingBarcode);
+      if (onBarcodeUsed) {
+        onBarcodeUsed();
+      }
+    }
+  }, [pendingBarcode, id, isDrawerOpen, setValue, onBarcodeUsed]);
 
   useEffect(() => {
     if (!isDrawerOpen) {

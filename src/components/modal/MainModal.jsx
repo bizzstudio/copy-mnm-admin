@@ -1,3 +1,4 @@
+// src/components/modal/MainModal.jsx
 import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { Modal, ModalBody, ModalFooter, Button } from "@windmill/react-ui";
