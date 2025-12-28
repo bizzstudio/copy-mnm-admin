@@ -4,18 +4,18 @@ const myTheme = {
     base: "p-4 pl-12 relative rounded-lg leading-5",
     withClose: "pr-12",
     success:
-      "bg-mainColor-superLight text-emerald-900 dark:bg-mainColor-dark dark:text-white",
-    danger: "bg-red-50 text-red-900 dark:bg-red-600 dark:text-white",
-    warning: "bg-yellow-50 text-yellow-900 dark:bg-yellow-600 dark:text-white",
+      "bg-emerald-50 text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-100",
+    danger: "bg-red-50 text-red-900 dark:bg-red-900/30 dark:text-red-100",
+    warning: "bg-yellow-50 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100",
     neutral: "bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-    info: "bg-blue-50 text-blue-900 dark:bg-mainColor-dark dark:text-white",
+    info: "bg-mainColor-superLight text-mainColor dark:bg-mainColor/20 dark:text-mainColor-light",
     icon: {
       base: "h-5 w-5",
-      success: "text-emerald-400 dark:text-customBrown-light",
-      danger: "text-red-400 dark:text-red-300",
-      warning: "text-yellow-400 dark:text-yellow-100",
-      neutral: "text-gray-400 dark:text-gray-500",
-      info: "text-blue-400 dark:text-blue-300",
+      success: "text-emerald-600 dark:text-emerald-400",
+      danger: "text-red-600 dark:text-red-400",
+      warning: "text-yellow-600 dark:text-yellow-400",
+      neutral: "text-gray-500 dark:text-gray-400",
+      info: "text-mainColor dark:text-mainColor-light",
     },
   },
   // Pagination
@@ -79,7 +79,7 @@ const myTheme = {
   },
   // ModalFooter
   modalFooter: {
-    base: "flex items-center justify-center gap-2 px-6 py-3 flex-row bg-gray-50 dark:bg-gray-800 rounded-b-lg",
+    base: "flex items-center justify-center gap-2 px-6 py-3 flex-row bg-gray-50 dark:bg-gray-900 rounded-b-lg border-t border-gray-200 dark:border-gray-700",
   },
   // ModalHeader
   modalHeader: {
@@ -89,38 +89,38 @@ const myTheme = {
   badge: {
     base: "inline-flex px-2 text-xs font-medium leading-5 rounded-full",
     success:
-      "bg-green-600 text-white",
-    danger: "text-red-500 bg-red-100 dark:text-red-100 dark:bg-red-800",
-    warning: "text-yellow-600 bg-yellow-100 dark:text-white dark:bg-yellow-600",
-    neutral: "text-gray-500 bg-gray-100 dark:text-gray-100 dark:bg-gray-500",
-    primary: "bg-green-600 text-white",
+      "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-white",
+    danger: "text-red-700 bg-red-100 dark:text-red-100 dark:bg-red-800",
+    warning: "text-yellow-700 bg-yellow-100 dark:text-yellow-100 dark:bg-yellow-600",
+    neutral: "text-gray-700 bg-gray-100 dark:text-gray-200 dark:bg-gray-600",
+    primary: "bg-mainColor text-white dark:bg-mainColor-light dark:text-white",
   },
   // Backdrop
   backdrop: {
-    base: "fixed inset-0 z-40 flex items-end bg-black bg-opacity-50 items-center justify-center",
+    base: "fixed inset-0 z-40 flex items-end bg-black bg-opacity-50 dark:bg-opacity-70 items-center justify-center",
   },
   // Textarea
   textarea: {
-    base: "block w-full border bg-gray-100 focus:bg-white text-sm dark:text-gray-300 rounded-md focus:outline-none p-3",
+    base: "block w-full border bg-gray-100 focus:bg-white text-sm dark:text-gray-300 rounded-md focus:outline-none p-3 dark:bg-gray-700 dark:focus:bg-gray-700",
     active:
-      "border border-gray-200 dark:border-gray-600 dark:focus:border-gray-600 dark:bg-gray-700",
-    disabled: "cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800",
+      "border border-gray-200 dark:border-gray-600 dark:focus:border-gray-500",
+    disabled: "cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800 dark:text-gray-500",
     valid:
-      "border-mainColor-dark dark:bg-gray-700 focus:border-emerald-400 dark:focus:border-emerald-400",
+      "border-mainColor dark:bg-gray-700 dark:border-mainColor-light focus:border-mainColor dark:focus:border-mainColor-light",
     invalid:
-      "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
+      "border-red-600 dark:bg-gray-700 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400",
   },
   // Select
   select: {
-    base: "block w-full h-12 border bg-gray-100 px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:bg-white dark:focus:bg-gray-700",
+    base: "block w-full h-12 border bg-gray-100 px-2 py-1 text-sm dark:text-gray-300 focus:outline-none rounded-md form-select focus:bg-white dark:bg-gray-700 dark:focus:bg-gray-700",
     active:
-      "focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none dark:focus:border-gray-500 dark:bg-gray-700",
+      "focus:border-gray-200 border-gray-200 dark:border-gray-600 focus:shadow-none dark:focus:border-gray-500",
     select: "leading-5",
-    disabled: "cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800",
+    disabled: "cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800 dark:text-gray-500",
     valid:
-      "border-mainColor-dark dark:bg-gray-700 focus:border-emerald-400 dark:focus:border-emerald-400",
+      "border-mainColor dark:bg-gray-700 dark:border-mainColor-light focus:border-mainColor dark:focus:border-mainColor-light",
     invalid:
-      "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
+      "border-red-600 dark:bg-gray-700 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400",
   },
   // Label
   label: {
@@ -131,24 +131,24 @@ const myTheme = {
   },
   // Input
   input: {
-    base: "block w-full h-12 border px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md bg-gray-100 focus:bg-white dark:focus:bg-gray-700",
+    base: "block w-full h-12 border border-gray-200 px-3 py-1 text-sm focus:outline-none dark:text-gray-300 leading-5 rounded-md bg-gray-100 focus:bg-white dark:bg-gray-700 dark:focus:bg-gray-700",
     active:
-      "focus:border-gray-200 dark:border-gray-600 dark:focus:border-gray-500 dark:bg-gray-700",
+      "focus:border-gray-300 dark:border-gray-600 dark:focus:border-gray-500",
     disabled:
-      "border border-gray-400 cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800",
+      "border border-gray-400 cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800 dark:text-gray-500",
     valid:
-      "border-mainColor-dark dark:bg-gray-700 focus:border-emerald-400 dark:focus:border-emerald-400",
+      "border-mainColor dark:bg-gray-700 dark:border-mainColor-light focus:border-mainColor dark:focus:border-mainColor-light",
     invalid:
-      "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
+      "border-red-600 dark:bg-gray-700 dark:border-red-500 focus:border-red-500 dark:focus:border-red-400",
     radio:
-      "text-mainColor-dark form-radio focus:border-emerald-400 focus:outline-none",
+      "text-mainColor form-radio focus:border-mainColor focus:outline-none dark:text-mainColor-light",
     checkbox:
-      "text-mainColor-dark form-checkbox focus:border-mainColor focus:outline-none rounded",
+      "text-mainColor form-checkbox focus:border-mainColor focus:outline-none rounded dark:text-mainColor-light",
   },
   // HelperText
   helperText: {
     base: "text-xs",
-    valid: "text-mainColor-dark dark:text-emerald-400",
+    valid: "text-mainColor dark:text-mainColor-light",
     invalid: "text-red-600 dark:text-red-400",
   },
   // Card
@@ -186,32 +186,32 @@ const myTheme = {
       right: "ml-2 -mr-1",
     },
     primary: {
-      base: "text-white bg-mainColor border border-transparent",
-      active: "active:bg-mainColor-dark hover:bg-mainColor-dark",
-      disabled: "opacity-50 cursor-not-allowed",
+      base: "text-white bg-mainColor border border-transparent dark:bg-mainColor-light dark:hover:bg-mainColor",
+      active: "active:bg-mainColor-dark hover:bg-mainColor-dark dark:active:bg-mainColor dark:hover:bg-mainColor",
+      disabled: "opacity-50 cursor-not-allowed dark:opacity-50",
     },
     modern: {
-      base: "text-white bg-gray-800 border border-transparent",
-      active: "active:bg-gray-800 hover:bg-gray-900",
-      disabled: "opacity-50 cursor-not-allowed",
+      base: "text-white bg-gray-800 border border-transparent dark:bg-gray-700",
+      active: "active:bg-gray-800 hover:bg-gray-900 dark:active:bg-gray-600 dark:hover:bg-gray-600",
+      disabled: "opacity-50 cursor-not-allowed dark:opacity-50",
     },
     outline: {
-      base: "text-gray-600 border-gray-200 border dark:text-gray-400 focus:outline-none",
+      base: "w-full text-gray-600 border-gray-200 border dark:text-gray-300 dark:border-gray-600 focus:outline-none",
       active:
-        "rounded-lg border bg-gray-200 border-gray-200 px-4 flex items-center justify-center cursor-pointer h-12",
-      disabled: "opacity-50 cursor-not-allowed bg-gray-300",
+        "rounded-lg border bg-gray-200 border-gray-200 px-4 flex items-center justify-center cursor-pointer h-12 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600",
+      disabled: "opacity-50 cursor-not-allowed bg-gray-300 dark:bg-gray-800 dark:text-gray-500",
     },
 
     link: {
-      base: "text-gray-600 dark:text-gray-400 focus:outline-none border border-transparent",
+      base: "text-gray-600 dark:text-gray-300 focus:outline-none border border-transparent",
       active:
-        "active:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:hover:bg-opacity-10",
-      disabled: "opacity-50 cursor-not-allowed",
+        "active:bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-100",
+      disabled: "opacity-50 cursor-not-allowed dark:opacity-50",
     },
     // this is the button that lives inside the DropdownItem
     dropdownItem: {
-      base: "align-bottom inline-flex items-center justify-center gap-1.5 leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-red-400 border border-red-300 dark:border-red-700 dark:hover:bg-red-700 dark:text-red-700 dark:hover:text-gray-200 rounded-lg hover:bg-red-500 hover:text-white hover:border-red-600",
-      disabled: "opacity-50 cursor-not-allowed disabled:hover:bg-transparent",
+      base: "align-bottom inline-flex items-center justify-center gap-1.5 leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 text-red-600 border border-red-300 dark:text-red-400 dark:border-red-700 dark:hover:bg-red-800 dark:hover:text-white rounded-lg hover:bg-red-500 hover:text-white hover:border-red-600",
+      disabled: "opacity-50 cursor-not-allowed disabled:hover:bg-transparent dark:opacity-50",
     },
   },
 };

@@ -12,7 +12,7 @@
 
 .checkmark-box {
     fill: rgba(207, 205, 205, 0.081);
-    stroke: #008000;
+    stroke: #3961ce;
     stroke-width: 40;
     stroke-dasharray: 800;
     stroke-dashoffset: 800;
@@ -21,7 +21,7 @@
 
 .checkmark-tick {
     fill: none;
-    stroke: #008000;
+    stroke: #3961ce;
     stroke-width: 15;
     stroke-dasharray: 172;
     stroke-dashoffset: 172;

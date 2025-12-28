@@ -19,7 +19,7 @@ const Setting = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Setting")}</PageTitle>
       <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -262,7 +262,7 @@ const Setting = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 export default Setting;

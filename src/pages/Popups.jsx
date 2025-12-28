@@ -57,7 +57,7 @@ const Popups = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("PopupsPageTitle")}</PageTitle>
       <DeleteModal
         ids={allId}
@@ -70,7 +70,7 @@ const Popups = () => {
         <PopupDrawer id={serviceId} />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <div className="flex justify-end">
             <div className="w-full md:w-32 lg:w-32 xl:w-32 ml-3 mb-3 lg:mb-0">
@@ -146,7 +146,7 @@ const Popups = () => {
       ) : (
         <NotFound title={t("SorryPopups")} />
       )}
-    </>
+    </div>
   );
 };
 

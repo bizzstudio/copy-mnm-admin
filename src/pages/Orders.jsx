@@ -221,7 +221,7 @@ const Orders = () => {
 
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Orders")}</PageTitle>
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
@@ -443,7 +443,7 @@ const Orders = () => {
       ) : (
         <NotFound title="Sorry, There are no orders right now." />
       )}
-    </>
+    </div>
   );
 };
 

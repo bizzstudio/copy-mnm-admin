@@ -59,7 +59,7 @@ const Languages = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>Languages</PageTitle>
       <MainDrawer>
         <LanguageDrawer />
@@ -73,7 +73,7 @@ const Languages = () => {
         title="Selected Currencies"
       />
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitLanguage}
@@ -175,7 +175,7 @@ const Languages = () => {
       {!loading && data.length === 0 && !error && (
         <NotFound title="Sorry, There are no languages right now." />
       )}
-    </>
+    </div>
   );
 };
 

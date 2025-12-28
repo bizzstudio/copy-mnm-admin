@@ -1,20 +1,30 @@
+// src/components/form/button/CMButton.jsx
 import React from "react";
-
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
+import { t } from "i18next";
+import { Button } from "@windmill/react-ui";
 
-const CMButton = ({ type, onClick, className, disabled }) => {
+const CMButton = ({
+  type = "button",
+  onClick,
+  className = "",
+  isLoading = false,
+  loadingText = t("Processing"),
+  children,
+  disabled = false,
+}) => {
   return (
-    <button
+    <Button
       type={type}
       onClick={onClick}
-      disabled={disabled}
-      className={`${className} opacity-50 cursor-not-allowed text-white text-sm h-12 font-semibold align-bottom inline-flex items-center justify-center leading-5 transition-colors duration-150 focus:outline-none`}
+      disabled={isLoading || disabled}
+      className={`${className} ${isLoading || disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
-      <img src={spinnerLoadingImage} alt="Loading" width={20} height={10} />
-      <span className="font-serif ml-1 font-light text-sm text-white">
-        Processing
+      {isLoading && <img src={spinnerLoadingImage} className="saturate-0" alt="Loading" width={22} height={22} />}
+      <span className="font-serif font-light text-sm text-white">
+        {isLoading ? loadingText : children}
       </span>
-    </button>
+    </Button>
   );
 };
 

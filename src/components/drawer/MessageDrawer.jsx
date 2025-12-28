@@ -82,10 +82,10 @@ const MessageDrawer = ({ id }) => {
         )}
       </div>
 
-      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
-        <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)} id="block">
-            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+      <Card className="flex flex-col grow w-full max-h-full border-none! overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+            <div className="px-6 pt-2 grow scrollbar-hide w-full overflow-y-auto grid grid-cols-12 gap-5">
               {/* פרטי הודעה */}
               <div className="col-span-12">
                 <CollapsibleSection
@@ -133,7 +133,7 @@ const MessageDrawer = ({ id }) => {
 
             <DrawerButton id={id} title={t("Message")} isSubmitting={isSubmitting} />
           </form>
-        </CardBody>
+        </div>
       </Card>
     </>
   );

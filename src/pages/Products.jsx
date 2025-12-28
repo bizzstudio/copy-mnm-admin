@@ -102,7 +102,7 @@ const Products = () => {
   } = useProductFilter(data?.products);
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("ProductsPage")}</PageTitle>
 
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
@@ -111,12 +111,12 @@ const Products = () => {
         <BulkActionDrawer ids={allId} title="Products" />
       )}
 
-      <MainDrawer maxWidth='700px'>
+      <MainDrawer width='700px'>
         <ProductDrawer id={serviceId} />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
-        <CardBody className="">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
+      <CardBody>
           <form
             onSubmit={handleSubmitForAll}
             className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6 xl:flex"
@@ -293,7 +293,7 @@ const Products = () => {
       ) : (
         <NotFound title="Product" />
       )}
-    </>
+    </div>
   );
 };
 

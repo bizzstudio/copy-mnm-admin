@@ -124,6 +124,8 @@
   "CashiersCanOverrideInuseItems": "Cashiers can override Inuse items",
   "EditProfile": "Edit Profile",
   "LogOut": "Log Out",
+  "LightMode": "Light Mode",
+  "DarkMode": "Dark Mode",
   "StockHandlingMethod": "Stock Handling Method",
   "Pages": "Pages",
   "ProductsPage": "Products",

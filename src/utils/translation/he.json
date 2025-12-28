@@ -125,6 +125,8 @@
   "CashiersCanOverrideInuseItems": "קופאיות יכולות לעקוף פריטי Inuse",
   "EditProfile": "ערוך פרופיל",
   "LogOut": "התנתקות",
+  "LightMode": "מצב בהיר",
+  "DarkMode": "מצב כהה",
   "StockHandlingMethod": "שיטת טיפול במלאי",
   "Pages": "דפים",
   "ProductsPage": "מוצרים",

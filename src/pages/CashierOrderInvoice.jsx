@@ -52,7 +52,8 @@ const CashierOrderInvoice = () => {
     console.log('CASHIER ORDER INVOICE :>> ', data);
 
     return (
-        <>
+        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+
             {/* <PageTitle> {t("CashierOrderInvoice")} </PageTitle> */}
 
             <div
@@ -181,7 +182,7 @@ const CashierOrderInvoice = () => {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 

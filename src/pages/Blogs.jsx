@@ -84,7 +84,7 @@ const Blogs = () => {
     };
 
     return (
-        <>
+        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
             <PageTitle>{t("Blogs")}</PageTitle>
 
             <MainDrawer maxWidth='570px'>
@@ -93,7 +93,7 @@ const Blogs = () => {
             <DeleteModal ids={allId} setIsCheck={setIsCheck} title={t("SelectedBlogs")} />
 
             {/* --- Search, Filter and Actions Card --- */}
-            <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+            <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
                 <CardBody>
                     <form
                         onSubmit={handleSubmitForAll}
@@ -218,7 +218,7 @@ const Blogs = () => {
             ) : (
                 <NotFound title={t("NoBlogsFound")} />
             )}
-        </>
+        </div>
     );
 };
 

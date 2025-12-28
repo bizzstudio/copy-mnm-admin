@@ -51,10 +51,10 @@ const Customers = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("CustomersPage")}</PageTitle>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitUser}
@@ -151,7 +151,7 @@ const Customers = () => {
       ) : (
         <NotFound title="Sorry, There are no customers right now." />
       )}
-    </>
+    </div>
   );
 };
 

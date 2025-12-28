@@ -22,7 +22,7 @@ const EditProfile = () => {
     useStaffSubmit(adminInfo._id);
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle> {t("EditProfile")} </PageTitle>
       <div className="container p-6 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -96,7 +96,7 @@ const EditProfile = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

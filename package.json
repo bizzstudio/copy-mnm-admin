@@ -12,6 +12,7 @@
     "@react-pdf/renderer": "^4.3.1",
     "@reduxjs/toolkit": "^2.11.2",
     "@windmill/react-ui": "^0.6.0",
+    "@yudiel/react-qr-scanner": "^2.5.0",
     "ajv": "^8.17.1",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",

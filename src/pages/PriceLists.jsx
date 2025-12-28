@@ -71,7 +71,7 @@ const PriceLists = () => {
     };
 
     return (
-        <>
+        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
             <PageTitle>{t("PriceListsPageTitle")}</PageTitle>
             <DeleteModal
                 ids={allId}
@@ -84,7 +84,7 @@ const PriceLists = () => {
                 <PriceListDrawer id={serviceId} />
             </MainDrawer>
 
-            <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+            <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
                 <CardBody>
                     <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-6">
                         {/* Search Section */}
@@ -100,7 +100,7 @@ const PriceLists = () => {
                                     className="h-12"
                                 />
                             </div>
-                            <div className="flex gap-2 sm:flex-shrink-0">
+                            <div className="flex gap-2 sm:shrink-0">
                                 <Button type="submit" className="h-12 px-4 bg-customGreen-dark whitespace-nowrap">
                                     {t("Filter")}
                                 </Button>
@@ -116,7 +116,7 @@ const PriceLists = () => {
                         </form>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:flex-shrink-0">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:shrink-0">
                             <div className="w-full sm:w-auto">
                                 <Button
                                     disabled={isCheck.length < 1}
@@ -188,7 +188,7 @@ const PriceLists = () => {
             ) : (
                 <NotFound title={t("SorryPriceLists")} />
             )}
-        </>
+        </div>
     );
 };
 

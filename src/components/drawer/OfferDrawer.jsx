@@ -37,8 +37,8 @@ const OfferDrawer = ({ id }) => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+    <div className="flex flex-col h-full">
+      <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shrink-0">
         {id ? (
           <Title
             register={register}
@@ -56,9 +56,9 @@ const OfferDrawer = ({ id }) => {
         )}
       </div>
 
-      <div className="w-full relative dark:bg-gray-700 dark:text-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="px-6 pt-8 grow scrollbar-hide w-full max-h-full pb-32">
+      <div className="flex-1 flex flex-col min-h-0 dark:bg-gray-700 dark:text-gray-200">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto px-6 pt-8 pb-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
               {/* Offer Type Selector */}
               <div>
@@ -418,7 +418,7 @@ const OfferDrawer = ({ id }) => {
           <DrawerButton id={id} title={t("offer")} isSubmitting={isSubmitting} />
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

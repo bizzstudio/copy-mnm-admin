@@ -176,7 +176,8 @@ const CashierOrders = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+
       <PageTitle>{t("CashierOrders")}</PageTitle>
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
@@ -248,11 +249,11 @@ const CashierOrders = () => {
                   layout="outline"
                   onClick={handleResetField}
                   type="reset"
-                  className="!h-12 w-full px-3 text-xs dark:bg-gray-700"
+                  className="h-12! w-full px-3 text-xs dark:bg-gray-700"
                 >
                   <span className="text-black dark:text-gray-200">{t("Reset")}</span>
                 </Button>
-                
+
                 {/* כפתור הורדה */}
                 <div>
                   {loadingExport ? (
@@ -358,7 +359,7 @@ const CashierOrders = () => {
       ) : (
         <NotFound title="Sorry, There are no cashier orders right now." />
       )}
-    </>
+    </div>
   );
 };
 

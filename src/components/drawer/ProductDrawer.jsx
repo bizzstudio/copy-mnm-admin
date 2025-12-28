@@ -63,7 +63,7 @@ const ProductDrawer = ({ id }) => {
 
   return (
     <>
-      <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <div className="w-full relative p-6 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
         {id ? (
           <Title
             register={register}
@@ -81,10 +81,10 @@ const ProductDrawer = ({ id }) => {
         )}
       </div>
 
-      <Card className="overflow-y-auto grow w-full max-h-full border-none!">
-        <CardBody>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="px-6 pt-2 grow scrollbar-hide w-full max-h-full pb-28 grid grid-cols-12 gap-5">
+      <Card className="flex flex-col grow w-full max-h-full border-0 overflow-hidden dark:bg-gray-800">
+        <div className="flex flex-col h-full overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
+            <div className="px-6 pt-2 grow scrollbar-hide w-full overflow-y-auto grid grid-cols-12 gap-5">
 
               {/* שם המוצר */}
               <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
@@ -124,7 +124,7 @@ const ProductDrawer = ({ id }) => {
                 <LabelArea label={t("ProductDescription")} />
                 <div className="col-span-6">
                   <Textarea
-                    className="border text-sm block w-full bg-gray-100 border-gray-200"
+                    className="text-sm block w-full"
                     {...register("description", {
                       required: false,
                     })}
@@ -186,7 +186,7 @@ const ProductDrawer = ({ id }) => {
                     {...register(`slug`, {
                       required: "Slug הוא שדה חובה!",
                     })}
-                    className="me-2 p-2"
+                    className="me-2"
                     name="slug"
                     type="text"
                     defaultValue={slug}
@@ -224,8 +224,8 @@ const ProductDrawer = ({ id }) => {
 
               {/* מחירים לפי מחירונים */}
               <div className="col-span-12">
-                <div className="mb-4 border-b pb-2">
-                  <h3 className="text-lg font-semibold">{t("ProductPrices")}</h3>
+                <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t("ProductPrices")}</h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {priceLists && priceLists.map((priceList, index) => {
@@ -237,8 +237,8 @@ const ProductDrawer = ({ id }) => {
                     };
 
                     return (
-                      <div key={priceList._id} className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-                        <h4 className="font-medium mb-3">{priceList.name}</h4>
+                      <div key={priceList._id} className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                        <h4 className="font-medium mb-3 text-gray-800 dark:text-gray-200">{priceList.name}</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div>
                             <LabelArea label={t("Price")} />
@@ -299,8 +299,8 @@ const ProductDrawer = ({ id }) => {
               {/* מלאיים */}
               {manageStock && (
                 <div className="col-span-12">
-                  <div className="mb-4 border-b pb-2 flex justify-between items-center">
-                    <h3 className="text-lg font-semibold">{t("StockManagement")}</h3>
+                  <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-2 flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t("StockManagement")}</h3>
                     <Button
                       type="button"
                       size="small"
@@ -313,16 +313,16 @@ const ProductDrawer = ({ id }) => {
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     {stocks.map((stock, index) => (
-                      <div key={index} className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+                      <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                         <div className="flex justify-between items-center mb-3">
-                          <h4 className="font-medium">{t("Stock")} #{index + 1}</h4>
+                          <h4 className="font-medium text-gray-800 dark:text-gray-200">{t("Stock")} #{index + 1}</h4>
                           {stocks.length > 1 && (
                             <Button
                               type="button"
                               size="small"
                               layout="outline"
                               onClick={() => handleRemoveStock(index)}
-                              className="h-8 text-red-500"
+                              className="h-8 text-red-600 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-800 dark:hover:text-white"
                             >
                               <FiTrash2 />
                             </Button>
@@ -425,10 +425,9 @@ const ProductDrawer = ({ id }) => {
               </div>
 
             </div>
-
             <DrawerButton id={id} title={t("Product")} isSubmitting={isSubmitting} />
           </form>
-        </CardBody>
+        </div>
       </Card>
     </>
   );

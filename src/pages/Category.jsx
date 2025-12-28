@@ -145,7 +145,7 @@ const Category = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Category")}</PageTitle>
       <DeleteModal ids={allId} setIsCheck={setIsCheck} />
 
@@ -161,7 +161,7 @@ const Category = () => {
         <CategoryDrawer id={serviceId} data={data} lang={lang} />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
           {/* <div className="flex md:flex-row flex-col gap-3 justify-end items-end"> */}
           <form
@@ -348,7 +348,7 @@ const Category = () => {
       ) : (
         <NotFound title="Sorry, There are no categories right now." />
       )}
-    </>
+    </div>
   );
 };
 

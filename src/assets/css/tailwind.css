@@ -1,14 +1,17 @@
 /* TailwindCss */
 @import "tailwindcss";
 
+/* Dark Mode Variant - Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
 /* Custom Theme - Tailwind v4 */
 @theme {
     /* Colors */
-    --color-mainColor-superLight: #f7eac8;
-    --color-mainColor-light: #3fac3f;
-    --color-mainColor: #008000;
-    --color-mainColor-DEFAULT: #008000;
-    --color-mainColor-dark: #006300;
+    --color-mainColor-superLight: #f2f4fa;
+    --color-mainColor-light: #7a90cc;
+    --color-mainColor: #3961ce;
+    --color-mainColor-DEFAULT: #3961ce;
+    --color-mainColor-dark: #f21e27;
 
     /* Font Family */
     --font-family-sans: "Assistant", sans-serif;

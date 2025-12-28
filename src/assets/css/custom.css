@@ -10,11 +10,9 @@
   box-sizing: border-box;
   /* מעלים היילייט כחול בלחיצה במובייל */
   -webkit-tap-highlight-color: transparent;
-}
 
-/* Set font family globally - Tailwind will handle the rest */
-body {
   font-family: 'Assistant', sans-serif;
+  font-weight: inherit;
 }
 
 #root {
@@ -28,7 +26,7 @@ body {
 }
 
 .react-calendar__navigation button {
-  @apply text-gray-900 dark:text-gray-100 font-semibold mx-1 hover:dark:!bg-gray-600;
+  @apply text-gray-900 dark:text-gray-100 font-semibold mx-1 dark:hover:!bg-gray-600;
 }
 
 .react-calendar__navigation button:disabled {
@@ -120,6 +118,33 @@ body {
   animation: pop-in 0.3s ease-out;
 }
 
+/* Drawer Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
 /* התאמת צבעי תפריטים נפתחים במצב כהה */
 .dark .ql-toolbar .ql-picker-options {
   background-color: #2D3748;
@@ -204,7 +229,6 @@ body>iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"]) {
   display: none;
 }
 
-/*input tag css */
 /*input tag css */
 .react-tag-input {
   width: 100%;
@@ -354,6 +378,55 @@ body>iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"]) {
   color: #24262d;
 }
 
+/* Dark mode support for ReactTagInput - Tailwind dark: */
+.dark .react-tag-input {
+  background: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .react-tag-input__input {
+  color: #e5e7eb;
+  background: transparent;
+}
+
+.dark .react-tag-input__input::placeholder,
+.dark .react-tag-input__input:-moz-placeholder,
+.dark .react-tag-input__input:-ms-input-placeholder,
+.dark .react-tag-input__input::-moz-placeholder,
+.dark .react-tag-input__input::-webkit-input-placeholder {
+  color: #9ca3af;
+}
+
+.dark .react-tag-input__input:focus {
+  background-color: #374151;
+  border-color: #6b7280;
+  color: #e5e7eb;
+}
+
+.dark .react-tag-input__tag {
+  background: #4b5563 ;
+  color: #e5e7eb;
+}
+
+.dark .react-tag-input__tag__content {
+  color: #e5e7eb;
+}
+
+.dark .react-tag-input__tag__remove {
+  background: #4b5563;
+}
+
+.dark .react-tag-input__tag__remove:before,
+.dark .react-tag-input__tag__remove:after {
+  background-color: #e5e7eb;
+}
+
+.dark .react-tag-input__tag__remove:hover {
+  background: #6b7280;
+}
+
+/* Dark mode support for ReactTagInput - theme-dark (legacy): */
 .theme-dark .react-tag-input {
   color: #ebebeb;
   border-color: #4c4f52;
@@ -364,9 +437,39 @@ body>iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"]) {
   color: #ebebeb;
 }
 
+.theme-dark .react-tag-input__input::placeholder,
+.theme-dark .react-tag-input__input:-moz-placeholder,
+.theme-dark .react-tag-input__input:-ms-input-placeholder,
+.theme-dark .react-tag-input__input::-moz-placeholder,
+.theme-dark .react-tag-input__input::-webkit-input-placeholder {
+  color: #9ca3af;
+}
+
 .theme-dark .react-tag-input__input:focus {
   background-color: #24262d;
   border-color: #707275;
+}
+
+.theme-dark .react-tag-input__tag {
+  background: #374151;
+  color: #ebebeb;
+}
+
+.theme-dark .react-tag-input__tag__content {
+  color: #ebebeb;
+}
+
+.theme-dark .react-tag-input__tag__remove {
+  background: #4b5563;
+}
+
+.theme-dark .react-tag-input__tag__remove:before,
+.theme-dark .react-tag-input__tag__remove:after {
+  background-color: #ebebeb;
+}
+
+.theme-dark .react-tag-input__tag__remove:hover {
+  background: #6b7280;
 }
 
 .theme-dark .optionContainer {

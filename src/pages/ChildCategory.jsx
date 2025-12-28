@@ -111,7 +111,7 @@ const ChildCategory = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("CategoryPageTitle")}</PageTitle>
 
       <DeleteModal ids={allId} setIsCheck={setIsCheck} category />
@@ -135,7 +135,7 @@ const ChildCategory = () => {
           </li>
           {selectedObj?.map((child, i) => (
             <span key={i + 1} className="flex items-center font-serif">
-              <li className="text-sm mt-[1px]">
+              <li className="text-sm mt-px">
                 {" "}
                 <FiChevronRight className={`text-gray-600 dark:text-gray-500 ${lang === 'he' ? 'rotate-180' : ''}`} />{" "}
               </li>
@@ -149,8 +149,8 @@ const ChildCategory = () => {
         </ol>
       </div>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
-        <CardBody>
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
+      <CardBody>
           <div className="flex justify-end items-end gap-3">
             <Button onClick={toggleDrawer} className="rounded-md h-12">
               <span className="me-1.5">
@@ -240,7 +240,7 @@ const ChildCategory = () => {
       ) : (
         <NotFound title="Sorry, There are no categories right now." />
       )}
-    </>
+    </div>
   );
 };
 

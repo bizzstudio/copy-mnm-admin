@@ -181,7 +181,7 @@ const HomePage = ({
             </div>
           </div>
 
-          <div className="flex justify-end items-center flex-shrink-0 space-x-6">
+          <div className="flex justify-end items-center shrink-0 space-x-6">
             <div className="fixed right-auto md:mb-6 mb-3 bottom-0 z-40">
               {isSubmitting ? (
                 <Button disabled={true} type="button" className="h-10 px-6">

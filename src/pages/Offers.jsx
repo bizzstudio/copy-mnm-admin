@@ -67,7 +67,7 @@ const Offers = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Offers")}</PageTitle>
 
       {isCheck?.length >= 1 && (
@@ -82,7 +82,7 @@ const Offers = () => {
         <OfferDrawer id={serviceId} />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitOffer}
@@ -98,7 +98,7 @@ const Offers = () => {
                   className="h-12"
                 />
               </div>
-              <div className="flex gap-2 sm:flex-shrink-0">
+              <div className="flex gap-2 sm:shrink-0">
                 <Button type="submit" className="h-12 px-6 bg-customGreen-dark">
                   {t("search")}
                 </Button>
@@ -189,7 +189,7 @@ const Offers = () => {
       ) : (
         <NotFound title="Sorry, There are no offers right now." />
       )}
-    </>
+    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import progress from "@/assets/img/progress.svg";
 
 const ComingSoon = () => {
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <div className="px-6 py-16 lg:py-20 h-screen flex flex-wrap content-center">
         <div className="block justify-items-stretch mx-auto items-center text-center">
           <img width={650} height={450} src={progress} alt="404" />
@@ -18,7 +18,7 @@ const ComingSoon = () => {
           </a>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

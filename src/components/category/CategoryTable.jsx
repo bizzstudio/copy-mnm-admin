@@ -94,7 +94,7 @@ const CategoryTable = ({
                                 to={`/categories/${child?._id}`}
                                 className="underline"
                               >
-                                <div className="flex text-xs items-center text-gray-500 hover:dark:text-white hover:text-black">
+                                <div className="flex text-xs items-center text-gray-500 dark:hover:text-white hover:text-black">
                                   <span className="text-xs pe-1">
                                     <IoRemoveSharp />
                                   </span>

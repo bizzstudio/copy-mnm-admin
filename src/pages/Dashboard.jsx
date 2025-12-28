@@ -242,7 +242,7 @@ const Dashboard = () => {
   }, [dashboardOrderAmount]);
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("הכנסות")}</PageTitle>
 
       <div className="grid gap-2 mb-8 xl:grid-cols-5 md:grid-cols-2">
@@ -453,7 +453,7 @@ const Dashboard = () => {
       ) : (
         <NotFound title="Sorry, There are no orders right now." />
       )} */}
-    </>
+    </div>
   );
 };
 

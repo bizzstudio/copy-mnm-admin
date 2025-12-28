@@ -260,7 +260,7 @@ const StoreHome = () => {
   }, [bothSliderOption, setBottomDots]);
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <div className="flex justify-between text-center items-center">
         <div>
           <PageTitle>{t("StoreCustomizationPageTitle")}</PageTitle>
@@ -759,7 +759,7 @@ const StoreHome = () => {
           </div>
         )}
       </>
-    </>
+    </div>
   );
 };
 

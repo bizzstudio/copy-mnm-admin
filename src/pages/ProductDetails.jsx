@@ -43,7 +43,7 @@ const ProductDetails = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <MainDrawer maxWidth='700px'>
         <ProductDrawer id={id} />
       </MainDrawer>
@@ -54,7 +54,7 @@ const ProductDetails = () => {
       ) : (
         <div className="inline-block overflow-y-auto h-full align-middle transition-all transform">
           <div className="flex flex-col lg:flex-row md:flex-row w-full overflow-hidden">
-            <div className="flex-shrink-0 flex items-center justify-center h-auto">
+            <div className="shrink-0 flex items-center justify-center h-auto">
               {data?.image && data.image[0] ? (
                 <img src={data.image[0]} alt="product" className="h-64 w-64" />
               ) : (
@@ -282,7 +282,7 @@ const ProductDetails = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

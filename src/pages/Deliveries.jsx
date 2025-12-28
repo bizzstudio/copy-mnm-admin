@@ -81,7 +81,7 @@ const Deliveries = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Deliveries")}</PageTitle>
       <DeleteModal
         ids={allId}
@@ -93,7 +93,7 @@ const Deliveries = () => {
         <DeliveryDrawer />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitDelivery}
@@ -242,7 +242,7 @@ const Deliveries = () => {
       ) : (
         <NotFound title="Sorry, There are no deliveries right now." />
       )}
-    </>
+    </div>
   );
 };
 

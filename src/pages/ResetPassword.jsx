@@ -1,21 +1,22 @@
-import { Button, Input } from "@windmill/react-ui";
+// src/pages/ResetPassword.jsx
+import { Input } from "@windmill/react-ui";
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 // Internal import
 import Error from "@/components/form/others/Error";
 import LabelArea from "@/components/form/selectOption/LabelArea";
 import AdminServices from "@/services/AdminServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
-import ImageLight from "@/assets/img/forgot-password-office.jpeg";
-import ImageDark from "@/assets/img/forgot-password-office-dark.jpeg";
+import logo from "/logo.png";
+import notifyApiResponse from "@/utils/notifyApiResponse";
+import CMButton from "@/components/form/button/CMButton";
+import { t } from "i18next";
 
 const ResetPassword = () => {
-  const { t } = useTranslation();
   const { token } = useParams();
+  const navigate = useNavigate();
   const password = useRef("");
   const [loading, setLoading] = useState(false);
   const {
@@ -33,11 +34,13 @@ const ResetPassword = () => {
     AdminServices.resetPassword({ newPassword, token })
       .then((res) => {
         setLoading(false);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
+        // Navigate to login page after successful password reset
+        navigate("/login", { replace: true });
       })
       .catch((err) => {
         setLoading(false);
-        notifyError(err ? err.response.data.message : err.message);
+        notifyApiResponse(err, false);
       });
   };
 
@@ -45,51 +48,45 @@ const ResetPassword = () => {
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
         <div className="flex flex-col overflow-y-auto md:flex-row">
-          <div className="h-32 md:h-auto md:w-1/2">
+          <div className="w-full md:h-auto md:w-1/2 flex flex-col items-center justify-center md:ps-12 md:pe-2 md:pt-0 pt-10 px-6">
             <img
               aria-hidden="true"
-              className="object-cover w-full h-full dark:hidden"
-              src={ImageLight}
-              alt="Office"
-            />
-            <img
-              aria-hidden="true"
-              className="hidden object-cover w-full h-full dark:block"
-              src={ImageDark}
-              alt="Office"
+              className="object-contain w-full h-full md:max-w-none max-w-[150px]"
+              src={logo}
+              alt="Logo"
             />
           </div>
-          <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+          <main className="flex items-center justify-center p-6 md:p-12 md:w-1/2">
             <div className="w-full">
-              <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
+              <h1 className="mb-3 text-2xl font-semibold text-gray-700 dark:text-gray-200 md:text-start text-center">
                 {t("ResetPassword")}
               </h1>
 
               <form onSubmit={handleSubmit(submitHandler)}>
-                <LabelArea label="Password" />
+                <LabelArea label={t("Password")} />
                 <Input
-                  label="Password"
+                  label={t("Password")}
                   name="newPassword"
                   type="password"
                   autocomplete="current-password"
-                  placeholder="Password"
+                  placeholder="*************"
                   {...register("newPassword", {
                     required: "You must specify a password",
                     minLength: {
-                      value: 10,
-                      message: "Password must have at least 10 characters",
+                      value: 8,
+                      message: "Password must have at least 8 characters",
                     },
                   })}
                 />
                 <Error errorName={errors.newPassword} />
                 <div className="mt-6"></div>
-                <LabelArea label="Confirm Password" />
+                <LabelArea label={t("ConfirmPassword")} />
                 <Input
-                  label="Confirm Password"
+                  label={t("ConfirmPassword")}
                   name="confirm_password"
                   type="password"
                   autocomplete="current-password"
-                  placeholder={t("ConfirmPassword")}
+                  placeholder="*************"
                   {...register("confirm_password", {
                     validate: (value) =>
                       value === password.current ||
@@ -98,18 +95,17 @@ const ResetPassword = () => {
                 />
                 <Error errorName={errors.confirm_password} />
 
-                <Button
+                <CMButton
                   disabled={loading}
                   type="submit"
-                  block
-                  className="mt-4 h-12"
+                  className="rounded-md mt-4 h-12 w-full"
                 >
                   {t("Reset")}
-                </Button>
+                </CMButton>
               </form>
-              <p className="mt-4">
+              <p className="mt-4 w-full text-end">
                 <Link
-                  className="text-sm font-medium text-customGreen dark:text-emerald-400 hover:underline"
+                  className="text-sm font-medium text-mainColor dark:text-gray-300 hover:underline"
                   to="/login"
                 >
                   {t("AlreadyAccount")}

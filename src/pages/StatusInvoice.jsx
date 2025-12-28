@@ -74,7 +74,7 @@ const DeliveryEdit = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <MainDrawer>
         <DeliveryDrawer id={id} />
       </MainDrawer>
@@ -201,7 +201,7 @@ const DeliveryEdit = () => {
           </div>
         </Modal>
       )}
-    </>
+    </div>
   );
 };
 

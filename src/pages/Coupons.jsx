@@ -73,7 +73,7 @@ const Coupons = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("CouponspageTitle")}</PageTitle>
       <DeleteModal
         ids={allId}
@@ -86,7 +86,7 @@ const Coupons = () => {
         <CouponDrawer id={serviceId} />
       </MainDrawer>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitCoupon}
@@ -234,7 +234,7 @@ const Coupons = () => {
       ) : (
         <NotFound title={t("SorryCoupons")} />
       )}
-    </>
+    </div>
   );
 };
 

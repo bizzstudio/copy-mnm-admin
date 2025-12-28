@@ -58,7 +58,7 @@ const AboutUs = ({
     <>
       <div className="grid grid-cols-12 font-sans pr-4">
         <div className="col-span-12 md:col-span-12 lg:col-span-12">
-          <div className="flex justify-end items-center flex-shrink-0 space-x-6">
+          <div className="flex justify-end items-center shrink-0 space-x-6">
             <div className="fixed right-auto mb-6 bottom-0 z-40">
               {isSubmitting ? (
                 <Button disabled={true} type="button" className="h-10 px-6">

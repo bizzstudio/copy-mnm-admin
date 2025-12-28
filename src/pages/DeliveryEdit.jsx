@@ -36,7 +36,7 @@ const DeliveryEdit = () => {
 
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <MainDrawer delivery>
         <DeliveryDrawer id={id} />
       </MainDrawer>
@@ -75,13 +75,13 @@ const DeliveryEdit = () => {
                 <p className="uppercase font-serif font-medium text-gray-500 dark:text-gray-400 text-sm">
                   {t("DeliveryDays")}:{" "}
                   <span className="font-bold text-gray-500 dark:text-gray-500">
-                    {data.days.map(day=>(day.name+', '))}
+                    {data.days.map(day => (day.name + ', '))}
                   </span>
                 </p>
               </div>
               <div className="font-serif product-price font-bold dark:text-gray-400">
                 <span className="inline-block text-2xl">
-                    {data.city}
+                  {data.city}
                 </span>
               </div>
               <div className="mt-6">
@@ -96,7 +96,7 @@ const DeliveryEdit = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

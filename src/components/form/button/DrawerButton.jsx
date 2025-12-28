@@ -13,8 +13,7 @@ const DrawerButton = ({ id, title, isSubmitting }) => {
   return (
     <>
       <div
-        className="fixed flex items-center justify-between z-10 bottom-0 right-0 w-full py-4 px-6 gap-2 bg-gray-50 border-t border-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
-        style={{ display: !isDrawerOpen && 'none' }}
+        className="flex items-center justify-between z-10 w-full py-4 px-6 gap-2 bg-gray-50 border-t border-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 shrink-0"
       >
         <div className="flex min-w-[80px] sm:min-w-[176px]">
           <Button

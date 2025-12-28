@@ -224,10 +224,10 @@ const Messages = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("WhatsApp Bot")}</PageTitle>
 
-      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           {/* חיבור לוואטסאפ */}
           <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3 w-full">
@@ -424,7 +424,7 @@ const Messages = () => {
           </div>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 
