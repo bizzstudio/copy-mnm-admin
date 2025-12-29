@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardBody } from "@windmill/react-ui";
 import ReactFlagsSelect from "react-flags-select";
 import { useTranslation } from "react-i18next";
-import { HiLanguage } from "react-icons/hi";
+import { MdLanguage } from "react-icons/md";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -52,7 +52,7 @@ const LanguageDrawer = ({ id }) => {
               <div className="col-span-12">
                 <CollapsibleSection
                   title={t("Language Details")}
-                  icon={<HiLanguage size={20} className="mt-1" />}
+                  icon={<MdLanguage size={20} className="mt-1" />}
                   defaultOpen
                 >
                   <div className="grid grid-cols-12 gap-5 mt-2">
