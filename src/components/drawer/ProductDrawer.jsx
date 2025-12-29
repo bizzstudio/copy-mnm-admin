@@ -103,19 +103,19 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                 </div>
               </div>
 
-              {/* מזהה פנימי */}
+              {/* ברקוד */}
               <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
-                <LabelArea label={t("ProductID")} />
+                <LabelArea label={t("ProductBarcode")} />
                 <div className="col-span-6">
                   <InputArea
                     register={register}
-                    required={false}
-                    label={t("ProductID")}
-                    name="productId"
+                    required="false"
+                    label={t("ProductBarcode")}
+                    name="barcode"
                     type="text"
-                    placeholder={t("ProductID")}
+                    placeholder={t("ProductBarcode")}
                   />
-                  <Error errorName={errors.productId} />
+                  <Error errorName={errors.barcode} />
                 </div>
               </div>
 
@@ -146,34 +146,6 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                     folder="products"
                     imageUrl={imageUrl}
                     setImageUrl={setImageUrl}
-                  />
-                </div>
-              </div>
-
-              {/* ברקוד */}
-              <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
-                <LabelArea label={t("ProductBarcode")} />
-                <div className="col-span-6">
-                  <InputArea
-                    register={register}
-                    required="false"
-                    label={t("ProductBarcode")}
-                    name="barcode"
-                    type="text"
-                    placeholder={t("ProductBarcode")}
-                  />
-                  <Error errorName={errors.barcode} />
-                </div>
-              </div>
-
-              {/* קטגוריות */}
-              <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
-                <LabelArea label={t("Category")} />
-                <div className="col-span-6">
-                  <ParentCategory
-                    lang={language}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
                   />
                 </div>
               </div>
@@ -211,13 +183,25 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
               </div>
 
               {/* כשרויות */}
-              <div className="flex flex-col gap-1 md:col-span-12 col-span-12">
+              <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
                 <LabelArea label={t("Kashrut")} />
                 <div className="col-span-12">
                   <ReactTagInput
                     placeholder={t("AddKashrutTag")}
                     tags={kashrut}
                     onChange={(newTags) => setKashrut(newTags)}
+                  />
+                </div>
+              </div>
+
+              {/* קטגוריות */}
+              <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                <LabelArea label={t("Category")} />
+                <div className="col-span-6">
+                  <ParentCategory
+                    lang={language}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
                   />
                 </div>
               </div>

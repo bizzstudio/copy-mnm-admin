@@ -1,8 +1,9 @@
 // src/components/modal/MainModal.jsx
 import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { Modal, ModalBody, ModalFooter, Button } from "@windmill/react-ui";
-import { FiTrash2 } from "react-icons/fi";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { IoClose, IoTrashOutline } from 'react-icons/io5';
+import { useTranslation } from "react-i18next";
 
 // Internal import
 import CustomerServices from "@/services/CustomerServices";
@@ -18,6 +19,7 @@ const MainModal = ({ id, title }) => {
   const { isModalOpen, closeModal, setIsUpdate } = useContext(SidebarContext);
   const { setServiceId } = useToggleDrawer();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const handleDelete = () => {
     if (location.pathname === "/products") {
@@ -75,35 +77,52 @@ const MainModal = ({ id, title }) => {
   };
 
   return (
-    <>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalBody className="text-center custom-modal px-8 pt-6 pb-4">
-          <span className="flex justify-center text-3xl mb-6 text-red-500">
-            <FiTrash2 />
-          </span>
-          <h2 className="text-xl font-medium mb-1">
-            Are You Sure! Want to Delete{" "}
-            <span className="text-red-500">{title}</span> Record?
-          </h2>
-          <p>
-            Do you really want to delete these records? You can't view this in
-            your list anymore if you delete!
-          </p>
-        </ModalBody>
-        <ModalFooter className="justify-center">
-          <Button
-            className="w-full sm:w-auto hover:bg-white hover:border-gray-50"
-            layout="outline"
-            onClick={closeModal}
-          >
-            No, Keep It
-          </Button>
-          <Button onClick={handleDelete} className="w-full sm:w-auto">
-            Yes, Delete It
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </>
+    <Dialog open={isModalOpen} onClose={closeModal} className="relative z-50" dir="rtl">
+      <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <IoTrashOutline className="h-8 w-8 text-red-500" />
+                {t("DeleteModalH2")} {title}?
+              </DialogTitle>
+              <button
+                onClick={closeModal}
+                className="rounded-full p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <IoClose className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="mb-3">
+              <p className="text-gray-600 dark:text-gray-300 text-center leading-relaxed">
+                {t("DeleteModalPtag")}
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+              <button
+                onClick={closeModal}
+                className="px-6 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                {t("modalKeepBtn")}
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-6 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+              >
+                {t("modalDeletBtn")}
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </div>
+    </Dialog>
   );
 };
 

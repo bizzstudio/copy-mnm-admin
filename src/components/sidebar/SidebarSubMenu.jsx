@@ -19,7 +19,7 @@ const SidebarSubMenu = ({ route }) => {
     <>
       <li className="relative px-6 py-3" key={route.name}>
         <button
-          className="flex gap-2 items-center justify-between focus:outline-none w-full text-sm font-semibold transition-colors duration-150 hover:text-mainColor dark:hover:text-mainColor-dark dark:hover:text-gray-200"
+          className="flex gap-2 items-center justify-between focus:outline-none w-full text-sm font-semibold transition-colors duration-150 hover:text-mainColor"
           onClick={() => setOpen(!open)}
           aria-haspopup="true"
         >

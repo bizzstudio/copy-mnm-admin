@@ -1,3 +1,4 @@
+// src/services/AdminServices.js
 import requests from "./httpService";
 
 const AdminServices = {
@@ -17,8 +18,8 @@ const AdminServices = {
     return requests.put("/admin/reset-password", body);
   },
 
-  signUpWithProvider: async (body) => {
-    return requests.post("/admin/signup", body);
+  verifyMfa: async (body) => {
+    return requests.post("/admin/mfa/verify", body);
   },
 
   addStaff: async (body) => {
@@ -44,7 +45,7 @@ const AdminServices = {
   },
 
   validateToken: async () => {
-    return requests.get("/customer/validate-token");
+    return requests.get("/admin/validate-token");
   },
 };
 

@@ -125,11 +125,11 @@ const sidebar = [
         path: "http://localhost:3000",
         outside: "store",
       },
-      // {
-      //   name: "ViewLikutApp",
-      //   path: "https://likut.meshek-kirshner.co.il/items",
-      //   outside: "likutApp",
-      // },
+      {
+        name: "ViewLikutApp",
+        path: "https://likut.meshek-kirshner.co.il/items",
+        outside: "likutApp",
+      },
       {
         path: "/store/customization",
         name: "StoreCustomization",

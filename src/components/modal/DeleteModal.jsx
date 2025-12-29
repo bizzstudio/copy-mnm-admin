@@ -1,13 +1,11 @@
 // src/components/modal/DeleteModal.jsx
-import { Button, Modal, ModalBody, ModalFooter } from "@windmill/react-ui";
-import React, { useContext } from "react";
-import { FiTrash2 } from "react-icons/fi";
-import { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { IoClose, IoTrashOutline } from 'react-icons/io5';
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
 // Internal import
-import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import { SidebarContext } from "@/context/SidebarContext";
 import AdminServices from "@/services/AdminServices";
 import CategoryServices from "@/services/CategoryServices";
@@ -390,59 +388,57 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalBody className="text-center custom-modal px-8 pt-6 pb-4">
-          <span className="flex justify-center text-3xl mb-6 text-red-500">
-            <FiTrash2 />
-          </span>
-          {/* <h2 className="text-xl font-medium mb-1">{t('DeleteModalH2')}</h2> */}
-          <h2 className="text-xl font-medium mb-2">
-            {t("DeleteModalH2")} <span className="text-red-500">{title}</span>?
-          </h2>
-          <p>{t("DeleteModalPtag")}</p>
-        </ModalBody>
+    <Dialog open={isModalOpen} onClose={closeModal} className="relative z-50" dir="rtl">
+      <DialogBackdrop className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
 
-        <ModalFooter className="justify-center gap-3">
-          <Button
-            className="w-full sm:w-auto hover:bg-white hover:border-gray-50"
-            layout="outline"
-            onClick={closeModal}
-          >
-            {t("modalKeepBtn")}
-          </Button>
-          <div className="flex justify-end">
-            {isSubmitting ? (
-              <Button
-                disabled={true}
-                type="button"
-                className="w-full h-12 sm:w-auto"
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <IoTrashOutline className="h-8 w-8 text-red-500" />
+                <span>{t("DeleteModalH2")} <span className="text-red-500">{title}</span>?</span>
+              </DialogTitle>
+              <button
+                onClick={closeModal}
+                className="rounded-full p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                <img
-                  src={spinnerLoadingImage}
-                  alt="Loading"
-                  width={20}
-                  height={10}
-                />{" "}
-                <span className="font-serif mr-0.5 font-light">
-                  {t("Processing")}
-                </span>
-              </Button>
-            ) : (
-              <Button onClick={handleDelete} className="w-full h-12 sm:w-auto">
+                <IoClose className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="mb-3">
+              <p className="text-gray-600 dark:text-gray-300 text-center leading-relaxed">
+                {t("DeleteModalPtag")}
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+              <button
+                onClick={closeModal}
+                disabled={isSubmitting}
+                className="px-6 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {t("modalKeepBtn")}
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isSubmitting}
+                className="px-6 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                )}
                 {t("modalDeletBtn")}
-              </Button>
-              // <button
-              //   type="submit"
-              //   className="text-sm mt-6 leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold font-serif text-center justify-center border-0 border-transparent rounded-md focus-visible:outline-none focus:outline-none text-white px-4 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 hover:text-white bg-emerald-400 hover:bg-customGreen h-10"
-              // >
-              //   Park Order
-              // </button>
-            )}
-          </div>
-        </ModalFooter>
-      </Modal>
-    </>
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </div>
+    </Dialog>
   );
 };
 

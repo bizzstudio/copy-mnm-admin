@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 // Internal import
@@ -14,26 +14,21 @@ import CMButton from "@/components/form/button/CMButton";
 const Login = () => {
   const { t } = useTranslation();
   const { onSubmit, register, handleSubmit, errors, loading } = useLoginSubmit();
-  const nav = useNavigate();
-
-  useEffect(() => {
-    nav("/login");
-  }, [])
 
   return (
     <>
       <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col w-full max-w-4xl bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
+        <div className="flex flex-col w-full max-w-xl bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
           {/* Hero Section - Logo */}
           <img
             aria-hidden="true"
-            className="object-contain w-full h-auto"
+            className="object-contain sm:w-3/5 h-auto mx-auto p-6"
             src={logo}
             alt="Logo"
           />
 
           {/* Form Section */}
-          <main className="flex items-center justify-center p-6 sm:p-8 md:p-12">
+          <main className="flex items-center justify-center p-6 sm:p-8 md:p-12 md:pt-0 sm:pt-0 pt-0">
             <div className="w-full max-w-md">
               <h1 className="mb-6 text-2xl sm:text-3xl font-semibold text-gray-700 dark:text-gray-200 text-center">
                 {t("Login")}

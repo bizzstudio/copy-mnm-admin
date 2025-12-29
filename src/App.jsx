@@ -54,11 +54,9 @@ const App = () => {
             <Route
               path="/login"
               element={
-                adminInfo?.email ? <Navigate to="/login" replace /> : <Login />
+                adminInfo?.email ? <Navigate to="/dashboard" replace /> : <Login />
               }
             />
-
-            <Route path="/login" element={<Login />} />
             {/* <Route path="/signup/:id" element={<SignUpUserChallenge />} /> */}
             {/* <Route path="/signup" element={<SignUp />} /> */}
             <Route path="/forgot-password" element={<ForgetPassword />} />

@@ -86,7 +86,6 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       const totalStock = stocks.reduce((sum, stock) => sum + Number(stock.currentQuantity || 0), 0);
 
       const productData = {
-        productId: data.productId || "",
         barcode: data.barcode || "",
         title: {
           [language]: data.title,
@@ -172,7 +171,6 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       setValue("slug");
       setValue("description");
       setValue("barcode");
-      setValue("productId");
       setValue("minStockThreshold");
       setImageUrl([]);
       setTag([]);
@@ -226,7 +224,6 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
             setValue("slug", res.slug || "");
             setValue("status", res.status || "show");
             setValue("barcode", res.barcode || "");
-            setValue("productId", res.productId || "");
             setValue("minStockThreshold", res.minStockThreshold || null);
             setIsVatFree(res.isVatFree !== undefined ? res.isVatFree : true);
             setIsWarehouseProduct(res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false);

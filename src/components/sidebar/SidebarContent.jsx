@@ -62,14 +62,18 @@ const SidebarContent = () => {
   // סינון הקישורים לפי תפקיד המשתמש
   let filteredSidebar = sidebar.filter((route) => {
     // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
-    const restrictedRoutes = ["Admins"];
+    const restrictedRoutes = [
+      // "Admins"
+    ];
 
     return !(restrictedRoutes.includes(route.name) && adminInfo?.role !== "super-admin");
   });
 
   // סינון התפריט במצב פרודקשיין
   if (import.meta.env.VITE_APP_ENVIRONMENT !== 'development') {
-    const hiddenRoutes = ["OnlineStore"];
+    const hiddenRoutes = [
+      // "OnlineStore"
+    ];
     filteredSidebar = filteredSidebar.filter((route) => !hiddenRoutes.includes(route.name));
   };
 
@@ -99,7 +103,7 @@ const SidebarContent = () => {
                     const additionalActive = route.active?.some((word) =>
                       location.pathname.includes(word)
                     );
-                    return `flex gap-2 px-6 py-4 items-center w-full text-sm font-semibold transition-colors duration-150 ${isActive || additionalActive ? "text-mainColor dark:text-gray-200" : "hover:text-mainColor dark:hover:text-gray-200"
+                    return `flex gap-2 px-6 py-4 items-center w-full text-sm font-semibold transition-colors duration-150 ${isActive || additionalActive ? "text-mainColor dark:text-gray-200" : "hover:text-mainColor"
                       }`;
                   }}
                   rel="noreferrer"
