@@ -43,10 +43,10 @@ const sidebar = [
         path: "/categories",
         name: "Categories",
       },
-      {
-        path: "/attributes",
-        name: "Attributes",
-      },
+      // {
+      //   path: "/attributes",
+      //   name: "Attributes",
+      // },
       {
         path: "/coupons",
         name: "Coupons",

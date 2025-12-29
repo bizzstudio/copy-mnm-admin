@@ -9,7 +9,6 @@ import {
 } from "@windmill/react-ui";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -28,11 +27,14 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
   const {
     tag,
     setTag,
+    kashrut,
+    setKashrut,
     language,
     register,
     onSubmit,
     errors,
-    slug,
+    watch,
+    setValue,
     imageUrl,
     setImageUrl,
     handleSubmit,
@@ -43,23 +45,18 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
     handleProductSlugIfEmpty,
     handleSelectLanguage,
     isVatFree,
-    setIsVatFree,
     isWarehouseProduct,
-    setIsWarehouseProduct,
     manageStock,
-    setManageStock,
-    kashrut,
-    setKashrut,
     supplier,
-    setSupplier,
-    stocks,
-    handleAddStock,
-    handleRemoveStock,
-    handleStockChange,
+    stock,
+    expiryDate,
+    lastStockUpdate,
     prices,
     handlePriceChange,
     priceLists,
   } = useProductSubmit(id, pendingBarcode, onBarcodeUsed);
+
+  const slug = watch("slug");
 
   return (
     <>
@@ -161,7 +158,6 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                     className="me-2"
                     name="slug"
                     type="text"
-                    defaultValue={slug}
                     placeholder={t("ProductSlug")}
                     onChange={(e) => handleProductSlug(e.target.value)}
                   />
@@ -174,8 +170,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                 <LabelArea label={t("Supplier")} />
                 <div className="col-span-6">
                   <Input
-                    value={supplier}
-                    onChange={(e) => setSupplier(e.target.value)}
+                    {...register("supplier")}
                     type="text"
                     placeholder={t("Supplier")}
                   />
@@ -275,81 +270,53 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                 <LabelArea label={t("ManageStock")} />
                 <SwitchToggle
                   id="manageStock"
-                  handleProcess={(checked) => setManageStock(checked)}
+                  handleProcess={(checked) => setValue("manageStock", checked)}
                   processOption={manageStock}
                 />
               </div>
 
-              {/* מלאיים */}
+              {/* מלאי */}
               {manageStock && (
                 <div className="col-span-12">
-                  <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-2 flex justify-between items-center">
+                  <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{t("StockManagement")}</h3>
-                    <Button
-                      type="button"
-                      size="small"
-                      onClick={handleAddStock}
-                      className="h-8"
-                    >
-                      <FiPlus className="mr-1" />
-                      {t("AddStock")}
-                    </Button>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
-                    {stocks.map((stock, index) => (
-                      <div key={index} className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                        <div className="flex justify-between items-center mb-3">
-                          <h4 className="font-medium text-gray-800 dark:text-gray-200">{t("Stock")} #{index + 1}</h4>
-                          {stocks.length > 1 && (
-                            <Button
-                              type="button"
-                              size="small"
-                              layout="outline"
-                              onClick={() => handleRemoveStock(index)}
-                              className="h-8 text-red-600 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-800 dark:hover:text-white"
-                            >
-                              <FiTrash2 />
-                            </Button>
-                          )}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div>
-                            <LabelArea label={t("CurrentQuantity")} />
-                            <Input
-                              type="number"
-                              value={stock.currentQuantity || ''}
-                              onChange={(e) => handleStockChange(index, 'currentQuantity', e.target.value)}
-                              placeholder={t("CurrentQuantity")}
-                            />
-                          </div>
-                          <div>
-                            <LabelArea label={t("InitialQuantity")} />
-                            <Input
-                              type="number"
-                              value={stock.initialQuantity || ''}
-                              onChange={(e) => handleStockChange(index, 'initialQuantity', e.target.value)}
-                              placeholder={t("InitialQuantity")}
-                            />
-                          </div>
-                          <div>
-                            <LabelArea label={t("AddedDate")} />
-                            <Input
-                              type="date"
-                              value={stock.addedDate || ''}
-                              onChange={(e) => handleStockChange(index, 'addedDate', e.target.value)}
-                            />
-                          </div>
-                          <div>
-                            <LabelArea label={t("ExpiryDate")} />
-                            <Input
-                              type="date"
-                              value={stock.expiryDate || ''}
-                              onChange={(e) => handleStockChange(index, 'expiryDate', e.target.value)}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <LabelArea label={t("Stock")} />
+                      <Input
+                        {...register("stock", { valueAsNumber: true })}
+                        type="number"
+                        placeholder={t("Stock")}
+                      />
+                    </div>
+                    <div>
+                      <LabelArea label={t("ExpiryDate")} />
+                      <Input
+                        {...register("expiryDate")}
+                        type="date"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {lastStockUpdate && (
+                <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                  <LabelArea label={t("LastStockUpdate")} />
+                  <div className="col-span-6">
+                    <Input
+                      type="text"
+                      value={new Date(lastStockUpdate).toLocaleString('he-IL', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                      disabled
+                      className="bg-gray-100 dark:bg-gray-700 cursor-not-allowed"
+                    />
                   </div>
                 </div>
               )}
@@ -390,7 +357,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                   <div className="col-span-6">
                     <SwitchToggle
                       id="isVatFree"
-                      handleProcess={(checked) => setIsVatFree(checked)}
+                      handleProcess={(checked) => setValue("isVatFree", checked)}
                       processOption={isVatFree}
                     />
                   </div>
@@ -401,7 +368,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                   <div className="col-span-6">
                     <SwitchToggle
                       id="isWarehouseProduct"
-                      handleProcess={(checked) => setIsWarehouseProduct(checked)}
+                      handleProcess={(checked) => setValue("isWarehouseProduct", checked)}
                       processOption={isWarehouseProduct}
                     />
                   </div>

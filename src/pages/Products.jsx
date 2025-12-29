@@ -140,6 +140,8 @@ const Products = () => {
       <PageTitle>{t("ProductsPage")}</PageTitle>
 
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
+      
+      {isCheck?.length < 1 && <DeleteModal id={serviceId} title={title} />}
 
       {isCheck?.length > 1 && (
         <BulkActionDrawer ids={allId} title="Products" />

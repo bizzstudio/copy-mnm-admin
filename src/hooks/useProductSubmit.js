@@ -14,29 +14,14 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang, priceLists } =
     useContext(SidebarContext);
 
-  // react hook
+  // react hook - שדות מורכבים שצריכים להישאר ב-state
   const [imageUrl, setImageUrl] = useState([]);
   const [tag, setTag] = useState([]);
+  const [kashrut, setKashrut] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [resData, setResData] = useState({});
-  const [language, setLanguage] = useState(lang);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [slug, setSlug] = useState("");
-  const [isVatFree, setIsVatFree] = useState(true);
-  const [isWarehouseProduct, setIsWarehouseProduct] = useState(false);
-  const [manageStock, setManageStock] = useState(false);
-  const [kashrut, setKashrut] = useState([]);
-  const [supplier, setSupplier] = useState("");
-
-  // מלאיים - מערך של מלאיים
-  const [stocks, setStocks] = useState([{
-    currentQuantity: 0,
-    initialQuantity: 0,
-    addedDate: new Date().toISOString().split('T')[0],
-    expiryDate: null
-  }]);
-
-  // מחירים - מערך של מחירים לפי מחירונים
+  const [lastStockUpdate, setLastStockUpdate] = useState(null);
   const [prices, setPrices] = useState([]);
 
   const { showingTranslateValue, getNumber, getNumberTwo } = useUtilsFunction();
@@ -46,9 +31,37 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
     handleSubmit,
     setValue,
     getValues,
+    watch,
     clearErrors,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+      slug: "",
+      barcode: "",
+      supplier: "",
+      stock: 0,
+      expiryDate: null,
+      minStockThreshold: null,
+      status: "show",
+      language: lang,
+      isVatFree: true,
+      isWarehouseProduct: false,
+      manageStock: false,
+    },
+  });
+
+  // Watch values from form
+  const language = watch("language");
+  const supplier = watch("supplier");
+  const stock = watch("stock");
+  const expiryDate = watch("expiryDate");
+  const isVatFree = watch("isVatFree");
+  const isWarehouseProduct = watch("isWarehouseProduct");
+  const manageStock = watch("manageStock");
+  const slug = watch("slug");
 
   // יצירת מחירים ברירת מחדל לכל המחירונים
   useEffect(() => {
@@ -82,9 +95,6 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         return notifyError("לפחות מחירון אחד חייב להכיל מחיר!");
       }
 
-      // חישוב מלאי כולל
-      const totalStock = stocks.reduce((sum, stock) => sum + Number(stock.currentQuantity || 0), 0);
-
       const productData = {
         barcode: data.barcode || "",
         title: {
@@ -100,13 +110,8 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         categories: selectedCategory.map((item) => item._id),
         image: imageUrl,
 
-        stocks: manageStock ? stocks.map(stock => ({
-          currentQuantity: Number(stock.currentQuantity) || 0,
-          initialQuantity: Number(stock.initialQuantity) || 0,
-          addedDate: stock.addedDate,
-          expiryDate: stock.expiryDate || null
-        })) : [],
-
+        stock: manageStock ? Number(data.stock) || 0 : 0,
+        expiryDate: manageStock && data.expiryDate ? data.expiryDate : null,
         manageStock: manageStock,
         minStockThreshold: data.minStockThreshold ? Number(data.minStockThreshold) : null,
         sales: 0,
@@ -122,7 +127,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         })),
 
         kashrut: kashrut || [],
-        supplier: supplier || "",
+        supplier: data.supplier || "",
         isWarehouseProduct: isWarehouseProduct,
         isVatFree: isVatFree,
         status: data.status || "show",
@@ -163,31 +168,29 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
   useEffect(() => {
     if (!isDrawerOpen) {
-      setSlug("");
-      setLanguage(lang);
-      setValue("language", language);
       setResData({});
-      setValue("title");
-      setValue("slug");
-      setValue("description");
-      setValue("barcode");
-      setValue("minStockThreshold");
       setImageUrl([]);
       setTag([]);
-      setSelectedCategory([]);
-      setIsVatFree(true);
-      setIsWarehouseProduct(false);
-      setManageStock(false);
       setKashrut([]);
-      setSupplier("");
+      setSelectedCategory([]);
+      setLastStockUpdate(null);
 
-      // איפוס מלאיים
-      setStocks([{
-        currentQuantity: 0,
-        initialQuantity: 0,
-        addedDate: new Date().toISOString().split('T')[0],
-        expiryDate: null
-      }]);
+      // איפוס טופס
+      reset({
+        title: "",
+        description: "",
+        slug: "",
+        barcode: "",
+        supplier: "",
+        stock: 0,
+        expiryDate: null,
+        minStockThreshold: null,
+        status: "show",
+        language: lang,
+        isVatFree: true,
+        isWarehouseProduct: false,
+        manageStock: false,
+      });
 
       // איפוס מחירים
       if (priceLists && priceLists.length > 0) {
@@ -202,10 +205,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         setPrices(defaultPrices);
       }
 
-      clearErrors("title");
-      clearErrors("slug");
-      clearErrors("description");
-      clearErrors("barcode");
+      clearErrors();
       setIsSubmitting(false);
       return;
     }
@@ -218,18 +218,24 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
           if (res) {
             setResData(res);
-            setSlug(res.slug || "");
-            setValue("title", res.title?.[language ? language : "he"] || "");
-            setValue("description", res.description?.[language ? language : "he"] || "");
-            setValue("slug", res.slug || "");
-            setValue("status", res.status || "show");
-            setValue("barcode", res.barcode || "");
-            setValue("minStockThreshold", res.minStockThreshold || null);
-            setIsVatFree(res.isVatFree !== undefined ? res.isVatFree : true);
-            setIsWarehouseProduct(res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false);
-            setManageStock(res.manageStock !== undefined ? res.manageStock : false);
-            setKashrut(res.kashrut || []);
-            setSupplier(res.supplier || "");
+            const currentLanguage = language || lang || "he";
+
+            // עדכון טופס עם נתונים מהשרת
+            reset({
+              title: res.title?.[currentLanguage] || "",
+              description: res.description?.[currentLanguage] || "",
+              slug: res.slug || "",
+              barcode: res.barcode || "",
+              supplier: res.supplier || "",
+              stock: res.stock || 0,
+              expiryDate: res.expiryDate ? new Date(res.expiryDate).toISOString().split('T')[0] : null,
+              minStockThreshold: res.minStockThreshold || null,
+              status: res.status || "show",
+              language: currentLanguage,
+              isVatFree: res.isVatFree !== undefined ? res.isVatFree : true,
+              isWarehouseProduct: res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false,
+              manageStock: res.manageStock !== undefined ? res.manageStock : false,
+            });
 
             if (res.categories && Array.isArray(res.categories)) {
               res.categories.map((category) => {
@@ -242,24 +248,9 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
             }
 
             setTag(res.tag || []);
+            setKashrut(res.kashrut || []);
             setImageUrl(res.image || []);
-
-            // טעינת מלאיים
-            if (res.stocks && Array.isArray(res.stocks) && res.stocks.length > 0) {
-              setStocks(res.stocks.map(stock => ({
-                ...stock,
-                addedDate: stock.addedDate ? new Date(stock.addedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-                expiryDate: stock.expiryDate ? new Date(stock.expiryDate).toISOString().split('T')[0] : null
-              })));
-            } else {
-              // אם אין מלאיים, ניצור אחד ברירת מחדל
-              setStocks([{
-                currentQuantity: 0,
-                initialQuantity: 0,
-                addedDate: new Date().toISOString().split('T')[0],
-                expiryDate: null
-              }]);
-            }
+            setLastStockUpdate(res.lastStockUpdate || null);
 
             // טעינת מחירים
             if (res.prices && Array.isArray(res.prices) && res.prices.length > 0) {
@@ -306,12 +297,11 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       .replace(/[()]+/g, "")
       .replace(/\s+/g, "-");
     setValue("slug", slug);
-    setSlug(slug);
   };
 
   // Handle product slug only if slug is empty
   const handleProductSlugIfEmpty = (titleValue) => {
-    const currentSlug = getValues("slug") || slug;
+    const currentSlug = getValues("slug");
     if (!currentSlug || currentSlug.trim() === "") {
       handleProductSlug(titleValue);
     }
@@ -319,34 +309,11 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
   // Handle select language
   const handleSelectLanguage = (lang) => {
-    setLanguage(lang);
+    setValue("language", lang);
     if (Object.keys(resData).length > 0) {
-      setValue("title", resData.title[lang ? lang : "he"]);
-      setValue("description", resData.description[lang ? lang : "he"]);
+      setValue("title", resData.title[lang ? lang : "he"] || "");
+      setValue("description", resData.description[lang ? lang : "he"] || "");
     }
-  };
-
-  // Handle stock changes
-  const handleAddStock = () => {
-    setStocks([...stocks, {
-      currentQuantity: 0,
-      initialQuantity: 0,
-      addedDate: new Date().toISOString().split('T')[0],
-      expiryDate: null
-    }]);
-  };
-
-  const handleRemoveStock = (index) => {
-    if (stocks.length > 1) {
-      const newStocks = stocks.filter((_, i) => i !== index);
-      setStocks(newStocks);
-    }
-  };
-
-  const handleStockChange = (index, field, value) => {
-    const newStocks = [...stocks];
-    newStocks[index][field] = value;
-    setStocks(newStocks);
   };
 
   // Handle price changes
@@ -363,11 +330,14 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   return {
     tag,
     setTag,
+    kashrut,
+    setKashrut,
     language,
     register,
     onSubmit,
     errors,
-    slug,
+    watch,
+    setValue,
     imageUrl,
     setImageUrl,
     handleSubmit,
@@ -378,20 +348,12 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
     handleProductSlugIfEmpty,
     handleSelectLanguage,
     isVatFree,
-    setIsVatFree,
     isWarehouseProduct,
-    setIsWarehouseProduct,
     manageStock,
-    setManageStock,
-    kashrut,
-    setKashrut,
     supplier,
-    setSupplier,
-    stocks,
-    setStocks,
-    handleAddStock,
-    handleRemoveStock,
-    handleStockChange,
+    stock,
+    expiryDate,
+    lastStockUpdate,
     prices,
     setPrices,
     handlePriceChange,

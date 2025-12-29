@@ -232,6 +232,8 @@
   "StockOut": "אזל המלאי",
   "InStock": "במלאי",
   "EditProduct": "ערוך מוצר",
+  "StockInformation": "מידע מלאי",
+  "AdditionalDetails": "פרטים נוספים",
   "ProductVariantList": "רשימת וריאציות מוצר",
   "Combination": "קוֹמבִּינַצִיָה",
   "Sku": "מספר סידורי",
@@ -1299,6 +1301,8 @@
   "AddPopupsBtn": "הוסף פופאפ",
   "PopupsPageTitle": "ניהול פופאפים",
   "SorryPopups": "לא נמצאו פופאפים.",
+  "Loading": "טוען",
+  "NoNotifications": "אין התראות",
   "PopupActions": "פעולות",
   "Popups": "פופאפים",
   "HasLink": "כפתור לפופאפ",
@@ -1358,6 +1362,7 @@
   "InitialQuantity": "כמות התחלתית",
   "AddedDate": "תאריך הוספה",
   "ExpiryDate": "תאריך תפוגה",
+  "LastStockUpdate": "עדכון מלאי אחרון",
   "MinStockThreshold": "מינימום מלאי להתראה",
   "Kashrut": "כשרויות",
   "AddKashrutTag": "הוסף כשרות (לחץ Enter להוספה)",
@@ -1379,5 +1384,6 @@
   "WouldYouLikeToAddProduct": "האם תרצה להוסיף את המוצר?",
   "CheckingProduct": "בודק מוצר...",
   "BarcodeScanError": "שגיאה בסריקת הברקוד. אנא נסה שוב.",
-  "Error": "שגיאה"
+  "Error": "שגיאה",
+  "Default": "ברירת מחדל"
 }

@@ -108,19 +108,9 @@ const ProductTable = ({
     }
   };
 
-  // חישוב מלאי כולל
-  const calculateTotalStock = (stocks) => {
-    if (!stocks || stocks.length === 0) return 0;
-    return stocks.reduce((sum, stock) => sum + (stock.currentQuantity || 0), 0);
-  };
-
   return (
-    <>
-      {isCheck?.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
-      <TableBody>
+    <TableBody>
         {products?.map((product, i) => {
-          const totalStock = calculateTotalStock(product.stocks);
           const firstPrice = product.prices && product.prices.length > 0 ? product.prices[0] : null;
 
           return (
@@ -143,7 +133,7 @@ const ProductTable = ({
 
               {/* image & title */}
               <TableCell className='text-center'>
-                <div className="flex items-center">
+                <div className="flex items-center w-fit">
                   {product?.image && product.image[0] ? (
                     <Avatar
                       className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
@@ -157,13 +147,8 @@ const ProductTable = ({
                       alt="product"
                     />
                   )}
-                  <div>
-                    <h2
-                      className={`text-sm font-medium ${product?.title?.he?.length > 30 ? "wrap-long-title" : ""
-                        }`}
-                    >
-                      {showingTranslateValue(product?.title)?.substring(0, 28)}
-                    </h2>
+                  <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
+                      {showingTranslateValue(product?.title)}
                   </div>
                 </div>
               </TableCell>
@@ -177,7 +162,7 @@ const ProductTable = ({
                   ) : firstPrice ? (
                     <form onSubmit={(e) => handleSubmit(e, product._id)}>
                       <Input
-                        className='!w-20 h-fit mr-1 text-center'
+                        className='w-20! h-fit mr-1 text-center'
                         type="number"
                         step="0.01"
                         value={priceInputs[product._id]}
@@ -207,7 +192,7 @@ const ProductTable = ({
               {/* stock */}
               <TableCell className='text-center'>
                 <span className="text-sm">
-                  {product.manageStock ? totalStock : t("UnlimitedStock")}
+                  {product.manageStock ? (product.stock || 0) : t("UnlimitedStock")}
                 </span>
               </TableCell>
 
@@ -248,7 +233,6 @@ const ProductTable = ({
           );
         })}
       </TableBody>
-    </>
   );
 };
 

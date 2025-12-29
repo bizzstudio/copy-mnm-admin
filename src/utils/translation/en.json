@@ -277,6 +277,8 @@
   "StockOut": "Stock Out",
   "InStock": "In Stock",
   "EditProduct": "Edit Product",
+  "StockInformation": "Stock Information",
+  "AdditionalDetails": "Additional Details",
   "ProductVariantList": "Product Variant List",
   "Combination": "Combination",
   "Sku": "Sku",
@@ -1264,6 +1266,8 @@
   "PopupPublished": "Published",
   "AddPopupsBtn": "Add Popup",
   "PopupsPageTitle": "Manage Popups",
+  "Loading": "Loading",
+  "NoNotifications": "No notifications",
   "SorryPopups": "No popups found.",
   "PopupActions": "Actions",
   "Popups": "Popups",
@@ -1324,6 +1328,7 @@
   "InitialQuantity": "Initial Quantity",
   "AddedDate": "Added Date",
   "ExpiryDate": "Expiry Date",
+  "LastStockUpdate": "Last Stock Update",
   "MinStockThreshold": "Minimum Stock Threshold",
   "Kashrut": "Kashrut",
   "AddKashrutTag": "Add kashrut certification (press Enter to add)",
@@ -1345,5 +1350,6 @@
   "WouldYouLikeToAddProduct": "Would you like to add the product?",
   "CheckingProduct": "Checking product...",
   "BarcodeScanError": "Error scanning barcode. Please try again.",
-  "Error": "Error"
+  "Error": "Error",
+  "Default": "Default"
 }
