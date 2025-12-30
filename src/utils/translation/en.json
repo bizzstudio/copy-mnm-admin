@@ -1319,6 +1319,7 @@
   "Survey Data": "Survey Data",
   "PurchaseLimit": "Purchase Limit",
   "UnitsPerOrder": "Units Per Order",
+  "Basic Details": "Basic Details",
   "ProductPrices": "Product Prices",
   "ManageStock": "Manage Stock",
   "StockManagement": "Stock Management",
@@ -1351,5 +1352,6 @@
   "CheckingProduct": "Checking product...",
   "BarcodeScanError": "Error scanning barcode. Please try again.",
   "Error": "Error",
-  "Default": "Default"
+  "Default": "Default",
+  "PleaseSelectPriceList": "Please select a price list"
 }

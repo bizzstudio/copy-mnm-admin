@@ -1,5 +1,7 @@
+// src/pages/ProductDetails.jsx
 import {
   Badge,
+  Button,
   Card,
   CardBody,
 } from "@windmill/react-ui";
@@ -123,7 +125,7 @@ const ProductDetails = () => {
                     </div>
 
                     {/* Stock Status */}
-                    <div className="flex items-center justify-end gap-3 flex-wrap">
+                    <div className="flex items-center justify-start gap-3 flex-wrap">
                       {data?.manageStock ? (
                         <>
                           {(data.stock || 0) <= 0 ? (
@@ -152,13 +154,10 @@ const ProductDetails = () => {
                     </div>
 
                     {/* Edit Button */}
-                    <div className="pt-4">
-                      <button
-                        onClick={() => handleUpdate(id)}
-                        className="cursor-pointer transition-all duration-200 font-medium text-sm focus:outline-none px-6 py-3 rounded-lg text-white bg-customGreen hover:bg-customGreen-dark active:bg-customGreen-dark shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                      >
+                    <div className="pt-2">
+                      <Button onClick={() => handleUpdate(id)}>
                         {t("EditProduct")}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

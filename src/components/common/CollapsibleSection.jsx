@@ -44,7 +44,7 @@ export default function CollapsibleSection({
                     <FiChevronDown size={24} />
                 </button>
             </div>
-            <hr className="mb-2.5" />
+            <hr className="mb-2.5 border-t-2 border-gray-600 dark:border-gray-500" />
 
             {/* תוכן קורס/נפתח */}
             <div

@@ -227,8 +227,8 @@
   "SelectedCurrencies": "מטבעות נבחרים",
   "SelectedLanguages": "שפות נבחרות",
   "ProductDetails": "פרטי מוצר",
-  "ThisProductShowing": "מוצר זה מציג",
-  "ThisProductHidden": "מוצר זה מוסתר",
+  "ThisProductShowing": "מוצר זה מוצג בחנות",
+  "ThisProductHidden": "מוצר זה מוסתר מהחנות",
   "StockOut": "אזל המלאי",
   "InStock": "במלאי",
   "EditProduct": "ערוך מוצר",
@@ -1353,6 +1353,7 @@
   "Survey Data": "נתוני סקר",
   "PurchaseLimit": "הגבלת רכישה",
   "UnitsPerOrder": "יחידות להזמנה",
+  "Basic Details": "פרטים בסיסיים",
   "ProductPrices": "מחירי מוצר",
   "ManageStock": "ניהול מלאי",
   "StockManagement": "ניהול מלאי",
@@ -1385,5 +1386,6 @@
   "CheckingProduct": "בודק מוצר...",
   "BarcodeScanError": "שגיאה בסריקת הברקוד. אנא נסה שוב.",
   "Error": "שגיאה",
-  "Default": "ברירת מחדל"
+  "Default": "ברירת מחדל",
+  "PleaseSelectPriceList": "נא לבחור מחירון"
 }

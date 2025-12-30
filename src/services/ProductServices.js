@@ -27,9 +27,9 @@ const ProductServices = {
     // console.log('body: ', body)
     return requests.patch(`/products/${id}`, body);
   },
-  updateProductPrice: async (id, body) => {
+  updateProductPrice: async (id, priceListId, body) => {
     // console.log('body: ', body)
-    return requests.patch(`/products/updatePrice/${id}`, body);
+    return requests.patch(`/products/updatePrice/${id}/${priceListId}`, body);
   },
   updateManyProducts: async (body) => {
     return requests.patch("products/update/many", body);

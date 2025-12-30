@@ -63,12 +63,15 @@ const Products = () => {
     setSortedField,
     limitData,
     isDrawerOpen,
+    priceLists,
   } = useContext(SidebarContext);
 
   // State for barcode scanner modal
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   // State for managing barcode from scanner
   const [pendingBarcode, setPendingBarcode] = useState(null);
+  // State for selected price list (default to the default price list)
+  const [selectedPriceListId, setSelectedPriceListId] = useState(null);
 
   const { data, loading, error } = useAsync(() =>
     ProductServices.getAllProducts({
@@ -98,6 +101,15 @@ const Products = () => {
     setCategory("");
     setSortedField("");
     searchRef.current.value = "";
+    // Reset to default price list
+    if (priceLists && priceLists.length > 0) {
+      const defaultPriceList = priceLists.find(pl => pl.isDefault);
+      if (defaultPriceList) {
+        setSelectedPriceListId(defaultPriceList._id);
+      } else {
+        setSelectedPriceListId(priceLists[0]._id);
+      }
+    }
   };
 
   // console.log('productss',products)
@@ -134,6 +146,19 @@ const Products = () => {
       setPendingBarcode(null);
     }
   }, [isDrawerOpen]);
+
+  // Initialize selected price list to default price list
+  useEffect(() => {
+    if (priceLists && priceLists.length > 0 && !selectedPriceListId) {
+      const defaultPriceList = priceLists.find(pl => pl.isDefault);
+      if (defaultPriceList) {
+        setSelectedPriceListId(defaultPriceList._id);
+      } else {
+        // If no default, use the first one
+        setSelectedPriceListId(priceLists[0]._id);
+      }
+    }
+  }, [priceLists, selectedPriceListId]);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
@@ -256,6 +281,23 @@ const Products = () => {
             </div>
 
             <div className="grow-0 md:grow lg:grow xl:grow">
+              <Select 
+                value={selectedPriceListId || ""} 
+                onChange={(e) => setSelectedPriceListId(e.target.value)}
+              >
+                {priceLists && priceLists.length > 0 ? (
+                  priceLists.map((priceList) => (
+                    <option key={priceList._id} value={priceList._id}>
+                      {priceList.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">{t("PriceListTitle")}</option>
+                )}
+              </Select>
+            </div>
+
+            <div className="grow-0 md:grow lg:grow xl:grow">
               <Select onChange={(e) => setSortedField(e.target.value)}>
                 <option value="All" defaultValue hidden>
                   {t("Price")}
@@ -318,7 +360,11 @@ const Products = () => {
                   {t("PublishedTbl")}
                 </TableCell>
                 <TableCell className='text-right'>{t("ProductNameTbl")}</TableCell>
-                <TableCell className='text-center'>{t("PriceTbl")}</TableCell>
+                <TableCell className='text-center'>
+                  {selectedPriceListId && priceLists?.length > 0
+                    ? `${t("PriceTbl")} (${priceLists.find(pl => pl._id === selectedPriceListId)?.name || ""})`
+                    : t("PriceTbl")}
+                </TableCell>
                 <TableCell className='text-center'>{t("offer")}</TableCell>
                 <TableCell className='text-center'>{t("CategoryTbl")}</TableCell>
                 <TableCell className='text-center'>{t("StockTbl")}</TableCell>
@@ -336,6 +382,7 @@ const Products = () => {
               serviceId={serviceId}
               handleModalOpen={handleModalOpen}
               handleUpdate={handleUpdate}
+              selectedPriceListId={selectedPriceListId}
             />
           </Table>
           <TableFooter>

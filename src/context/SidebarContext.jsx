@@ -145,10 +145,12 @@ export const SidebarProvider = ({ children }) => {
 
         const data = await AdminServices.validateToken();
         if (data !== true) {
+          Cookies.remove("adminInfo");
           window.location.pathname = "/login";
         }
       } catch (error) {
         console.error("Error validating token:", error);
+          Cookies.remove("adminInfo");
         window.location.pathname = "/login";
       }
     }
