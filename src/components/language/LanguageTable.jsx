@@ -8,10 +8,9 @@ import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import LanguageDrawer from "@/components/drawer/LanguageDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
 
-const LanguageTable = ({ languages, isCheck, setIsCheck }) => {
-  const { serviceId, handleModalOpen, handleUpdate, title } = useToggleDrawer();
+const LanguageTable = ({ languages, isCheck, setIsCheck, handleModalOpen }) => {
+  const { serviceId, handleUpdate } = useToggleDrawer();
   // console.log("language", languages);
   const handleClick = (e) => {
     const { id, checked } = e.target;
@@ -24,8 +23,6 @@ const LanguageTable = ({ languages, isCheck, setIsCheck }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       <MainDrawer>
         <LanguageDrawer id={serviceId} />
       </MainDrawer>

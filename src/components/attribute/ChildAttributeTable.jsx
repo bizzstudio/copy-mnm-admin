@@ -6,7 +6,6 @@ import useToggleDrawer from "@/hooks/useToggleDrawer";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import CheckBox from "@/components/form/others/CheckBox";
-import DeleteModal from "@/components/modal/DeleteModal";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import AttributeChildDrawer from "@/components/drawer/AttributeChildDrawer";
@@ -17,11 +16,12 @@ const ChildAttributeTable = ({
   isCheck,
   setIsCheck,
   childAttributes,
+  handleModalOpen,
 }) => {
   // console.log(lang);
   // console.log("att", childAttributes);
 
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+  const { serviceId, handleUpdate } = useToggleDrawer();
   const { showingTranslateValue } = useUtilsFunction();
 
   const handleClick = (e) => {
@@ -34,8 +34,6 @@ const ChildAttributeTable = ({
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       {isCheck.length < 2 && (
         <MainDrawer>
           <AttributeChildDrawer id={serviceId} />

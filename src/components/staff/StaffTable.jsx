@@ -8,15 +8,12 @@ import useUtilsFunction from "@/hooks/useUtilsFunction";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import StaffDrawer from "@/components/drawer/StaffDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import ActiveInActiveButton from "@/components/table/ActiveInActiveButton";
 
-const StaffTable = ({ staffs, lang }) => {
+const StaffTable = ({ staffs, lang, handleModalOpen }) => {
   const {
-    title,
     serviceId,
-    handleModalOpen,
     handleUpdate,
     isSubmitting,
     handleResetPassword,
@@ -26,8 +23,6 @@ const StaffTable = ({ staffs, lang }) => {
 
   return (
     <>
-      <DeleteModal id={serviceId} title={title} />
-
       <MainDrawer>
         <StaffDrawer id={serviceId} />
       </MainDrawer>

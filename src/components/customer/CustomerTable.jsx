@@ -1,92 +1,81 @@
+// src/components/customer/CustomerTable.jsx
 import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import React from "react";
-import { FiZoomIn } from "react-icons/fi";
+import { FiZoomIn, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 // Internal import
-
-import MainDrawer from "@/components/drawer/MainDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
-import useToggleDrawer from "@/hooks/useToggleDrawer";
 import Tooltip from "@/components/tooltip/Tooltip";
-import CustomerDrawer from "@/components/drawer/CustomerDrawer";
-import EditDeleteButton from "@/components/table/EditDeleteButton";
 import CashierToggleButton from "@/components/table/CashierToggleButton";
 
-const CustomerTable = ({ customers }) => {
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+const CustomerTable = ({ customers, handleModalOpen }) => {
 
   return (
-    <>
-      <DeleteModal id={serviceId} title={title} />
+    <TableBody>
+      {customers?.map((user) => (
+        <TableRow key={user._id}>
+          <TableCell className="text-center">
+            <span className="font-semibold uppercase text-xs">
+              {" "}
+              {user?._id?.substring(20, 24)}
+            </span>
+          </TableCell>
 
-      <MainDrawer>
-        <CustomerDrawer id={serviceId} />
-      </MainDrawer>
+          <TableCell className="text-center">
+            <span className="text-sm">
+              {dayjs(user.createdAt).format("MMM D, YYYY")}
+            </span>
+          </TableCell>
 
-      <TableBody>
-        {customers?.map((user) => (
-          <TableRow key={user._id}>
-            <TableCell>
-              <span className="font-semibold uppercase text-xs">
-                {" "}
-                {user?._id?.substring(20, 24)}
-              </span>
-            </TableCell>
+          <TableCell className="text-center">
+            <span className="text-sm">{user.name} {user.lastName}</span>
+          </TableCell>
 
-            <TableCell>
-              <span className="text-sm">
-                {dayjs(user.createdAt).format("MMM D, YYYY")}
-              </span>
-            </TableCell>
+          <TableCell className="text-center">
+            <span className="text-sm">{user.email}</span>{" "}
+          </TableCell>
 
-            <TableCell>
-              <span className="text-sm">{user.name} {user.lastName}</span>
-            </TableCell>
+          <TableCell className="text-center">
+            <span className="text-sm font-medium">{user.phone}</span>
+          </TableCell>
 
-            <TableCell>
-              <span className="text-sm">{user.email}</span>{" "}
-            </TableCell>
+          <TableCell className="text-center">
+            <CashierToggleButton
+              id={user._id}
+              isCashier={user.isCashier || false}
+            />
+          </TableCell>
 
-            <TableCell>
-              <span className="text-sm font-medium">{user.phone}</span>
-            </TableCell>
-
-            <TableCell className="text-center">
-              <CashierToggleButton
-                id={user._id}
-                isCashier={user.isCashier || false}
-              />
-            </TableCell>
-
-            <TableCell>
-              <div className="flex justify-right text-right">
-                <div className="p-2 cursor-pointer text-gray-400 hover:text-customGreen-dark">
-                  {" "}
-                  <Link to={`/customer-order/${user._id}`}>
-                    <Tooltip
-                      id="view"
-                      Icon={FiZoomIn}
-                      title={t("ViewOrder")}
-                      bgColor="#3961ce"
-                    />
-                  </Link>
-                </div>
-
-                <EditDeleteButton
-                  title={user.name + " " + user.lastName}
-                  id={user._id}
-                  handleUpdate={handleUpdate}
-                  handleModalOpen={handleModalOpen}
-                />
+          <TableCell className="text-center">
+            <div className="flex justify-center text-center gap-2">
+              <div className="p-2 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                <Link to={`/customer/${user._id}`}>
+                  <Tooltip
+                    id="view"
+                    Icon={FiZoomIn}
+                    title={t("View")}
+                    bgColor="#10B981"
+                  />
+                </Link>
               </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </>
+              <button
+                onClick={() => handleModalOpen(user._id, `${user.name} ${user.lastName}`)}
+                className="p-2 cursor-pointer text-gray-400 hover:text-red-600 focus:outline-none"
+              >
+                <Tooltip
+                  id="delete"
+                  Icon={FiTrash2}
+                  title={t("Delete")}
+                  bgColor="#EF4444"
+                />
+              </button>
+            </div>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
   );
 };
 

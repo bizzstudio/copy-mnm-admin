@@ -1,19 +1,18 @@
-import useToggleDrawer from "@/hooks/useToggleDrawer";
 import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import CheckBox from "../form/others/CheckBox";
 import { useEffect } from "react";
-import DeleteModal from "../modal/DeleteModal";
 import MainDrawer from "../drawer/MainDrawer";
 import DeliveryDrawer from "../drawer/DeliveryDrawer";
 import EditDeleteButton from "../table/EditDeleteButton";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import useToggleDrawer from "@/hooks/useToggleDrawer";
 
-const DeliveryTable = ({ deliveries, isCheck, setIsCheck, isCheckAll }) => {
+const DeliveryTable = ({ deliveries, isCheck, setIsCheck, isCheckAll, handleModalOpen }) => {
   const { t } = useTranslation();
-  const { handleUpdate, serviceId, title, handleModalOpen } = useToggleDrawer();
+  const { handleUpdate, serviceId } = useToggleDrawer();
   // const { showingTranslateValue } = useUtilsFunction();
 
   const handleClick = (e, id) => {
@@ -25,8 +24,6 @@ const DeliveryTable = ({ deliveries, isCheck, setIsCheck, isCheckAll }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       {isCheck.length < 2 && (
         <MainDrawer>
           <DeliveryDrawer id={serviceId} />

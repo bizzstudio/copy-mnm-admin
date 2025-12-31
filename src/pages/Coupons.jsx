@@ -39,7 +39,7 @@ const Coupons = () => {
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState([]);
 
-  const { allId, serviceId, handleDeleteMany, handleUpdateMany } =
+  const { allId, serviceId, title, handleDeleteMany, handleUpdateMany, handleModalOpen } =
     useToggleDrawer();
 
   const {
@@ -75,11 +75,19 @@ const Coupons = () => {
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("CouponspageTitle")}</PageTitle>
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title="Selected Coupon"
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title="Selected Coupon"
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
       <BulkActionDrawer ids={allId} title="Coupons" />
 
       <MainDrawer maxWidth='385px'>
@@ -219,6 +227,7 @@ const Coupons = () => {
               isCheck={isCheck}
               coupons={dataTable}
               setIsCheck={setIsCheck}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
           <TableFooter>

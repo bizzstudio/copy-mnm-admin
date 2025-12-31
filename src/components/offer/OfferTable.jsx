@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 
 // Internal import
 import useUtilsFunction from "@/hooks/useUtilsFunction";
-import DeleteModal from "@/components/modal/DeleteModal";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import CheckBox from "@/components/form/others/CheckBox";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
@@ -15,8 +14,8 @@ import OfferServices from "@/services/OfferServices";
 import { SidebarContext } from "@/context/SidebarContext";
 import notifyApiResponse from "@/utils/notifyApiResponse";
 
-const OfferTable = ({ isCheck, setIsCheck, offers }) => {
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+const OfferTable = ({ isCheck, setIsCheck, offers, handleModalOpen }) => {
+  const { serviceId, handleUpdate } = useToggleDrawer();
   const { showingTranslateValue } = useUtilsFunction();
   const { t } = useTranslation();
   const { setIsUpdate } = useContext(SidebarContext);
@@ -120,10 +119,7 @@ const OfferTable = ({ isCheck, setIsCheck, offers }) => {
   };
 
   return (
-    <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
-      <TableBody>
+    <TableBody>
         {offers?.map((offer) => (
           <TableRow key={offer._id}>
             <TableCell>
@@ -180,7 +176,6 @@ const OfferTable = ({ isCheck, setIsCheck, offers }) => {
           </TableRow>
         ))}
       </TableBody>
-    </>
   );
 };
 

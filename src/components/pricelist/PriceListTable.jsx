@@ -10,15 +10,14 @@ import { useEffect, useState } from "react";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import CheckBox from "@/components/form/others/CheckBox";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import PriceListDrawer from "@/components/drawer/PriceListDrawer";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 
-const PriceListTable = ({ isCheck, priceLists, setIsCheck }) => {
+const PriceListTable = ({ isCheck, priceLists, setIsCheck, handleModalOpen }) => {
     const [updatedPriceLists, setUpdatedPriceLists] = useState([]);
 
-    const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+    const { serviceId, handleUpdate } = useToggleDrawer();
 
     const { showDateTimeFormat, globalSetting } = useUtilsFunction();
 
@@ -51,8 +50,6 @@ const PriceListTable = ({ isCheck, priceLists, setIsCheck }) => {
 
     return (
         <>
-            {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
             {isCheck.length < 2 && (
                 <MainDrawer maxWidth='570px'>
                     <PriceListDrawer id={serviceId} />
@@ -101,4 +98,3 @@ const PriceListTable = ({ isCheck, priceLists, setIsCheck }) => {
 };
 
 export default PriceListTable;
-

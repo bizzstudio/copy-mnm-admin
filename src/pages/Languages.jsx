@@ -33,7 +33,7 @@ import MainDrawer from "@/components/drawer/MainDrawer";
 const Languages = () => {
   const { toggleDrawer } = useContext(SidebarContext);
 
-  const { allId, handleUpdateMany, handleDeleteMany } = useToggleDrawer();
+  const { allId, serviceId, title, handleUpdateMany, handleDeleteMany, handleModalOpen } = useToggleDrawer();
   const { data, loading, error } = useAsync(LanguageServices.getAllLanguages);
   // console.log("data-language", data);
   const {
@@ -67,11 +67,19 @@ const Languages = () => {
 
       <BulkActionDrawer ids={allId} title="Languages" />
 
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title="Selected Currencies"
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title="Selected Languages"
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
@@ -158,6 +166,7 @@ const Languages = () => {
                 languages={dataTable}
                 isCheck={isCheck}
                 setIsCheck={setIsCheck}
+                handleModalOpen={handleModalOpen}
               />
             </Table>
             <TableFooter>
@@ -173,7 +182,7 @@ const Languages = () => {
         )
       )}
       {!loading && data.length === 0 && !error && (
-        <NotFound title="Sorry, There are no languages right now." />
+        <NotFound title={t("NoLanguages")} />
       )}
     </div>
   );

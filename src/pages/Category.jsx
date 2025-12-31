@@ -346,7 +346,7 @@ const Category = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no categories right now." />
+        <NotFound title={t("NoCategories")} />
       )}
     </div>
   );

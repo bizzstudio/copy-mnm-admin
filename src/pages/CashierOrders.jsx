@@ -357,7 +357,7 @@ const CashierOrders = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no cashier orders right now." />
+        <NotFound title={t("NoCashierOrders")} />
       )}
     </div>
   );

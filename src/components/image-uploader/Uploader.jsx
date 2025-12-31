@@ -45,6 +45,7 @@ const Uploader = ({
     accept: acceptedFileTypes,
     multiple: multiple,
     maxFiles: multiple ? maxFiles : 1,  // שימוש בפרופס במקום 20
+    maxSize: 5 * 1024 * 1024, // הגבלה של 5MB
     onDrop: async (acceptedFiles) => {
       // אם לא ניתן העלאת מספר קבצים – בוחרים רק את הראשון
       if (!multiple) acceptedFiles = acceptedFiles.slice(0, 1);

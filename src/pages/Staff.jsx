@@ -1,3 +1,4 @@
+// src/pages/Staff.jsx
 import {
   Button,
   Card,
@@ -28,6 +29,8 @@ import PageTitle from "@/components/Typography/PageTitle";
 import { AdminContext } from "@/context/AdminContext";
 import { SidebarContext } from "@/context/SidebarContext";
 import AdminServices from "@/services/AdminServices";
+import useToggleDrawer from "@/hooks/useToggleDrawer";
+import DeleteModal from "@/components/modal/DeleteModal";
 
 const Staff = () => {
   const { state } = useContext(AdminContext);
@@ -49,6 +52,7 @@ const Staff = () => {
     handleSubmitUser,
   } = useFilter(data);
 
+  const { title, serviceId, handleModalOpen } = useToggleDrawer();
   const { t } = useTranslation();
 
   // handle reset filed
@@ -60,6 +64,7 @@ const Staff = () => {
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("StaffPageTitle")} </PageTitle>
+      <DeleteModal id={serviceId} title={title} />
       <MainDrawer>
         <StaffDrawer />
       </MainDrawer>
@@ -151,7 +156,7 @@ const Staff = () => {
               </tr>
             </TableHeader>
 
-            <StaffTable staffs={dataTable} lang={lang} />
+            <StaffTable staffs={dataTable} lang={lang} handleModalOpen={handleModalOpen} />
           </Table>
           <TableFooter>
             <Pagination
@@ -164,7 +169,7 @@ const Staff = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no staff right now." />
+        <NotFound title={t("NoStaff")} />
       )}
     </div>
   );

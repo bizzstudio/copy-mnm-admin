@@ -15,10 +15,10 @@ import PopupDrawer from "@/components/drawer/PopupDrawer";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 
-const PopupTable = ({ isCheck, popups, setIsCheck }) => {
+const PopupTable = ({ isCheck, popups, setIsCheck, handleModalOpen }) => {
   const [updatedPopups, setUpdatedPopups] = useState([]);
 
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+  const { serviceId, handleUpdate } = useToggleDrawer();
 
   const { showDateTimeFormat, globalSetting, showingTranslateValue } = useUtilsFunction();
 
@@ -46,8 +46,6 @@ const PopupTable = ({ isCheck, popups, setIsCheck }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       {isCheck.length < 2 && (
         <MainDrawer maxWidth='570px'>
           <PopupDrawer id={serviceId} />

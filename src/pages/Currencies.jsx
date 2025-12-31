@@ -32,7 +32,7 @@ import NotFound from "@/components/table/NotFound";
 
 const Currencies = () => {
   const { toggleDrawer } = useContext(SidebarContext);
-  const { allId, handleUpdateMany, handleDeleteMany } = useToggleDrawer();
+  const { allId, serviceId, title, handleUpdateMany, handleDeleteMany, handleModalOpen } = useToggleDrawer();
   const { data, loading, error } = useAsync(CurrencyServices.getAllCurrency);
 
   const {
@@ -62,11 +62,19 @@ const Currencies = () => {
       <MainDrawer>
         <CurrencyDrawer />
       </MainDrawer>
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title="Selected Currencies"
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title="Selected Currencies"
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
@@ -160,6 +168,7 @@ const Currencies = () => {
                 currency={dataTable}
                 isCheck={isCheck}
                 setIsCheck={setIsCheck}
+                handleModalOpen={handleModalOpen}
               />
             </Table>
             <TableFooter>
@@ -175,7 +184,7 @@ const Currencies = () => {
         )
       )}
       {!loading && data.length === 0 && !error && (
-        <NotFound title="Sorry, There are no currency right now." />
+        <NotFound title={t("NoCurrencies")} />
       )}
     </div>
   );

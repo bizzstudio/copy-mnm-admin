@@ -5,7 +5,6 @@ import { IoRemoveSharp } from "react-icons/io5";
 
 // Internal import
 import CheckBox from "@/components/form/others/CheckBox";
-import DeleteModal from "@/components/modal/DeleteModal";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -18,7 +17,6 @@ const CategoryTable = ({
   setIsCheck,
   useParamId,
   showChild,
-  title,
   serviceId,
   handleModalOpen,
   handleUpdate,
@@ -34,12 +32,7 @@ const CategoryTable = ({
   };
 
   return (
-    <>
-      {isCheck?.length < 1 && (
-        <DeleteModal useParamId={useParamId} id={serviceId} title={title} />
-      )}
-
-      <TableBody>
+    <TableBody>
         {categories?.map((category) => (
           <TableRow key={category._id}>
             <TableCell>
@@ -141,7 +134,6 @@ const CategoryTable = ({
           </TableRow>
         ))}
       </TableBody>
-    </>
   );
 };
 

@@ -38,7 +38,7 @@ const Popups = () => {
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState([]);
 
-  const { allId, serviceId, handleDeleteMany, handleUpdateMany } = useToggleDrawer();
+  const { allId, serviceId, title, handleDeleteMany, handleUpdateMany, handleModalOpen } = useToggleDrawer();
 
   const {
     dataTable,
@@ -59,11 +59,19 @@ const Popups = () => {
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("PopupsPageTitle")}</PageTitle>
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title={t("Selected Popup")}
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title={t("Selected Popup")}
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
       <BulkActionDrawer ids={allId} title="Popups" />
 
       <MainDrawer maxWidth='570px'>
@@ -131,6 +139,7 @@ const Popups = () => {
               isCheck={isCheck}
               popups={dataTable}
               setIsCheck={setIsCheck}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
           <TableFooter>

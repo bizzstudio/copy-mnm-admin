@@ -32,6 +32,14 @@ const CustomerServices = {
   toggleCashier: async (id, body) => {
     return requests.put(`/customer/toggle-cashier/${id}`, body);
   },
+
+  updateCustomerByAdmin: async (id, body) => {
+    return requests.put(`/customer/admin/${id}`, body);
+  },
+
+  createCustomerByAdmin: async (body) => {
+    return requests.post(`/customer/admin/create`, body);
+  },
 };
 
 export default CustomerServices;

@@ -192,7 +192,7 @@ const Statuses = () => {
           </TableFooter> */}
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no statuses right now." />
+        <NotFound title={t("NoStatuses")} />
       )}
     </div>
   );

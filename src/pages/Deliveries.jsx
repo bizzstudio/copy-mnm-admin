@@ -45,7 +45,7 @@ const Deliveries = () => {
     setSortedField,
   } = useContext(SidebarContext);
 
-  const { title, allId, handleDeleteMany, handleUpdateMany } = useToggleDrawer();
+  const { title, allId, serviceId, handleDeleteMany, handleUpdateMany, handleModalOpen } = useToggleDrawer();
 
   const { t } = useTranslation();
 
@@ -83,11 +83,19 @@ const Deliveries = () => {
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("Deliveries")}</PageTitle>
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title={title}
-      />
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title={title}
+        />
+      )}
       <BulkActionDrawer ids={allId} title="Deliveries" />
       <MainDrawer>
         <DeliveryDrawer />
@@ -224,6 +232,7 @@ const Deliveries = () => {
               isCheck={isCheck}
               setIsCheck={setIsCheck}
               isCheckAll={isCheckAll}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
 
@@ -240,7 +249,7 @@ const Deliveries = () => {
           )} */}
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no deliveries right now." />
+        <NotFound title={t("NoDeliveries")} />
       )}
     </div>
   );

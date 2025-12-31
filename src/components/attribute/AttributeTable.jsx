@@ -7,15 +7,14 @@ import { Link } from "react-router-dom";
 import Tooltip from "@/components/tooltip/Tooltip";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import MainDrawer from "@/components/drawer/MainDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import CheckBox from "@/components/form/others/CheckBox";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import AttributeDrawer from "@/components/drawer/AttributeDrawer";
 
-const AttributeTable = ({ isCheck, setIsCheck, attributes }) => {
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+const AttributeTable = ({ isCheck, setIsCheck, attributes, handleModalOpen }) => {
+  const { serviceId, handleUpdate } = useToggleDrawer();
 
   const { showingTranslateValue } = useUtilsFunction();
 
@@ -31,8 +30,6 @@ const AttributeTable = ({ isCheck, setIsCheck, attributes }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       {isCheck.length < 2 && (
         <MainDrawer>
           <AttributeDrawer id={serviceId} />

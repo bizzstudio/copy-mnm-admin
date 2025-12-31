@@ -33,7 +33,7 @@ import useUtilsFunction from "@/hooks/useUtilsFunction";
 const ChildAttributes = () => {
   let { id } = useParams();
 
-  const { handleDeleteMany, allId, serviceId, handleUpdateMany } =
+  const { handleDeleteMany, allId, serviceId, title, handleUpdateMany, handleModalOpen } =
     useToggleDrawer();
   const { toggleDrawer, lang } = useContext(SidebarContext);
   const { data, loading, error } = useAsync(() =>
@@ -81,11 +81,19 @@ const ChildAttributes = () => {
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>Attributes Values</PageTitle>
 
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title="Selected Attribute Value(s)"
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title="Selected Attribute Value(s)"
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
 
       <BulkActionDrawer
         attributes={attributeData}
@@ -187,6 +195,7 @@ const ChildAttributes = () => {
               isCheck={isCheck}
               setIsCheck={setIsCheck}
               childAttributes={dataTable}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
           <TableFooter>
@@ -200,7 +209,7 @@ const ChildAttributes = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no attributes right now." />
+        <NotFound title={t("NoAttributes")} />
       )}
     </div>
   );

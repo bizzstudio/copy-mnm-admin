@@ -18,10 +18,10 @@ import CouponDrawer from "@/components/drawer/CouponDrawer";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 
-const CouponTable = ({ isCheck, coupons, setIsCheck }) => {
+const CouponTable = ({ isCheck, coupons, setIsCheck, handleModalOpen }) => {
   const [updatedCoupons, setUpdatedCoupons] = useState([]);
 
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+  const { serviceId, handleUpdate } = useToggleDrawer();
 
   const { currency, showDateFormat, globalSetting, showingTranslateValue } =
     useUtilsFunction();
@@ -50,8 +50,6 @@ const CouponTable = ({ isCheck, coupons, setIsCheck }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       {isCheck.length < 2 && (
         <MainDrawer maxWidth='385px'>
           <CouponDrawer id={serviceId} />

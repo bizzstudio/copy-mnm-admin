@@ -1,3 +1,4 @@
+// src/pages/Customers.jsx
 import {
   Card,
   Button,
@@ -12,6 +13,8 @@ import {
 } from "@windmill/react-ui";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { FiPlus } from "react-icons/fi";
 
 // Internal import
 import UploadManyTwo from "@/components/common/UploadManyTwo";
@@ -22,9 +25,13 @@ import PageTitle from "@/components/Typography/PageTitle";
 import useAsync from "@/hooks/useAsync";
 import useFilter from "@/hooks/useFilter";
 import CustomerServices from "@/services/CustomerServices";
+import DeleteModal from "@/components/modal/DeleteModal";
+import useToggleDrawer from "@/hooks/useToggleDrawer";
 
 const Customers = () => {
   const { data, loading, error } = useAsync(CustomerServices.getAllCustomers);
+  const navigate = useNavigate();
+  const { title, serviceId, handleModalOpen } = useToggleDrawer();
 
   // console.log('customer',data)
 
@@ -50,27 +57,39 @@ const Customers = () => {
     userRef.current.value = "";
   };
 
+  const handleAddCustomer = () => {
+    navigate("/customer/add");
+  };
+
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+      <DeleteModal id={serviceId} title={title} />
       <PageTitle>{t("CustomersPage")}</PageTitle>
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form
             onSubmit={handleSubmitUser}
-            className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
+            className="flex flex-wrap justify-between items-center"
           >
-            <div className="items-center">
-              <UploadManyTwo
-                title="Customers"
-                exportData={data}
-                filename={filename}
-                isDisabled={isDisabled}
-                handleSelectFile={handleSelectFile}
-                handleUploadMultiple={handleUploadMultiple}
-                handleRemoveSelectFile={handleRemoveSelectFile}
-              />
-            </div>
+            <UploadManyTwo
+              title="Customers"
+              exportData={data}
+              filename={filename}
+              isDisabled={isDisabled}
+              handleSelectFile={handleSelectFile}
+              handleUploadMultiple={handleUploadMultiple}
+              handleRemoveSelectFile={handleRemoveSelectFile}
+            />
+            <Button
+              onClick={handleAddCustomer}
+              className="h-12"
+            >
+              <span className="me-1.5">
+                <FiPlus />
+              </span>
+              {t("AddCustomer")}
+            </Button>
           </form>
         </CardBody>
       </Card>
@@ -125,18 +144,18 @@ const Customers = () => {
           <Table>
             <TableHeader>
               <tr>
-                <TableCell>{t("CustomersId")}</TableCell>
-                <TableCell>{t("CustomersJoiningDate")}</TableCell>
-                <TableCell>{t("CustomersName")}</TableCell>
-                <TableCell>{t("CustomersEmail")}</TableCell>
-                <TableCell>{t("CustomersPhone")}</TableCell>
+                <TableCell className="text-center">{t("CustomersId")}</TableCell>
+                <TableCell className="text-center">{t("CustomersJoiningDate")}</TableCell>
+                <TableCell className="text-center">{t("CustomersName")}</TableCell>
+                <TableCell className="text-center">{t("CustomersEmail")}</TableCell>
+                <TableCell className="text-center">{t("CustomersPhone")}</TableCell>
                 <TableCell className="text-center">{t("CashierStatus")}</TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-center">
                   {t("CustomersActions")}
                 </TableCell>
               </tr>
             </TableHeader>
-            <CustomerTable customers={dataTable} />
+            <CustomerTable customers={dataTable} handleModalOpen={handleModalOpen} />
           </Table>
           <TableFooter>
             <Pagination
@@ -149,7 +168,7 @@ const Customers = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no customers right now." />
+        <NotFound title={t("NoCustomers")} />
       )}
     </div>
   );

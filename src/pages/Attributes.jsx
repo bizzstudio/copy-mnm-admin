@@ -43,7 +43,7 @@ const Attributes = () => {
     })
   );
 
-  const { handleDeleteMany, allId, handleUpdateMany } = useToggleDrawer();
+  const { handleDeleteMany, allId, serviceId, title, handleUpdateMany, handleModalOpen } = useToggleDrawer();
 
   const { t } = useTranslation();
 
@@ -83,11 +83,19 @@ const Attributes = () => {
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <PageTitle>{t("AttributeTitle")}</PageTitle>
-      <DeleteModal
-        ids={allId}
-        setIsCheck={setIsCheck}
-        title="Selected Attributes"
-      />
+      {isCheck?.length >= 1 && (
+        <DeleteModal
+          ids={allId}
+          setIsCheck={setIsCheck}
+          title="Selected Attributes"
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
+        />
+      )}
       <BulkActionDrawer ids={allId} title="Attributes" />
       <MainDrawer>
         <AttributeDrawer />
@@ -225,6 +233,7 @@ const Attributes = () => {
               isCheck={isCheck}
               setIsCheck={setIsCheck}
               attributes={dataTable}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
           <TableFooter>

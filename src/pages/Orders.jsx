@@ -441,7 +441,7 @@ const Orders = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no orders right now." />
+        <NotFound title={t("NoOrders")} />
       )}
     </div>
   );

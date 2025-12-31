@@ -34,7 +34,7 @@ const Offers = () => {
   const { toggleDrawer, lang } = useContext(SidebarContext);
   const { data, loading, error } = useAsync(() => OfferServices.getAllOffers());
 
-  const { handleDeleteMany, allId, serviceId } = useToggleDrawer();
+  const { handleDeleteMany, allId, serviceId, title, handleModalOpen } = useToggleDrawer();
 
   const { t } = useTranslation();
 
@@ -75,6 +75,12 @@ const Offers = () => {
           ids={allId}
           setIsCheck={setIsCheck}
           title={t("selectedOffers")}
+        />
+      )}
+      {isCheck?.length < 1 && (
+        <DeleteModal
+          id={serviceId}
+          title={title}
         />
       )}
 
@@ -174,6 +180,7 @@ const Offers = () => {
               isCheck={isCheck}
               setIsCheck={setIsCheck}
               offers={dataTable}
+              handleModalOpen={handleModalOpen}
             />
           </Table>
           <TableFooter>
@@ -187,7 +194,7 @@ const Offers = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no offers right now." />
+        <NotFound title={t("NoOffers")} />
       )}
     </div>
   );

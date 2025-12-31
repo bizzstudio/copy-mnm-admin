@@ -4,15 +4,14 @@ import React from "react";
 // Internal import
 import CheckBox from "@/components/form/others/CheckBox";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
-import DeleteModal from "@/components/modal/DeleteModal";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import CurrencyDrawer from "@/components/drawer/CurrencyDrawer";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import ShowHideButton from "@/components/table/ShowHideButton";
 // import { SidebarContext } from '../context/SidebarContext';
 
-const CurrencyTable = ({ currency, isCheck, setIsCheck }) => {
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+const CurrencyTable = ({ currency, isCheck, setIsCheck, handleModalOpen }) => {
+  const { serviceId, handleUpdate } = useToggleDrawer();
   // console.log('currency',currency)
 
   const handleClick = (e) => {
@@ -26,8 +25,6 @@ const CurrencyTable = ({ currency, isCheck, setIsCheck }) => {
 
   return (
     <>
-      {isCheck.length < 1 && <DeleteModal id={serviceId} title={title} />}
-
       <MainDrawer>
         <CurrencyDrawer id={serviceId} />
       </MainDrawer>
