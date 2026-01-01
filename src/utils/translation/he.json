@@ -1127,7 +1127,7 @@
   "Name": "שם",
   "LastMonth": "חודש שעבר",
   "Method": "שיטה",
-  "StoreCustomization": "התאמה אישית של חנות",
+  "StoreCustomization": "התאמה אישית של החנות",
   "SearchbyCustomerName": "חפש לפי שם לקוח",
   "DownloadAllOrders": "הורדת כל ההזמנות",
   "SearchbyStatusName": "חפש לפי שם מלקט",
@@ -1448,5 +1448,7 @@
   "CustomerEmailPlaceholder": "הזן את כתובת האימייל של הלקוח",
   "CustomerPhonePlaceholder": "הזן את מספר הטלפון של הלקוח",
   "CompanyNumberPlaceholder": "הזן את מספר ח.פ של החברה",
+  "CreditLimit": "מסגרת אשראי",
+  "CreditLimitPlaceholder": "הזן מסגרת אשראי",
   "Back": "חזרה"
 }

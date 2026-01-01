@@ -31,7 +31,6 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
         isNewCustomer,
     } = useCustomerSubmit(customerId, customer);
 
-
     return (
         <div className="mt-6">
             <Card className="bg-white dark:bg-gray-800 shadow-lg">
@@ -101,12 +100,10 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 </div>
                             </div>
 
-                            {/* Customer Type, Company Number (if business/institutional), Price List (if not casual), and Payment Terms */}
+                            {/* Customer Type, Company Number (if business/institutional), Price List (if not casual), Credit Limit (if not casual), and Payment Terms */}
                             <div className={`grid gap-6 ${customerType === "casual"
                                     ? "grid-cols-1 sm:grid-cols-2"
-                                    : (customerType === "business" || customerType === "institutional")
-                                        ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-4"
-                                        : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+                                    : "grid-cols-1 lg:grid-cols-2 xl:grid-cols-4"
                                 }`}>
                                 <div className="flex flex-col">
                                     <LabelArea label={t("CustomerType")} />
@@ -151,6 +148,23 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                             ))}
                                         </Select>
                                         <Error errorName={errors.priceList} />
+                                    </div>
+                                )}
+
+                                {/* Credit Limit - רק אם לא casual, אחרי המחירון */}
+                                {customerType !== "casual" && (
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("CreditLimit")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("CreditLimit")}
+                                            name="creditLimit"
+                                            type="number"
+                                            min={0}
+                                            placeholder={t("CreditLimitPlaceholder")}
+                                            isRequired={false}
+                                        />
+                                        <Error errorName={errors.creditLimit} />
                                     </div>
                                 )}
 

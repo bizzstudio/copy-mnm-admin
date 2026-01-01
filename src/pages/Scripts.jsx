@@ -66,13 +66,13 @@ const Scripts = () => {
     }
 
     return (
-        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+        <>
             <PageTitle>{t("Scripts")}</PageTitle>
             <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg relative mb-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-12 font-sans">
                         <div className="col-span-12 md:col-span-12 lg:col-span-12 mr-3">
-                            <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 grow scrollbar-hide w-full max-h-full">
+                            <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 flex-grow scrollbar-hide w-full max-h-full">
 
                                 {/* Header Scripts Section */}
                                 <div className="mb-8">
@@ -87,7 +87,6 @@ const Scripts = () => {
                                     <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                         <CodeEditor
                                             value={headCode}
-                                            noWrapper={true}
                                             onChange={handleHeadChange}
                                             placeholder={t("HeaderScriptsPlaceholder")}
                                             height="250px"
@@ -113,7 +112,6 @@ const Scripts = () => {
                                     <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                         <CodeEditor
                                             value={bodyStartCode}
-                                            noWrapper={true}
                                             onChange={handleBodyStartChange}
                                             placeholder={t("BodyStartScriptsPlaceholder")}
                                             height="250px"
@@ -181,7 +179,7 @@ const Scripts = () => {
                 </div>
             </div>
 
-        </div>
+        </>
     );
 };
 

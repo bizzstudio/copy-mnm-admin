@@ -1,3 +1,4 @@
+// src/hooks/useCustomerSubmit.js
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -48,6 +49,7 @@ const useCustomerSubmit = (customerId, customer) => {
         companyNumber: customer.companyNumber || "",
         priceList: getDefaultPriceList(customer.priceList),
         paymentTerms: customer.paymentTerms || "current",
+        creditLimit: customer.creditLimit || 0,
       };
     }
     return {
@@ -59,6 +61,7 @@ const useCustomerSubmit = (customerId, customer) => {
       companyNumber: "",
       priceList: getDefaultPriceListId(),
       paymentTerms: "current",
+      creditLimit: 0,
     };
   };
 
@@ -88,8 +91,9 @@ const useCustomerSubmit = (customerId, customer) => {
         }
       }
     } else if (customerType === "casual") {
-      // אם סוג הלקוח הוא casual, נאפס את המחירון
+      // אם סוג הלקוח הוא casual, נאפס את המחירון ואת מסגרת האשראי
       setValue("priceList", null, { shouldDirty: false });
+      setValue("creditLimit", 0, { shouldDirty: false });
     }
   }, [customerType, priceLists, currentPriceList, setValue]);
 
@@ -158,6 +162,9 @@ const useCustomerSubmit = (customerId, customer) => {
         finalPriceList = null;
       }
 
+      // אם הלקוח הוא casual, מסגרת האשראי חייבת להיות 0
+      const finalCreditLimit = data.customerType === "casual" ? 0 : (data.creditLimit || 0);
+
       const customerData = {
         name: data.name,
         lastName: data.lastName,
@@ -167,6 +174,7 @@ const useCustomerSubmit = (customerId, customer) => {
         companyNumber: data.companyNumber || "",
         priceList: finalPriceList,
         paymentTerms: data.paymentTerms,
+        creditLimit: finalCreditLimit,
         image: imageUrl,
         documents: formattedDocuments,
         address: customer?.address || {},

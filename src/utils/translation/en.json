@@ -1414,5 +1414,7 @@
   "CustomerEmailPlaceholder": "Enter customer's email address",
   "CustomerPhonePlaceholder": "Enter customer's phone number",
   "CompanyNumberPlaceholder": "Enter company registration number",
+  "CreditLimit": "Credit Limit",
+  "CreditLimitPlaceholder": "Enter credit limit",
   "Back": "Back"
 }
