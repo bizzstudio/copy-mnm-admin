@@ -56,8 +56,8 @@ const StatusDrawer = ({ id }) => {
         ) : (
           <Title
             register={register}
-            title={t("הוספת מלקטים")}
-            description={t("נא להכניס את כל הפרטים")}
+            title={t("AddStatus")}
+            description={t("AddStatusDescription")}
           />
         )}
       </div>

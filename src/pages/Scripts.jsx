@@ -72,7 +72,7 @@ const Scripts = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-12 font-sans">
                         <div className="col-span-12 md:col-span-12 lg:col-span-12 mr-3">
-                            <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 flex-grow scrollbar-hide w-full max-h-full">
+                            <div className="lg:px-6 pt-4 lg:pl-40 lg:pr-40 md:pl-5 md:pr-5 grow scrollbar-hide w-full max-h-full">
 
                                 {/* Header Scripts Section */}
                                 <div className="mb-8">

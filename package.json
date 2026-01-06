@@ -65,8 +65,8 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "dev": "vite --force --port 4104",
-    "host": "vite --host 0.0.0.0 --port 4104",
+    "dev": "vite --force --port 4105",
+    "host": "vite --host 0.0.0.0 --port 4105",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest"
