@@ -198,7 +198,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                             </div>
 
                             {/* Documents Upload */}
-                            <div className="flex flex-col">
+                            {/* <div className="flex flex-col">
                                 <LabelArea label={t("Documents")} />
                                 <Uploader
                                     imageUrl={documents}
@@ -207,7 +207,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     multiple={true}
                                     onlyImages={false}
                                 />
-                            </div>
+                            </div> */}
 
                             {/* Update/Save Button */}
                             {hasChanges && (

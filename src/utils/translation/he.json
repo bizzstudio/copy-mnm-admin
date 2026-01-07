@@ -1434,7 +1434,7 @@
   "AddCustomer": "הוסף לקוח",
   "EditCustomer": "ערוך לקוח",
   "DragYourFile": "גרור את הקבצים שלך לכאן",
-  "fileFormat": "(כל סוגי הקבצים מתקבלים)",
+  "fileFormat": "(כל סוגי הקבצים מתקבלים, עד 5MB)",
   "Files Uploaded successfully!": "הקבצים הועלו בהצלחה!",
   "File Uploaded successfully!": "הקובץ הועלה בהצלחה!",
   "File deleted successfully!": "הקובץ נמחק בהצלחה!",
@@ -1451,5 +1451,11 @@
   "CompanyNumberPlaceholder": "הזן את מספר ח.פ של החברה",
   "CreditLimit": "מסגרת אשראי",
   "CreditLimitPlaceholder": "הזן מסגרת אשראי",
-  "Back": "חזרה"
+  "Back": "חזרה",
+  "DeleteDocument": "מחיקת מסמך",
+  "AreYouSureDeleteDocument": "האם אתה בטוח שברצונך למחוק מסמך זה? פעולה זו לא ניתנת לביטול.",
+  "DocumentDeletedSuccessfully": "המסמך נמחק בהצלחה",
+  "DocumentNameUpdatedSuccessfully": "שם המסמך עודכן בהצלחה",
+  "DeleteFailed": "מחיקת המסמך נכשלה",
+  "Cancel": "ביטול"
 }

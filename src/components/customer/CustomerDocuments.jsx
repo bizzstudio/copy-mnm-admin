@@ -1,99 +1,128 @@
 // src/components/customer/CustomerDocuments.jsx
 import React, { useState } from "react";
-import { Card, CardBody, Button } from "@windmill/react-ui";
+import { Card, CardBody } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
-import { BiFile, BiDownload, BiTrash } from "react-icons/bi";
-import { FiFile } from "react-icons/fi";
+import { BiFile } from "react-icons/bi";
 
 // Internal import
 import Uploader from "@/components/image-uploader/Uploader";
 import CustomerServices from "@/services/CustomerServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import notifyApiResponse from "@/utils/notifyApiResponse";
+import DocumentCard from "@/components/customer/DocumentCard";
 
 const CustomerDocuments = ({ customer, customerId }) => {
     const { t } = useTranslation();
-    // המרת documents לפורמט שהשרת מצפה (מערך של אובייקטים עם name ו-url)
+    // המרת documents לפורמט שהשרת מצפה (מערך של אובייקטים עם name, url ו-_id)
     const initialDocuments = customer?.documents || [];
     const formattedInitialDocuments = initialDocuments.map((doc) => {
         if (typeof doc === "string") {
-            return { name: doc.split("/").pop(), url: doc };
+            return {
+                name: doc.split("/").pop(),
+                url: doc
+            };
         }
-        return { name: doc.name || doc.url?.split("/").pop() || "document", url: doc.url || doc.link || doc };
+        return {
+            name: doc.name || doc.url?.split("/").pop() || "document",
+            url: doc.url || doc.link || doc,
+            _id: doc._id
+        };
     });
     const [documents, setDocuments] = useState(formattedInitialDocuments);
     const [isUpdating, setIsUpdating] = useState(false);
 
     const handleDocumentsChange = (newDocuments) => {
-        // המרת לפורמט שהשרת מצפה (מערך של אובייקטים עם name ו-url)
+        // המרת לפורמט שהשרת מצפה (מערך של אובייקטים עם name, url ו-_id)
         // Uploader מחזיר אובייקטים עם link ו-name כש-onlyImages=false
         if (Array.isArray(newDocuments)) {
             const formattedDocs = newDocuments.map((doc) => {
                 if (typeof doc === "string") {
-                    return { name: doc.split("/").pop(), url: doc };
+                    return {
+                        name: doc.split("/").pop(),
+                        url: doc
+                    };
                 }
                 // אם יש link (מהעלאה חדשה), נמיר ל-url
                 if (doc.link) {
-                    return { name: doc.name || doc.link.split("/").pop(), url: doc.link };
+                    return {
+                        name: doc.name || doc.link.split("/").pop(),
+                        url: doc.link,
+                        _id: doc._id
+                    };
                 }
                 // אם יש url (מהשרת), נשמור כמו שהוא
                 if (doc.url) {
-                    return { name: doc.name || doc.url.split("/").pop(), url: doc.url };
+                    return {
+                        name: doc.name || doc.url.split("/").pop(),
+                        url: doc.url,
+                        _id: doc._id
+                    };
                 }
-                return { name: doc.name || "document", url: doc.url || doc.link || doc };
+                return {
+                    name: doc.name || "document",
+                    url: doc.url || doc.link || doc,
+                    _id: doc._id
+                };
             });
             setDocuments(formattedDocs);
         } else if (newDocuments && typeof newDocuments === "object" && !Array.isArray(newDocuments)) {
             // אם זה אובייקט יחיד (לא מערך)
             const doc = newDocuments;
             const formatted = doc.link
-                ? { name: doc.name || doc.link.split("/").pop(), url: doc.link }
-                : { name: doc.name || doc.url?.split("/").pop() || "document", url: doc.url || doc.link || "" };
+                ? {
+                    name: doc.name || doc.link.split("/").pop(),
+                    url: doc.link,
+                    _id: doc._id
+                }
+                : {
+                    name: doc.name || doc.url?.split("/").pop() || "document",
+                    url: doc.url || doc.link || "",
+                    _id: doc._id
+                };
             setDocuments([formatted]);
         } else {
             setDocuments([]);
         }
     };
 
-    const handleSaveDocuments = async () => {
+    // שמירה אוטומטית של מסמכים אחרי העלאה
+    const handleUploadComplete = async (uploadedFiles) => {
         try {
             setIsUpdating(true);
+            // המרת הקבצים שהועלו לפורמט הנדרש
+            const newDocs = Array.isArray(uploadedFiles)
+                ? uploadedFiles.map((file) => ({
+                    name: file.name || (typeof file === "string" ? file.split("/").pop() : file.link?.split("/").pop() || "document"),
+                    url: typeof file === "string" ? file : (file.link || file.url || "")
+                }))
+                : [{
+                    name: uploadedFiles.name || (typeof uploadedFiles === "string" ? uploadedFiles.split("/").pop() : uploadedFiles.link?.split("/").pop() || "document"),
+                    url: typeof uploadedFiles === "string" ? uploadedFiles : (uploadedFiles.link || uploadedFiles.url || "")
+                }];
+
+            // עדכון המסמכים עם המסמכים החדשים
+            const updatedDocuments = [...documents, ...newDocs];
+
+            // שמירה אוטומטית לשרת
             const customerData = {
-                ...customer,
-                documents: documents,
+                documents: updatedDocuments,
             };
             const res = await CustomerServices.updateCustomerByAdmin(customerId, customerData);
-            notifySuccess(res.message?.he || res.message || t("DocumentsUpdatedSuccessfully"));
+
+            // עדכון המסמכים מהתשובה של השרת
+            if (res.customer?.documents) {
+                setDocuments(res.customer.documents);
+            } else {
+                setDocuments(updatedDocuments);
+            }
+
+            notifyApiResponse(res, true);
         } catch (err) {
-            notifyError(err?.response?.data?.message?.he || err?.response?.data?.message || err?.message || t("UpdateFailed"));
+            notifyApiResponse(err, false);
+            // במקרה של שגיאה, נחזיר את המסמכים למצב הקודם
+            setDocuments(documents);
         } finally {
             setIsUpdating(false);
         }
-    };
-
-    const handleDownload = (url, name) => {
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = name || "document";
-        link.target = "_blank";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    const handleRemoveDocument = (index) => {
-        const updatedDocuments = documents.filter((_, i) => i !== index);
-        setDocuments(updatedDocuments);
-    };
-
-    const getFileIcon = (doc) => {
-        const url = doc.url || doc.link || (typeof doc === "string" ? doc : "");
-        if (!url) return <FiFile className="w-12 h-12 text-gray-400" />;
-        const extension = url.split(".").pop()?.toLowerCase();
-        const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
-        if (imageExtensions.includes(extension)) {
-            return <img src={url} alt="Document" className="w-12 h-12 object-cover rounded" />;
-        }
-        return <FiFile className="w-12 h-12 text-gray-400" />;
     };
 
     return (
@@ -117,10 +146,17 @@ const CustomerDocuments = ({ customer, customerId }) => {
                             <Uploader
                                 imageUrl={documents}
                                 setImageUrl={handleDocumentsChange}
-                                folder="customer-documents"
+                                folder="customer-documents-mnm"
                                 multiple={true}
                                 onlyImages={false}
+                                hideAfterUpload={true}
+                                onUploadComplete={handleUploadComplete}
                             />
+                            {isUpdating && (
+                                <div className="mt-2 text-sm text-mainColor">
+                                    {t("Saving")}...
+                                </div>
+                            )}
                         </div>
 
                         {/* Documents List */}
@@ -129,62 +165,17 @@ const CustomerDocuments = ({ customer, customerId }) => {
                                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                                     {t("UploadedDocuments")} ({documents.length})
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {documents.map((doc, index) => {
-                                        const docUrl = doc.url || doc.link || "";
-                                        const docName = doc.name || docUrl.split("/").pop() || `Document ${index + 1}`;
-                                        return (
-                                            <div
-                                                key={index}
-                                                className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600"
-                                            >
-                                                <div className="flex items-center gap-3 mb-3">
-                                                    {getFileIcon(doc)}
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                                                            {docName}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                                            {docUrl}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        size="small"
-                                                        layout="outline"
-                                                        onClick={() => handleDownload(docUrl, docName)}
-                                                        className="flex-1"
-                                                    >
-                                                        <BiDownload className="w-4 h-4 mr-1" />
-                                                        {t("Download")}
-                                                    </Button>
-                                                    <Button
-                                                        size="small"
-                                                        layout="outline"
-                                                        onClick={() => handleRemoveDocument(index)}
-                                                        className="text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
-                                                    >
-                                                        <BiTrash className="w-4 h-4" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                                    {documents.map((doc) => (
+                                        <DocumentCard
+                                            key={doc._id}
+                                            document={doc}
+                                            customerId={customerId}
+                                            allDocuments={documents}
+                                            onDocumentsUpdate={setDocuments}
+                                        />
+                                    ))}
                                 </div>
-                            </div>
-                        )}
-
-                        {/* Save Button */}
-                        {documents.length > 0 && (
-                            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <Button
-                                    onClick={handleSaveDocuments}
-                                    disabled={isUpdating}
-                                    className="w-full md:w-auto"
-                                >
-                                    {isUpdating ? t("Saving") + "..." : t("SaveDocuments")}
-                                </Button>
                             </div>
                         )}
 
@@ -205,4 +196,3 @@ const CustomerDocuments = ({ customer, customerId }) => {
 };
 
 export default CustomerDocuments;
-

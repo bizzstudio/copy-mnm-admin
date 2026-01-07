@@ -22,6 +22,8 @@ const Uploader = ({
   folder,
   isSmall = false, // האם להציג את האינפוט בקטן או לא
   maxFiles = 20,
+  hideAfterUpload = false, // האם להסתיר את התצוגה המקדימה אחרי העלאה מוצלחת
+  onUploadComplete, // callback שקורא אחרי העלאה מוצלחת
 }) => {
   // פונקציה לבדיקת אם הקישור הוא מ-Imgur (עבור תצוגת גבול לפי הצלבה)
   const isUploaded = (url) => {
@@ -82,19 +84,39 @@ const Uploader = ({
 
           if (multiple) {
             notifySuccess(onlyImages ? t("Images Uploaded successfully!") : t("Files Uploaded successfully!"));
-            if (onlyImages) {
-              setImageUrl((prev) => [...(prev || []), ...links]);
-            } else {
-              // עבור קבצים – נבנה מערך של אובייקטים עם link ו-name
-              const fileObjects = links.map((link) => ({ link, name: link.split('/').pop() }));
-              setImageUrl((prev) => [...(prev || []), ...fileObjects]);
+            const fileObjects = onlyImages ? links : links.map((link) => ({ link, name: link.split('/').pop() }));
+
+            // אם hideAfterUpload=true, לא מעדכנים את imageUrl כדי שלא יופיעו בתצוגה המקדימה
+            if (!hideAfterUpload) {
+              if (onlyImages) {
+                setImageUrl((prev) => [...(prev || []), ...links]);
+              } else {
+                setImageUrl((prev) => [...(prev || []), ...fileObjects]);
+              }
+            }
+
+            // מנקים את files כדי שלא יופיעו בתצוגה המקדימה
+            setFiles([]);
+
+            // קריאה ל-callback אם קיים
+            if (onUploadComplete) {
+              onUploadComplete(fileObjects);
             }
           } else {
             notifySuccess(onlyImages ? t("Image Uploaded successfully!") : t("File Uploaded successfully!"));
-            if (onlyImages) {
-              setImageUrl(links[0]);
-            } else {
-              setImageUrl({ link: links[0], name: links[0].split('/').pop() });
+            const uploadedData = onlyImages ? links[0] : { link: links[0], name: links[0].split('/').pop() };
+
+            // אם hideAfterUpload=true, לא מעדכנים את imageUrl כדי שלא יופיעו בתצוגה המקדימה
+            if (!hideAfterUpload) {
+              setImageUrl(uploadedData);
+            }
+
+            // מנקים את files כדי שלא יופיעו בתצוגה המקדימה
+            setFiles([]);
+
+            // קריאה ל-callback אם קיים
+            if (onUploadComplete) {
+              onUploadComplete(uploadedData);
             }
           }
         } catch (error) {
@@ -191,35 +213,37 @@ const Uploader = ({
       </div>
 
       <div className="text-mainColor">{loading && err}</div>
-      <aside className="flex flex-row flex-wrap mt-4">
-        {multiple ? (
-          <DndProvider backend={HTML5Backend}>
-            <Container
-              onlyImages={onlyImages}
-              setImageUrl={setImageUrl}
-              imageUrl={imageUrl}
-              handleRemoveImage={handleRemoveImage}
-            />
-          </DndProvider>
-        ) : imageUrl ? (
-          <div className="relative">
-            <img
-              className="inline-flex border rounded-md w-24 max-h-24 p-2 border-gray-100 dark:border-gray-600"
-              src={imageUrl}
-              alt="Image"
-            />
-            <button
-              type="button"
-              className="absolute top-0 right-0 text-red-500 focus:outline-none"
-              onClick={() => handleRemoveImage(imageUrl)}
-            >
-              <FiXCircle />
-            </button>
-          </div>
-        ) : (
-          thumbs
-        )}
-      </aside>
+      {!hideAfterUpload && (
+        <aside className="flex flex-row flex-wrap mt-4">
+          {multiple ? (
+            <DndProvider backend={HTML5Backend}>
+              <Container
+                onlyImages={onlyImages}
+                setImageUrl={setImageUrl}
+                imageUrl={imageUrl}
+                handleRemoveImage={handleRemoveImage}
+              />
+            </DndProvider>
+          ) : imageUrl ? (
+            <div className="relative">
+              <img
+                className="inline-flex border rounded-md w-24 max-h-24 p-2 border-gray-100 dark:border-gray-600"
+                src={imageUrl}
+                alt="Image"
+              />
+              <button
+                type="button"
+                className="absolute top-0 right-0 text-red-500 focus:outline-none"
+                onClick={() => handleRemoveImage(imageUrl)}
+              >
+                <FiXCircle />
+              </button>
+            </div>
+          ) : (
+            thumbs
+          )}
+        </aside>
+      )}
     </div>
   );
 };
