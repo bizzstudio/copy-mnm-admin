@@ -1,3 +1,4 @@
+// src/components/form/others/PrintReceipt.jsx
 import React, { useRef, useState } from "react";
 import { FiPrinter } from "react-icons/fi";
 import { useReactToPrint } from "react-to-print";
@@ -10,11 +11,13 @@ import { notifyError } from "../../../utils/toast";
 import OrderServices from "../../../services/OrderServices";
 import SettingServices from "../../../services/SettingServices";
 import InvoiceForPrint from "@/components/invoice/InvoiceForPrint";
+import useUtilsFunction from "@/hooks/useUtilsFunction";
 
 const PrintReceipt = ({ orderId, isCashierOrder = false }) => {
   const printRefTwo =  useRef(null);
   const [orderData, setOrderData] = useState({});
   const { t } = useTranslation();
+  const { storeCustomizationSetting } = useUtilsFunction();
 
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
 
@@ -52,7 +55,7 @@ const PrintReceipt = ({ orderId, isCashierOrder = false }) => {
   `;
 
   const handlePrint = useReactToPrint({
-    content: () => printRefTwo.current,
+    contentRef: printRefTwo,
     pageStyle: pageStyle,
     documentTitle: t("Order"),
   });
@@ -68,7 +71,7 @@ const PrintReceipt = ({ orderId, isCashierOrder = false }) => {
      const sortedCart = res.cart.sort((a, b) => a?.sku - b?.sku);
     
      setOrderData({ ...res, cart: sortedCart });
-      setTimeout(() => handlePrint(), 0);
+      setTimeout(() => handlePrint(), 100);
     } catch (err) {
       // console.log("order by user id error", err);
       notifyError(err ? err?.response?.data?.message : err?.message);
@@ -84,6 +87,7 @@ const PrintReceipt = ({ orderId, isCashierOrder = false }) => {
             data={orderData}
             ref={printRefTwo}
             globalSetting={globalSetting}
+            storeCustomizationSetting={storeCustomizationSetting}
           />
         )}
       </div>

@@ -1,578 +1,274 @@
 // src/components/invoice/InvoiceForPrint.jsx
+import React, { forwardRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  ModalBody,
   Table,
+  TableHeader,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHeader,
   TableRow,
+  Badge,
 } from "@windmill/react-ui";
-import { forwardRef, Fragment } from "react";
-import { useTranslation } from "react-i18next";
-import AddressFormat from "../AddressFormat";
+
+// Internal imports
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import Status from "@/components/table/Status";
 
-const InvoiceForPrint = forwardRef(({ data, globalSetting }, ref) => {
+const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSetting }, ref) => {
   const { t } = useTranslation();
+  const { currency, getNumberTwo, showDateTimeFormat, showDateFormat } = useUtilsFunction();
 
-  const currency = globalSetting?.default_currency || "₪";
-
-  const { showDateTimeFormat, storeCustomizationSetting } = useUtilsFunction();
+  // Helper component for displaying info fields
+  const InfoField = ({ label, value, className = "" }) => (
+    <div className={`flex flex-col ${className}`}>
+      <span className="text-xs font-semibold text-gray-500 uppercase">
+        {label}
+      </span>
+      <span className="text-sm text-gray-800">
+        {value || "-"}
+      </span>
+    </div>
+  );
 
   return (
-    <div ref={ref} className="p-4" dir="rtl">
-      {Array.isArray(data) ? (
-        data?.map((or, i) => (
-          <div className="mb-8" key={i + 1}>
-            <div className="w-full flex justify-between gap-1">
-              <div>
-                <img
-                  className="flex"
-                  size="large"
-                  // src={globalSetting?.logo}
-                  src={storeCustomizationSetting?.footer?.block4_logo}
-                  alt="logo"
-                  width={100}
-                />
-                <div className="flex justify-center">
-                  {globalSetting?.address},&nbsp;
-                  {globalSetting?.contact}&nbsp;
-                  {globalSetting?.web_site}
-                </div>
-              </div>
-              <div className="flex flex-col items-start">
-                <h1 className="text-lg font-bold underline">{t("addressee")}: </h1>
-                <div>
-                  <span>{t("name")}</span>:{" "}
-                  <span className="font-semibold text-gray-900">
-                    {or?.user_info?.name} {or?.user_info?.lastName}
-                  </span>
-                </div>
-                <div>
-                  <span>{t("email")}</span>:{" "}
-                  <span className="font-semibold text-gray-900">
-                    {or?.user_info?.email}
-                  </span>
-                </div>
-                <div>
-                  <span>{t("phone")}</span>:{" "}
-                  <span className="font-semibold text-gray-900">
-                    {or?.user_info?.contact}
-                  </span>
-                </div>
-              </div>
-              {or?.shippingOption && (
-                <div className="flex flex-col items-start">
-                  <h1 className="text-lg font-bold underline">{t("ShippingMethodLower")}: </h1>
-                  <div>
-                    <span>{t("ShippingMethodLower")}</span>:{" "}
-                    <span className="font-semibold text-gray-900">
-                      {or?.shippingOption == 2 ? t("shipping"): t("pickup")}
-                    </span>
-                  </div>
-                  <div>
-                    {or.shippingOption == 2 &&
-                      <div>
-                        <span>{t("address")}: </span>
-                        <span className="font-semibold text-gray-900">
-                          <AddressFormat userInfo={or?.user_info} />
-                        </span>
-                      </div>}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {or.customer_note && <div className="mt-2">
-              <b>{t("CustomerNote")}: </b>
-              <span>
-                {or.customer_note}
-              </span>
-            </div>}
-
-            <TableContainer className="mt-2 mb-4 rounded-b-lg">
-              <Table>
-                <TableHeader>
-                  <tr>
-                    <TableCell className="bg-white w-fit text-center">
-                      <span className="text-xs capitalize text-gray-700 mx-auto text-center">
-                        {t("Number")}
-                      </span>
-                    </TableCell>
-                    <TableCell className="bg-white text-right">
-                      <span className="text-xs capitalize text-gray-700">
-                        {t("Item")}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-xs bg-white capitalize text-center text-gray-700">
-                      {t("QTY")}
-                    </TableCell>
-                    <TableCell className="text-xs bg-white capitalize text-right text-gray-700">
-                      {t("Total")}
-                    </TableCell>
-                  </tr>
-                </TableHeader>
-                <TableBody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 text-serif text-sm">
-                  {or?.cart?.map((item, i) => (
-                    <TableRow
-                      key={i}
-                      className="dark:border-gray-700 dark:text-gray-400 bill"
-                    >
-                      <TableCell className="py-1 w-fit text-center">
-                        <span className="font-normal text-gray-600 bill">
-                          {item.sku}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-1">
-                        <span className="font-normal text-gray-600 bill">
-                          {item.title.he}
-                          {" | "}
-                          {item.title.en}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-center py-1">
-                        <span className="font-bold text-center bill">
-                          {" "}
-                          {item.quantity}{" "}
-                        </span>
-                      </TableCell>
-
-                      <TableCell className="text-right py-1">
-                        <span className="text-right font-bold text-gray-700 bill">
-                          {" "}
-                          {currency}
-                          {(item.discountedPrice ? item.discountedPrice : item.itemTotal).toFixed(2)}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <ModalBody>
-              <div className="flex justify-between -mt-3 mr-1 mb-4" dir="rtl">
-                <div className="mt-2">
-                  {or?.paymentMethod === "Combined" ? (
-                    <p className="bill">
-                      <span className="mb-1 font-semibold bill font-serif text-xs text-gray-700 dark:text-gray-500 block">
-                        {t("Paymentmethod")}:{" "}
-                        <span className="text-gray-600 bill">
-                          {or.paymentMethod}
-                        </span>
-                      </span>
-                      {or?.paymentDetails?.selectPaymentOption_Card !==
-                        undefined && (
-                          <span className="text-xs bill">
-                            {or?.paymentDetails?.selectPaymentOption_Card}:{" "}
-                            <span className="font-semibold text-gray-900">
-                              {" "}
-                              {currency}
-                              {parseFloat(
-                                or?.paymentDetails?.paymentAmount_Card
-                              ).toFixed(2)}
-                            </span>
-                          </span>
-                        )}
-                      <br />
-                      {or?.paymentDetails?.selectPaymentOption_Cash !==
-                        undefined && (
-                          <span className="text-xs bill">
-                            {or?.paymentDetails?.selectPaymentOption_Cash}:{" "}
-                            <span className="font-semibold text-gray-900">
-                              {currency}
-                              {parseFloat(
-                                or?.paymentDetails?.paymentAmount_Cash
-                              ).toFixed(2)}
-                            </span>
-                          </span>
-                        )}
-                      <br />
-                      {or?.paymentDetails?.selectPaymentOption_Credit !==
-                        undefined && (
-                          <span className="text-xs bill">
-                            {or?.paymentDetails?.selectPaymentOption_Credit}:{" "}
-                            <span className="font-semibold text-gray-900">
-                              {currency}
-                              {parseFloat(
-                                or?.paymentDetails?.paymentAmount_Credit
-                              ).toFixed(2)}
-                            </span>
-                          </span>
-                        )}
-                    </p>
-                  ) : (
-                    <p className="bill">
-                      <span className="text-gray-600">
-                        {t("Paymentmethod")}:{" "}
-                        <span className="font-semibold text-gray-900">
-                          {or.paymentMethod}
-                        </span>
-                      </span>
-                    </p>
-                  )}
-
-                  <div className="text-xs bill">
-                    <span className="text-gray-600">
-                      {t("NoofItems")}:{" "}
-                      <span className="font-semibold text-gray-900">
-                        {or?.cart?.length}
-                      </span>{" "}
-                    </span>{" "}
-                    <br />
-                    <span className="text-gray-600">
-                      {t("BillNo")}:{" "}
-                      <span className="font-semibold text-gray-900">
-                        {" "}
-                        {or?.invoice}
-                      </span>{" "}
-                    </span>{" "}
-                    <br />
-                    <br />
-                    {globalSetting?.vat_number && (
-                      <>
-                        <span className="text-gray-600">
-                          {t("VATNumber")}:{" "}
-                          <span className="font-semibold text-gray-900">
-                            {" "}
-                            {globalSetting?.vat_number}
-                          </span>{" "}
-                        </span>
-                        <br />
-                      </>
-                    )}
-                    <span className="text-gray-600">
-                      {t("Date")}:{" "}
-                      <span className="font-semibold text-gray-700">
-                        {" "}
-                        {/* {dayjs(new Date()).format('MMMM D, YYYY h:mm A')} */}
-                        {/* {dayjs(new Date()).format("MM/D/YYYY")} */}
-                        {showDateTimeFormat(or?.createdAt)}
-                      </span>{" "}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-2">
-                  <h5 className="flex justify-between font-medium text-xs ">
-                    <span>{t("GrossTotal")}: </span>{" "}
-                    <span className="font-semibold ">
-                      {currency}
-                      {parseFloat(or?.subTotal).toFixed(2)}
-                    </span>
-                  </h5>
-
-                  {or?.shippingCost > 0 && (
-                    <h5 className="flex justify-between font-medium text-xs">
-                      <span> {t("ShippingCostLower")}: </span>{" "}
-                      <span className="font-semibold ">
-                        {currency}
-                        {parseFloat(or?.shippingCost).toFixed(2)}
-                      </span>
-                    </h5>
-                  )}
-                  {or?.discount > 0 && (
-                    <h5 className="flex justify-between font-medium text-xs">
-                      <span> {t("DiscountLower")}: </span>{" "}
-                      <span className="font-semibold">
-                        {currency}
-                        {parseFloat(or?.discount).toFixed(2)}
-                      </span>
-                    </h5>
-                  )}
-                  <h3 className="flex justify-between font-medium text-xs border-t border-black mt-2">
-                    <span> {t("Total")}: </span>
-                    <span className="font-semibold ">
-                      {currency}
-                      {parseFloat(or?.total).toFixed(2)}
-                    </span>
-                  </h3>
-                </div>
-              </div>
-            </ModalBody>
-
-            <h2 className="mb-2 text-center font-medium text-sm">
-              {t("ThankYouMsg")}
-            </h2>
-          </div>
-        ))
-      ) : (
-        <Fragment>
-          <div className="w-full flex justify-between gap-1">
-            <div>
-              <img
-                className="flex"
-                size="large"
-                // src={globalSetting?.logo}
-                src={storeCustomizationSetting?.footer?.block4_logo}
-                alt="logo"
-                width={100}
-              />
-              <div className="flex justify-center">
-                {globalSetting?.address},&nbsp;
-                {globalSetting?.contact}&nbsp;
-                {globalSetting?.web_site}
-              </div>
-            </div>
-            <div className="flex flex-col items-start">
-              <h1 className="text-lg font-bold underline">{t("addressee")}: </h1>
-              <div>
-                <span>{t("name")}</span>:{" "}
-                <span className="font-semibold text-gray-900">
-                  {data?.user_info?.name} {data?.user_info?.lastName}
-                </span>
-              </div>
-              <div>
-                <span>{t("email")}</span>:{" "}
-                <span className="font-semibold text-gray-900">
-                  {data?.user_info?.email}
-                </span>
-              </div>
-              <div>
-                <span>{t("phone")}</span>:{" "}
-                <span className="font-semibold text-gray-900">
-                  {data?.user_info?.contact}
-                </span>
-              </div>
-            </div>
-            {data?.shippingOption && (
-              <div className="flex flex-col items-start">
-                <h1 className="text-lg font-bold underline">{t("ShippingMethodLower")}: </h1>
-                <div>
-                  <span>{t("ShippingMethodLower")}</span>:{" "}
-                  <span className="font-semibold text-gray-900">
-                    {data?.shippingOption == 2 ? t("shipping"): t("pickup")}
-                  </span>
-                </div>
-                <div>
-                  {data.shippingOption == 2 &&
-                    <div>
-                      <span>{t("address")}: </span>
-                      <span className="font-semibold text-gray-900">
-                        <AddressFormat userInfo={data?.user_info} />
-                      </span>
-                    </div>}
-                </div>
-              </div>
+    <div ref={ref} className="w-full p-6 bg-white" dir="rtl">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-4 pb-3 border-b-2 border-gray-200">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">
+            {t("Order")} #{data?.invoice}
+          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <Status status={data?.status} />
+            {data?.payment?.isPaid ? (
+              <Badge type="success">{t("Paid")}</Badge>
+            ) : (
+              <Badge type="warning">{t("Unpaid")}</Badge>
             )}
           </div>
+          <p className="text-sm text-gray-600">
+            {t("OrderDate")}: {showDateTimeFormat(data?.createdAt)}
+          </p>
+        </div>
+        <div className="text-left flex flex-col items-end">
+          {storeCustomizationSetting?.footer?.block4_logo && (
+            <img
+              src={storeCustomizationSetting?.footer?.block4_logo}
+              alt="Logo"
+              width="100"
+              className="mb-2"
+            />
+          )}
+          <p className="text-xs text-gray-600 text-right">
+            {globalSetting?.address}<br />
+            {globalSetting?.contact}<br />
+            {globalSetting?.email}
+          </p>
+        </div>
+      </div>
 
-          {data.customer_note && <div className="mt-2">
-            <b>{t("CustomerNote")}: </b>
-            <span>
-              {data.customer_note}
+      {/* Customer Information */}
+      <div className="mb-4">
+        <h2 className="text-base font-bold mb-2 text-gray-700">
+          {t("Customer Information")}
+        </h2>
+        <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+          <InfoField
+            label={t("Customer Name")}
+            value={`${data?.user_info?.name || ""} ${data?.user_info?.lastName || ""}`}
+          />
+          <InfoField
+            label={t("Email")}
+            value={data?.user_info?.email}
+          />
+          <InfoField
+            label={t("Phone")}
+            value={data?.user_info?.contact}
+          />
+          <InfoField
+            label={t("City")}
+            value={data?.user_info?.address?.city?.city_name_he}
+          />
+          <InfoField
+            label={t("Street")}
+            value={data?.user_info?.address?.street}
+          />
+          <InfoField
+            label={t("House Number")}
+            value={data?.user_info?.address?.houseNumber}
+          />
+          <InfoField
+            label={t("Apartment Number")}
+            value={data?.user_info?.address?.apartmentNumber}
+          />
+          <InfoField
+            label={t("Floor")}
+            value={data?.user_info?.address?.floor}
+          />
+          <InfoField
+            label={t("Entry Code")}
+            value={data?.user_info?.address?.entryCode}
+          />
+          {data?.user_info?.priceList && (
+            <InfoField
+              label={t("Customer Price List")}
+              value={data?.user_info?.priceList?.name}
+              className="col-span-3"
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Payment Information */}
+      <div className="mb-4">
+        <h2 className="text-base font-bold mb-2 text-gray-700">
+          {t("Payment Information")}
+        </h2>
+        <div className="grid grid-cols-4 gap-x-4 gap-y-2">
+          <InfoField
+            label={t("Payment Status")}
+            value={
+              data?.payment?.isPaid ? (
+                <Badge type="success">{t("Paid")}</Badge>
+              ) : (
+                <Badge type="warning">{t("Unpaid")}</Badge>
+              )
+            }
+          />
+          <InfoField
+            label={t("Payment Method")}
+            value={t(data?.payment?.paymentMethod || data?.paymentMethod)}
+          />
+          <InfoField
+            label={t("Payment Amount")}
+            value={data?.payment?.paymentAmount ? `${currency}${getNumberTwo(data?.payment?.paymentAmount)}` : "-"}
+          />
+          <InfoField
+            label={t("Payment Date")}
+            value={data?.payment?.paymentDate ? showDateTimeFormat(data?.payment?.paymentDate) : "-"}
+          />
+        </div>
+      </div>
+
+      {/* Order Details */}
+      <div className="mb-4">
+        <h2 className="text-base font-bold mb-2 text-gray-700">
+          {t("Order Details")}
+        </h2>
+        <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+          <InfoField
+            label={t("Shipping Method")}
+            value={data?.shippingCost > 0 ? t("Shipping") : t("pickup")}
+          />
+          <InfoField
+            label={t("Call On Arrival")}
+            value={data?.callOnArrival ? t("Yes") : t("No")}
+          />
+          {data?.customerSatisfaction && (
+            <InfoField
+              label={t("Customer Satisfaction")}
+              value={`${data?.customerSatisfaction}/3`}
+            />
+          )}
+          {data?.bonus > 0 && (
+            <InfoField
+              label={t("Picker Bonus")}
+              value={`${currency}${getNumberTwo(data?.bonus)}`}
+            />
+          )}
+          {data?.customer_note && (
+            <InfoField
+              label={t("Customer Note")}
+              value={data?.customer_note}
+              className="col-span-3"
+            />
+          )}
+          {data?.coupon && (
+            <InfoField
+              label={t("Coupon Used")}
+              value={data?.coupon?.couponCode || t("Yes")}
+            />
+          )}
+          {data?.usedOfferIds?.length > 0 && (
+            <InfoField
+              label={t("Offers Used")}
+              value={`${data?.usedOfferIds?.length} ${t("offers")}`}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Products Table */}
+      <div className="mb-4">
+        <h2 className="text-base font-bold mb-2 text-gray-700">
+          {t("Order Products")}
+        </h2>
+        <Table>
+          <TableHeader>
+            <tr className="bg-gray-50">
+              <TableCell className="font-bold text-sm py-2">{t("Sr")}</TableCell>
+              <TableCell className="font-bold text-sm py-2">{t("ProductTitle")}</TableCell>
+              <TableCell className="text-center font-bold text-sm py-2">{t("Quantity")}</TableCell>
+              <TableCell className="text-center font-bold text-sm py-2">{t("ItemPrice")}</TableCell>
+              <TableCell className="text-right font-bold text-sm py-2">{t("Amount")}</TableCell>
+            </tr>
+          </TableHeader>
+          <TableBody>
+            {data?.cart?.map((item, i) => (
+              <TableRow key={i}>
+                <TableCell className="py-2 text-sm">{i + 1}</TableCell>
+                <TableCell className="py-2 text-sm font-semibold">{item.title.he}</TableCell>
+                <TableCell className="text-center py-2 text-sm font-bold">{item.quantity}</TableCell>
+                <TableCell className="text-center py-2 text-sm font-bold">
+                  {currency}
+                  {getNumberTwo(item.discountedPrice ? item.discountedPrice / item.quantity : item.itemTotal / item.quantity)}
+                </TableCell>
+                <TableCell className="text-right py-2 text-sm font-bold text-red-500">
+                  {currency}
+                  {getNumberTwo(item.discountedPrice ? item.discountedPrice : item.itemTotal)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Financial Summary */}
+      <div className="mb-4 bg-gray-50 p-4 rounded">
+        <h2 className="text-base font-bold mb-3 text-gray-700">
+          {t("Financial Summary")}
+        </h2>
+        <div className="grid grid-cols-5 gap-x-4 gap-y-2">
+          <InfoField
+            label={t("Subtotal")}
+            value={`${currency}${getNumberTwo(data?.subTotal)}`}
+          />
+          <InfoField
+            label={t("ShippingCost")}
+            value={`${currency}${getNumberTwo(data?.shippingCost)}`}
+          />
+          <InfoField
+            label={t("Discount")}
+            value={`${currency}${getNumberTwo(data?.discount)}`}
+          />
+          <InfoField
+            label={t("Offer Discount")}
+            value={`${currency}${getNumberTwo(data?.offerDiscount || 0)}`}
+          />
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 uppercase">
+              {t("InvoiceTotalAmount")}
             </span>
-          </div>}
-
-          <TableContainer className="mt-2 mb-4 rounded-b-lg">
-            <Table>
-              <TableHeader>
-                <tr>
-                  <TableCell className="bg-white w-fit text-center">
-                    <span className="text-xs capitalize text-gray-700 mx-auto text-center">
-                      {t("Number")}
-                    </span>
-                  </TableCell>
-                  <TableCell className="bg-white text-right">
-                    <span className="text-xs capitalize text-gray-700">
-                      {t("Item")}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-xs bg-white capitalize text-center text-gray-700">
-                    {t("QTY")}
-                  </TableCell>
-                  <TableCell className="text-xs bg-white capitalize text-right text-gray-700">
-                    {t("Total")}
-                  </TableCell>
-                </tr>
-              </TableHeader>
-              <TableBody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 text-serif text-sm px-1">
-                {data?.cart?.map((item, i) => (
-                  <tr
-                    key={i}
-                    className="dark:border-gray-700 dark:text-gray-400 bill"
-                  >
-                    <td className="py-1 w-fit text-center">
-                      <span className="font-normal text-gray-600 bill">
-                        {item.sku}
-                      </span>
-                    </td>
-                    <td className="py-1">
-                      <span className="font-normal text-gray-600 bill">
-                        {item.title.he}
-                        {" | "}
-                        {item.title.en}
-                      </span>
-                    </td>
-                    <td className="text-center py-1">
-                      <span className="font-bold text-center bill">
-                        {" "}
-                        {item.quantity}{" "}
-                      </span>
-                    </td>
-
-                    <td className="text-right py-1">
-                      <span className="text-right font-bold text-gray-700 bill">
-                        {" "}
-                        {currency}
-                        {(item.discountedPrice ? item.discountedPrice : item.itemTotal).toFixed(2)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <ModalBody>
-            <div className="flex justify-between -mt-3 mr-1 mb-4" dir="rtl">
-              <div className="mt-2">
-                {data?.paymentMethod === "Combined" ? (
-                  <p className="bill">
-                    <span className="mb-1 font-semibold bill font-serif text-xs text-gray-700 dark:text-gray-500 block">
-                      {t("Paymentmethod")}:{" "}
-                      <span className="text-gray-600 bill">
-                        {data.paymentMethod}
-                      </span>
-                    </span>
-                    {data?.paymentDetails?.selectPaymentOption_Card !==
-                      undefined && (
-                        <span className="text-xs bill">
-                          {data?.paymentDetails?.selectPaymentOption_Card}:{" "}
-                          <span className="font-semibold text-gray-900">
-                            {" "}
-                            {currency}
-                            {parseFloat(
-                              data?.paymentDetails?.paymentAmount_Card
-                            ).toFixed(2)}
-                          </span>
-                        </span>
-                      )}
-                    <br />
-                    {data?.paymentDetails?.selectPaymentOption_Cash !==
-                      undefined && (
-                        <span className="text-xs bill">
-                          {data?.paymentDetails?.selectPaymentOption_Cash}:{" "}
-                          <span className="font-semibold text-gray-900">
-                            {currency}
-                            {parseFloat(
-                              data?.paymentDetails?.paymentAmount_Cash
-                            ).toFixed(2)}
-                          </span>
-                        </span>
-                      )}
-                    <br />
-                    {data?.paymentDetails?.selectPaymentOption_Credit !==
-                      undefined && (
-                        <span className="text-xs bill">
-                          {data?.paymentDetails?.selectPaymentOption_Credit}:{" "}
-                          <span className="font-semibold text-gray-900">
-                            {currency}
-                            {parseFloat(
-                              data?.paymentDetails?.paymentAmount_Credit
-                            ).toFixed(2)}
-                          </span>
-                        </span>
-                      )}
-                  </p>
-                ) : (
-                  <p className="bill">
-                    <span className="text-gray-600">
-                      {t("PaymentMethod")}:{" "}
-                      <span className="font-semibold text-gray-900">
-                        {t(data.paymentMethod)}
-                      </span>
-                    </span>
-                  </p>
-                )}
-
-                <div className="text-xs bill">
-                  <span className="text-gray-600">
-                    {t("NoofItems")}:{" "}
-                    <span className="font-semibold text-gray-900">
-                      {data?.cart?.length}
-                    </span>{" "}
-                  </span>{" "}
-                  <br />
-                  <span className="text-gray-600">
-                    {t("BillNo")}:{" "}
-                    <span className="font-semibold text-gray-900">
-                      {" "}
-                      {data?.invoice}
-                    </span>{" "}
-                  </span>{" "}
-                  <br />
-                  <br />
-                  {globalSetting?.vat_number && (
-                    <>
-                      <span className="text-gray-600">
-                        {t("VATNumber")}:{" "}
-                        <span className="font-semibold text-gray-900">
-                          {" "}
-                          {globalSetting?.vat_number}
-                        </span>{" "}
-                      </span>
-                      <br />
-                    </>
-                  )}
-                  <span className="text-gray-600">
-                    {t("Date")}:{" "}
-                    <span className="font-semibold text-gray-700">
-                      {" "}
-                      {/* {dayjs(new Date()).format('MMMM D, YYYY h:mm A')} */}
-                      {/* {dayjs(new Date()).format("MM/D/YYYY")} */}
-                      {showDateTimeFormat(data?.createdAt)}
-                    </span>{" "}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-2">
-                <h5 className="flex justify-between font-medium text-xs ">
-                  <span>{t("GrossTotal")}: </span>{" "}
-                  <span className="font-semibold ">
-                    {currency}
-                    {parseFloat(data?.subTotal).toFixed(2)}
-                  </span>
-                </h5>
-
-                {data?.shippingCost > 0 && (
-                  <h5 className="flex justify-between font-medium text-xs">
-                    <span> {t("ShippingCostLower")}: </span>{" "}
-                    <span className="font-semibold ">
-                      {currency}
-                      {parseFloat(data?.shippingCost).toFixed(2)}
-                    </span>
-                  </h5>
-                )}
-                {data?.discount > 0 && (
-                  <h5 className="flex justify-between font-medium text-xs">
-                    <span> {t("DiscountLower")}: </span>{" "}
-                    <span className="font-semibold">
-                      {currency}
-                      {parseFloat(data?.discount).toFixed(2)}
-                    </span>
-                  </h5>
-                )}
-                <h3 className="flex justify-between font-medium text-xs border-t border-black mt-2">
-                  <span> {t("Total")}: </span>
-                  <span className="font-semibold ">
-                    {currency}
-                    {parseFloat(data?.total).toFixed(2)}
-                  </span>
-                </h3>
-              </div>
-            </div>
-          </ModalBody>
-
-          <h2 className="mb-2 text-center font-medium text-sm">
-            {t("ThankYouMsg")}
-          </h2>
-        </Fragment>
-      )}
+            <span className="text-2xl font-bold text-red-500">
+              {currency}{getNumberTwo(data?.total)}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 });
+
+InvoiceForPrint.displayName = "InvoiceForPrint";
 
 export default InvoiceForPrint;

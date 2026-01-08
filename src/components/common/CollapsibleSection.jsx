@@ -48,13 +48,15 @@ export default function CollapsibleSection({
 
             {/* תוכן קורס/נפתח */}
             <div
-                className={`overflow-hidden p-1 transition-all ease-in-out ${isOpen
+                className={`overflow-hidden transition-all ease-in-out ${isOpen
                     ? "max-h-[100rem] duration-700" // max-h גדול כדי להכיל תוכן ארוך + מעבר
                     // ? "max-h-[100rem] overflow-y-auto scrollbar-none duration-700" // max-h גדול כדי להכיל תוכן ארוך + מעבר
                     : "max-h-0 duration-300"
                     }`}
             >
-                {children}
+                <div className="p-1">
+                    {children}
+                </div>
             </div>
         </div>
     );

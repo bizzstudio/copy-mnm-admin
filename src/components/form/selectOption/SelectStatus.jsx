@@ -1,51 +1,155 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Select } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
+import Select from "react-select";
+import { WindmillContext } from "@windmill/react-ui";
 
 // Internal import
 import OrderServices from "@/services/OrderServices";
 import { notifySuccess, notifyError } from "@/utils/toast";
 import { SidebarContext } from "@/context/SidebarContext";
-import useAsync from "@/hooks/useAsync";
-import StatusServices from "@/services/StatusService";
 import ChangStatusModal from "@/components/modal/ChangStatusModal";
 
 const SelectStatus = ({ id, order }) => {
   const { setIsUpdate, statusesData: data } = useContext(SidebarContext);
-  // const { data } = useAsync(StatusServices.getAllStatuses);
-
+  const { mode } = useContext(WindmillContext);
   const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState(""); // שמור את הערך הנוכחי של הסטטוס
-  const [tempStatus, setTempStatus] = useState({}); // שמור את האובייקט החדש של הסטטוס לפני אישור
-  const [statusColor, setStatusColor] = useState(""); // שמירת צבע הרקע של הסטטוס
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [tempStatus, setTempStatus] = useState(null);
 
-  // Use useEffect to update the status when the data or order changes
+  // Update the status when the data or order changes
   useEffect(() => {
     if (order && data) {
-      const currentStatus = data.find((status) => status?.name === order?.status?.name);
-      setStatus(currentStatus ? currentStatus.name : "");
-      setStatusColor(currentStatus ? currentStatus.color : ""); // שמירת צבע הסטטוס
+      const foundStatus = data.find((status) => status?.name === order?.status?.name);
+      setCurrentStatus(foundStatus || null);
     }
   }, [order, data]);
 
   const handleChangeStatus = async (id, status, password) => {
     try {
-      // שליחת סטטוס וסיסמה לשרת
       await OrderServices.updateOrder(id, { status: status?.name, password });
       notifySuccess(t("Status updated successfully"));
-      setStatus(tempStatus?.name); // עדכן את הערך לאחר הצלחה
-      setStatusColor(tempStatus?.color); // עדכן את צבע הרקע של הסטטוס הנבחר
+      setCurrentStatus(tempStatus);
       setIsUpdate(true);
       setIsModalOpen(false);
     } catch (err) {
       notifyError(t("Invalid password"));
-      setTempStatus(status); // החזר את הערך הישן במידה והיתה שגיאה
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleStatusChange = (selectedOption) => {
+    setTempStatus(selectedOption.data);
+    setIsModalOpen(true);
+  };
+
+  if (!currentStatus || !data) return null;
+
+  // Convert data to react-select format
+  const options = data.map((status) => ({
+    value: status._id,
+    label: status.heName + (order?.actualMelaket?.heName && order?.status?.name === 'Likut' ? ` (${order.actualMelaket.heName})` : ''),
+    color: status.color,
+    data: status,
+  }));
+
+  const selectedOption = options.find((opt) => opt.value === currentStatus._id);
+
+  // Custom styles for react-select
+  const customStyles = {
+    container: (provided) => ({
+      ...provided,
+      width: "fit-content",
+      minWidth: "140px",
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      borderColor: state.isFocused ? "var(--main-color)" : provided.borderColor,
+      minHeight: "32px",
+      height: "32px",
+      backgroundColor: mode === "dark" ? "#374151" : "#f3f4f6",
+      color: mode === "dark" ? "#D1D5DB" : provided.color,
+      boxShadow: state.isFocused ? `0 0 0 1px var(--main-color)` : provided.boxShadow,
+      outline: "none",
+      border: mode === "dark" ? "1px solid #4b5563" : "1px solid #e5e7eb",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      "&:hover": {
+        borderColor: state.isFocused ? "var(--main-color)" : mode === "dark" ? "var(--main-color)" : provided.borderColor,
+      },
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      height: "32px",
+      padding: "0 8px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      padding: "3px 10px",
+      backgroundColor: mode === "dark"
+        ? state.isFocused ? "#334155" : "#1F2937"
+        : state.isFocused ? "var(--main-color-super-light)" : provided.backgroundColor,
+      color: mode === "dark" ? "#D1D5DB" : state.isFocused ? "#000" : provided.color,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      position: "relative",
+      "&:before": {
+        content: '""',
+        display: "inline-block",
+        width: "12px",
+        height: "12px",
+        borderRadius: "50%",
+        backgroundColor: state.data.color || "#6B7280",
+        marginLeft: "8px",
+        flexShrink: 0,
+      },
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 100 }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: mode === "dark" ? "#1F2937" : "#fff",
+      border: mode === "dark" ? "1px solid #4b5563" : "1px solid #e5e7eb",
+      boxShadow: mode === "dark"
+        ? "0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -2px rgba(0,0,0,0.3)"
+        : provided.boxShadow,
+      zIndex: 100,
+      minWidth: "160px",
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      backgroundColor: mode === "dark" ? "#1F2937" : "#fff",
+      paddingTop: 0,
+      paddingBottom: 0,
+      maxHeight: "240px",
+    }),
+    noOptionsMessage: (provided) => ({
+      ...provided,
+      backgroundColor: mode === "dark" ? "#1F2937" : "#fff",
+      color: mode === "dark" ? "#D1D5DB" : "#374151",
+    }),
+    input: (provided) => ({
+      ...provided,
+      margin: "0px",
+      color: mode === "dark" ? "#D1D5DB" : "#374151",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: mode === "dark" ? "#D1D5DB" : "#374151",
+      fontWeight: "500",
+      fontSize: "0.875rem",
+    }),
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      padding: "4px",
+      color: mode === "dark" ? "#D1D5DB" : "#374151",
+    }),
   };
 
   return (
@@ -54,7 +158,7 @@ const SelectStatus = ({ id, order }) => {
         <ChangStatusModal
           yes={(password) => handleChangeStatus(id, tempStatus, password)}
           cancel={() => setIsModalOpen(false)}
-          status={tempStatus?.heName} // הצג את השם העברי במודל
+          status={tempStatus?.heName}
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
           userName={order?.user_info?.name + " " + order?.user_info?.lastName}
@@ -62,26 +166,16 @@ const SelectStatus = ({ id, order }) => {
       )}
 
       <Select
-        value={status}
-        onChange={(e) => {
-          const selectedStatus = data.find((status) => status?.name === e.target.value);
-          setTempStatus(selectedStatus);
-          setIsModalOpen(true);
-        }}
-        className="h-8 text-white"
-        style={{ backgroundColor: statusColor }} // הוספת צבע הרקע ל-Select
-      >
-        <option value="status" defaultValue hidden>
-          {order?.status?.heName}
-        </option>
-        {data &&
-          data.map((status) => (
-            <option key={status?._id} value={status?.name}>
-              {status?.heName} {order?.actualMelaket?.heName && order?.status?.name == 'Likut' ?
-                `(${order.actualMelaket.heName})` : ''}
-            </option>
-          ))}
-      </Select>
+        value={selectedOption}
+        onChange={handleStatusChange}
+        options={options}
+        styles={customStyles}
+        isSearchable={false}
+        menuPlacement="auto"
+        menuPortalTarget={document.body}
+        menuPosition="fixed"
+        noOptionsMessage={() => t("noOptions")}
+      />
     </>
   );
 };

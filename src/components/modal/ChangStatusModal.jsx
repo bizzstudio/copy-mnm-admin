@@ -32,18 +32,24 @@ const ChangStatusModal = ({ yes, cancel, status, isSubmitting, setIsSubmitting, 
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
-          <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
+          <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <IoSwapHorizontalOutline className="h-8 w-8 text-red-500" />
-                {t("ChangStatusModalH2", { userName })}<span className="text-red-500">"{status}"</span>?
-              </DialogTitle>
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-3 flex-1 pr-2">
+                <div className="mt-1 p-2 rounded-lg bg-red-50 dark:bg-red-900/20">
+                  <IoSwapHorizontalOutline className="h-6 w-6 text-red-500" />
+                </div>
+                <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white leading-relaxed">
+                  {t("ChangStatusModalH2", { userName })}
+                  <span className="text-red-500 font-bold"> "{status}"</span>?
+                </DialogTitle>
+              </div>
               <button
                 onClick={cancel}
-                className="rounded-full p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shrink-0"
+                aria-label="Close"
               >
-                <IoClose className="h-6 w-6" />
+                <IoClose className="h-5 w-5" />
               </button>
             </div>
 

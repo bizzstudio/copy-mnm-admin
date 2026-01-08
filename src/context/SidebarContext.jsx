@@ -111,10 +111,7 @@ export const SidebarProvider = ({ children }) => {
         console.error("Error fetching statuses:", error);
       }
     };
-    facthStatusesData();
-  }, []);
 
-  useEffect(() => {
     // טעינת המחירונים בעת עליית המערכת
     const fetchPriceLists = async () => {
       try {
@@ -124,6 +121,8 @@ export const SidebarProvider = ({ children }) => {
         console.error("Error fetching price lists:", error);
       }
     };
+
+    facthStatusesData();
     fetchPriceLists();
   }, []);
 
@@ -150,7 +149,7 @@ export const SidebarProvider = ({ children }) => {
         }
       } catch (error) {
         console.error("Error validating token:", error);
-          Cookies.remove("adminInfo");
+        Cookies.remove("adminInfo");
         window.location.pathname = "/login";
       }
     }

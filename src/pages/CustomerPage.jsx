@@ -25,6 +25,8 @@ const CustomerPage = () => {
         CustomerServices.getCustomerById(id)
     );
 
+    console.log('customer :>> ', customer);
+
     if (loading) {
         return (
             <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
@@ -69,7 +71,7 @@ const CustomerPage = () => {
                     <span className="md:block hidden">{t("Orders")}</span>
                 </span>
             ),
-            content: <CustomerOrders customerId={id} />,
+            content: <CustomerOrders orders={customer.orders || []} />,
         },
         {
             id: "documents",

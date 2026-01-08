@@ -38,7 +38,7 @@ const StatusHistoryCard = ({ index, from, to, changedAt, changedBy }) => {
 
     return (
         <div className="border-2 border-gray-300 dark:border-gray-600 rounded-lg px-9 pt-2 pb-4 space-y-3 relative overflow-hidden">
-            <div className="w-24 h-24 dark:bg-mainColor bg-mainColor-light rounded-full absolute -right-2 -top-2 flex items-center justify-center pt-4 pr-4">
+            <div className="w-24 h-24 dark:bg-mainColor bg-mainColor-light rounded-full absolute -start-5 -top-5 flex items-center justify-center pt-4 pr-4">
                 <p className="text-white text-3xl font-bold">{index}</p>
             </div>
             <div className="dark:text-mainColor text-mainColor-light ms-auto w-fit">

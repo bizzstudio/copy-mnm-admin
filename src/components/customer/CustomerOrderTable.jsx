@@ -1,63 +1,89 @@
+// src/components/customer/CustomerOrderTable.jsx
 import React from "react";
-import { TableCell, TableBody, TableRow } from "@windmill/react-ui";
+import { TableCell, TableBody, TableRow, Badge } from "@windmill/react-ui";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FiZoomIn } from "react-icons/fi";
 
 // Internal import
-import Status from "@/components/table/Status";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import SelectStatus from "@/components/form/selectOption/SelectStatus";
-import AddressFormat from "../AddressFormat";
-
-// import Status from '../table/Status';
-// import SelectStatus from '../form/SelectStatus';
+import PrintReceipt from "@/components/form/others/PrintReceipt";
+import Tooltip from "@/components/tooltip/Tooltip";
 
 const CustomerOrderTable = ({ orders }) => {
   const { showDateTimeFormat, getNumberTwo, currency } = useUtilsFunction();
-  return (
-    <>
-      <TableBody>
-        {orders?.map((order) => (
-          <TableRow key={order._id}>
-            <TableCell>
-              <span className="font-semibold uppercase text-xs">
-                {order?._id?.substring(20, 24)}
-              </span>
-            </TableCell>
-            <TableCell>
-              <span className="text-sm">
-                {/* {dayjs(order.createdAt).format("MMM D, YYYY")} */}
-                {showDateTimeFormat(order.createdAt)}
-              </span>
-            </TableCell>
+  const { t } = useTranslation();
 
-            <TableCell>
-              <span className="text-sm"><AddressFormat userInfo={order?.user_info}/></span>
-            </TableCell>
-            <TableCell>
-              {" "}
-              <span className="text-sm">{order.user_info?.contact}</span>{" "}
-            </TableCell>
-            <TableCell>
-              <span className="text-sm font-semibold">
-                {order.paymentMethod}
-              </span>
-            </TableCell>
-            <TableCell>
-              {" "}
-              <span className="text-sm font-semibold">
-                {currency}
-                {getNumberTwo(order.total)}
-              </span>{" "}
-            </TableCell>
-            <TableCell className="text-center">
-              <Status status={order.status?.heName} />
-            </TableCell>
-            <TableCell className="text-right">
+  return (
+    <TableBody>
+      {orders?.map((order) => (
+        <TableRow key={order._id}>
+          {/* Invoice Number */}
+          <TableCell className="font-semibold text-sm text-center">
+            {order?.invoice || order?._id?.substring(20, 24)}
+          </TableCell>
+
+          {/* Order Date */}
+          <TableCell className="text-sm text-center">
+            {showDateTimeFormat(order.createdAt)}
+          </TableCell>
+
+          {/* Order Update Time */}
+          <TableCell className="text-sm text-center">
+            {showDateTimeFormat(order.updatedAt)}
+          </TableCell>
+
+          {/* Shipping Method */}
+          <TableCell className="text-center">
+            <span className="text-sm font-semibold">
+              {order?.shippingCost > 0 
+                ? t("Shipping") + " - " + (order?.user_info?.address?.city?.city_name_he || "")
+                : t("pickup")}
+            </span>
+          </TableCell>
+
+          {/* Total Amount */}
+          <TableCell className="text-sm font-semibold text-center">
+            {currency}{getNumberTwo(order.total)}
+          </TableCell>
+
+          {/* Payment Status */}
+          <TableCell className="text-center">
+            {order.payment?.isPaid ? (
+              <Badge type="success">{t("Paid")}</Badge>
+            ) : (
+              <Badge type="warning">{t("Unpaid")}</Badge>
+            )}
+          </TableCell>
+
+          {/* Order Status - Interactive */}
+          <TableCell className="text-center">
+            <div className="flex justify-center">
               <SelectStatus id={order._id} order={order} />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </>
+            </div>
+          </TableCell>
+
+          {/* Actions */}
+          <TableCell className="text-center">
+            <div className="flex justify-center items-center gap-2">
+              <PrintReceipt orderId={order._id} isCashierOrder={false} />
+
+              <span className="cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                <Link to={`/order/${order._id}`}>
+                  <Tooltip
+                    id="view"
+                    Icon={FiZoomIn}
+                    title={t("ViewInvoice")}
+                    bgColor="#059669"
+                  />
+                </Link>
+              </span>
+            </div>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
   );
 };
 
