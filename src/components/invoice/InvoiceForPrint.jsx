@@ -13,22 +13,11 @@ import {
 // Internal imports
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import Status from "@/components/table/Status";
+import InfoField from "@/components/common/InfoField";
 
 const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSetting }, ref) => {
   const { t } = useTranslation();
   const { currency, getNumberTwo, showDateTimeFormat, showDateFormat } = useUtilsFunction();
-
-  // Helper component for displaying info fields
-  const InfoField = ({ label, value, className = "" }) => (
-    <div className={`flex flex-col ${className}`}>
-      <span className="text-xs font-semibold text-gray-500 uppercase">
-        {label}
-      </span>
-      <span className="text-sm text-gray-800">
-        {value || "-"}
-      </span>
-    </div>
-  );
 
   return (
     <div ref={ref} className="w-full p-6 bg-white" dir="rtl">
@@ -40,7 +29,7 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
           </h1>
           <div className="flex items-center gap-3 mb-2">
             <Status status={data?.status} />
-            {data?.payment?.isPaid ? (
+            {data?.cardcom?.isPaid ? (
               <Badge type="success">{t("Paid")}</Badge>
             ) : (
               <Badge type="warning">{t("Unpaid")}</Badge>
@@ -128,7 +117,7 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
           <InfoField
             label={t("Payment Status")}
             value={
-              data?.payment?.isPaid ? (
+              data?.cardcom?.isPaid ? (
                 <Badge type="success">{t("Paid")}</Badge>
               ) : (
                 <Badge type="warning">{t("Unpaid")}</Badge>
@@ -137,15 +126,15 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
           />
           <InfoField
             label={t("Payment Method")}
-            value={t(data?.payment?.paymentMethod || data?.paymentMethod)}
+            value={data?.paymentMethod === "credit" ? t("Credit") : data?.paymentMethod === "card" ? t("CreditCard") : t(data?.paymentMethod)}
           />
           <InfoField
             label={t("Payment Amount")}
-            value={data?.payment?.paymentAmount ? `${currency}${getNumberTwo(data?.payment?.paymentAmount)}` : "-"}
+            value={data?.cardcom?.isPaid ? `${currency}${getNumberTwo(data?.total)}` : "-"}
           />
           <InfoField
             label={t("Payment Date")}
-            value={data?.payment?.paymentDate ? showDateTimeFormat(data?.payment?.paymentDate) : "-"}
+            value={data?.cardcom?.paidAt ? showDateTimeFormat(data?.cardcom?.paidAt) : "-"}
           />
         </div>
       </div>

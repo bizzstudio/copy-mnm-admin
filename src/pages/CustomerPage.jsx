@@ -29,7 +29,7 @@ const CustomerPage = () => {
 
     if (loading) {
         return (
-            <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
                 <Loading loading={loading} />
             </div>
         );
@@ -37,7 +37,7 @@ const CustomerPage = () => {
 
     if (error || !customer) {
         return (
-            <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
                 <div className="max-w-7xl mx-auto">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
@@ -71,7 +71,7 @@ const CustomerPage = () => {
                     <span className="md:block hidden">{t("Orders")}</span>
                 </span>
             ),
-            content: <CustomerOrders orders={customer.orders || []} />,
+            content: <CustomerOrders customer={customer} />,
         },
         {
             id: "documents",
@@ -86,9 +86,8 @@ const CustomerPage = () => {
     ];
 
     return (
-        <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-6">
+        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+                <div className="flex items-center justify-between mt-8 w-full">
                     <PageTitle>
                         {customer.name} {customer.lastName}
                     </PageTitle>
@@ -102,10 +101,9 @@ const CustomerPage = () => {
                     </Button>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-6 w-full">
                     <Tabs tabs={tabs} tab="tab" />
                 </div>
-            </div>
         </div>
     );
 };

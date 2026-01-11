@@ -1437,6 +1437,9 @@
   "CompanyNumberPlaceholder": "Enter company registration number",
   "CreditLimit": "Credit Limit",
   "CreditLimitPlaceholder": "Enter credit limit",
+  "AvailableCredit": "Available Credit",
+  "UnpaidBalance": "Unpaid Balance",
+  "Financial Information": "Financial Information",
   "Back": "Back",
   "DeleteDocument": "Delete Document",
   "AreYouSureDeleteDocument": "Are you sure you want to delete this document? This action cannot be undone.",
@@ -1456,5 +1459,6 @@
   "Payment Method": "Payment Method",
   "Payment Amount": "Payment Amount",
   "Payment Date": "Payment Date",
-  "Shipping Method": "Shipping Method"
+  "Shipping Method": "Shipping Method",
+  "CreditCard": "Credit Card"
 }

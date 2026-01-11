@@ -1,3 +1,4 @@
+// src/components/invoice/Invoice.jsx
 import React from "react";
 import { TableCell, TableBody, TableRow } from "@windmill/react-ui";
 

@@ -14,7 +14,7 @@ const CustomerAdd = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
                     <PageTitle>{t("AddCustomer")}</PageTitle>

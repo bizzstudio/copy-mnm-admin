@@ -37,7 +37,7 @@ const CustomerOrderTable = ({ orders }) => {
           {/* Shipping Method */}
           <TableCell className="text-center">
             <span className="text-sm font-semibold">
-              {order?.shippingCost > 0 
+              {order?.shippingCost > 0
                 ? t("Shipping") + " - " + (order?.user_info?.address?.city?.city_name_he || "")
                 : t("pickup")}
             </span>
@@ -50,7 +50,7 @@ const CustomerOrderTable = ({ orders }) => {
 
           {/* Payment Status */}
           <TableCell className="text-center">
-            {order.payment?.isPaid ? (
+            {order.cardcom?.isPaid ? (
               <Badge type="success">{t("Paid")}</Badge>
             ) : (
               <Badge type="warning">{t("Unpaid")}</Badge>

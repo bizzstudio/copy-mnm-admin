@@ -91,7 +91,7 @@
   "BestSellingProducts": "המוצרים הנמכרים ביותר",
   "Cash": "כסף מזומן",
   "Card": "כ.א",
-  "Credit": "אשראי",
+  "Credit": "הקפה",
   "ConversionsThisYear": "המרות השנה",
   "ConversionsThisWeek": "המרות השבוע",
   "FreshVegetable": "ירק טרי",
@@ -1471,6 +1471,9 @@
   "CompanyNumberPlaceholder": "הזן את מספר ח.פ של החברה",
   "CreditLimit": "מסגרת אשראי",
   "CreditLimitPlaceholder": "הזן מסגרת אשראי",
+  "AvailableCredit": "קרדיט זמין",
+  "UnpaidBalance": "חוב",
+  "Financial Information": "מידע פיננסי",
   "Back": "חזרה",
   "DeleteDocument": "מחיקת מסמך",
   "AreYouSureDeleteDocument": "האם אתה בטוח שברצונך למחוק מסמך זה? פעולה זו לא ניתנת לביטול.",
@@ -1490,5 +1493,6 @@
   "Payment Method": "אמצעי תשלום",
   "Payment Amount": "סכום תשלום",
   "Payment Date": "תאריך תשלום",
-  "Shipping Method": "שיטת משלוח"
+  "Shipping Method": "שיטת משלוח",
+  "CreditCard": "כרטיס אשראי"
 }

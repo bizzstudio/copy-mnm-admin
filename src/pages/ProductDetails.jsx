@@ -45,12 +45,12 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
       <MainDrawer maxWidth='700px'>
         <ProductDrawer id={id} />
       </MainDrawer>
 
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full mx-auto my-8">
         <PageTitle>{t("ProductDetails")}</PageTitle>
 
         {loading ? (
