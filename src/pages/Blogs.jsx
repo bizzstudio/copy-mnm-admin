@@ -9,7 +9,6 @@ import {
     TableCell,
     TableContainer,
     TableFooter,
-    Pagination,
     Select,
 } from "@windmill/react-ui";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
@@ -30,6 +29,7 @@ import useAsync from "@/hooks/useAsync";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import useFilter from "@/hooks/useFilter";
 import { SidebarContext } from "@/context/SidebarContext";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Blogs = () => {
     const { t } = useTranslation();
@@ -57,6 +57,7 @@ const Blogs = () => {
         handleChangePage,
         handleSubmitForAll,
         setStatus,
+        currentPage,
     } = useFilter(data);
 
     const [isCheckAll, setIsCheckAll] = useState(false);
@@ -169,7 +170,7 @@ const Blogs = () => {
 
             {/* --- table --- */}
             {loading ? (
-                <TableLoading row={12} col={7} width={170} height={20} />
+                <TableLoading row={12} col={8} width={163} height={20} />
             ) : error ? (
                 <span className="text-red-500">{error}</span>
             ) : serviceData?.length ? (
@@ -206,12 +207,13 @@ const Blogs = () => {
                         />
                     </Table>
                     <TableFooter>
-                        <Pagination
-                            className="pagination-ltr"
+                        <CustomPagination
                             totalResults={totalResults}
                             resultsPerPage={resultsPerPage}
                             onChange={handleChangePage}
-                            label="Blog Page Navigation"
+                            label={t("Table navigation")}
+                            currentPage={currentPage}
+                            loading={loading}
                         />
                     </TableFooter>
                 </TableContainer>

@@ -31,6 +31,9 @@ const useAsync = (asyncFunction) => {
     let source = axios.CancelToken.source();
     let debounceTimeout;
 
+    // Set loading to true immediately when dependencies change
+    setLoading(true);
+
     const fetchData = async () => {
       try {
         const res = await asyncFunction({ cancelToken: source.token });

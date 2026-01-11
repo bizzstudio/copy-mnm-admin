@@ -11,7 +11,6 @@ import {
   Button,
   Card,
   CardBody,
-  Pagination,
 } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { FiPlus } from "react-icons/fi";
@@ -36,6 +35,7 @@ import BulkActionDrawer from "@/components/drawer/BulkActionDrawer";
 import TableLoading from "@/components/preloader/TableLoading";
 import SelectCategory from "@/components/form/selectOption/SelectCategory";
 import BarcodeScannerModal from "@/components/modal/BarcodeScannerModal";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Products = () => {
   const {
@@ -339,7 +339,7 @@ const Products = () => {
       </Card>
 
       {loading ? (
-        <TableLoading row={12} col={7} width={160} height={20} />
+        <TableLoading row={12} col={10} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -386,12 +386,13 @@ const Products = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={data?.totalDoc}
               resultsPerPage={limitData}
               onChange={handleChangePage}
-              label="Product Page Navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

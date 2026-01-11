@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -30,6 +29,7 @@ import CheckBox from "@/components/form/others/CheckBox";
 import CouponTable from "@/components/coupon/CouponTable";
 import NotFound from "@/components/table/NotFound";
 import UploadManyTwo from "@/components/common/UploadManyTwo";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Coupons = () => {
   const { t } = useTranslation();
@@ -56,6 +56,7 @@ const Coupons = () => {
     handleSubmitCoupon,
     handleUploadMultiple,
     handleRemoveSelectFile,
+    currentPage,
   } = useFilter(data);
 
   const handleSelectAll = () => {
@@ -193,7 +194,7 @@ const Coupons = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={8} width={140} height={20} />
+        <TableLoading row={12} col={7} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -231,12 +232,13 @@ const Coupons = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

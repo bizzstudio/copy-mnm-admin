@@ -57,101 +57,102 @@ const ProductTable = ({
 
   return (
     <TableBody>
-        {products?.map((product, i) => {
-          return (
-            <TableRow key={i + 1}>
-              {/* checkbox */}
-              <TableCell className='text-center'>
-                <CheckBox
-                  type="checkbox"
-                  name={product?.title?.en}
-                  id={product._id}
-                  handleClick={handleClick}
-                  isChecked={isCheck?.includes(product._id)}
-                />
-              </TableCell>
+      {products?.map((product, i) => {
+        return (
+          <TableRow key={i + 1}>
+            {/* checkbox */}
+            <TableCell className='text-center'>
+              <CheckBox
+                type="checkbox"
+                name={product?.title?.en}
+                id={product._id}
+                handleClick={handleClick}
+                isChecked={isCheck?.includes(product._id)}
+              />
+            </TableCell>
 
-              {/* status */}
-              <TableCell className="text-center">
-                <ShowHideButton id={product._id} status={product.status} />
-              </TableCell>
+            {/* status */}
+            <TableCell className="text-center">
+              <ShowHideButton id={product._id} status={product.status} />
+            </TableCell>
 
-              {/* image & title */}
-              <TableCell className='text-center'>
-                <div className="flex items-center w-fit">
-                  {product?.image && product.image[0] ? (
-                    <Avatar
-                      className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                      src={product.image[0]}
-                      alt="product"
-                    />
-                  ) : (
-                    <Avatar
-                      className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                      src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
-                      alt="product"
-                    />
-                  )}
-                  <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
-                      {showingTranslateValue(product?.title)}
-                  </div>
-                </div>
-              </TableCell>
-
-              {/* price */}
-              <TableCell className='text-center'>
-                <ProductPriceInput
-                  product={product}
-                  selectedPriceListId={selectedPriceListId}
-                  onPriceUpdate={handlePriceUpdate}
-                />
-              </TableCell>
-
-              {/* offer */}
-              <TableCell className='text-center'>
-                <span className="text-sm">
-                  {offers.find((offer) => offer.products.some(prod => prod._id == product._id))?.name?.he || "-"}
-                </span>
-              </TableCell>
-
-              {/* categories */}
-              <TableCell className='text-center'>
-                <span className="text-sm">
-                  {product?.categories?.map(cat => showingTranslateValue(cat?.name)).join(", ") || "-"}
-                </span>
-              </TableCell>
-
-              {/* stock */}
-              <TableCell className='text-center'>
-                <span className="text-sm">
-                  {product.manageStock ? (product.stock || 0) : t("UnlimitedStock")}
-                </span>
-              </TableCell>
-
-              {/* barcode */}
-              <TableCell className='text-center'>
-                <span className="text-sm">
-                  {product?.barcode || "-"}
-                </span>
-              </TableCell>
-
-              {/* zoom in */}
-              <TableCell className='text-center'>
-                <Link
-                  to={`/product/${product._id}`}
-                  className="flex justify-center text-gray-400 hover:text-customGreen-dark"
-                >
-                  <Tooltip
-                    id="view"
-                    Icon={FiZoomIn}
-                    title={t("DetailsTbl")}
-                    bgColor="#10B981"
+            {/* image & title */}
+            <TableCell className='text-center'>
+              <div className="flex items-center w-fit">
+                {product?.image && product.image[0] ? (
+                  <Avatar
+                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
+                    src={product.image[0]}
+                    alt="product"
                   />
-                </Link>
-              </TableCell>
+                ) : (
+                  <Avatar
+                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
+                    src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
+                    alt="product"
+                  />
+                )}
+                <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
+                  {showingTranslateValue(product?.title)}
+                </div>
+              </div>
+            </TableCell>
 
-              {/* edit & delete */}
-              <TableCell className='text-center'>
+            {/* price */}
+            <TableCell className='text-center'>
+              <ProductPriceInput
+                product={product}
+                selectedPriceListId={selectedPriceListId}
+                onPriceUpdate={handlePriceUpdate}
+              />
+            </TableCell>
+
+            {/* offer */}
+            <TableCell className='text-center'>
+              <span className="text-sm">
+                {offers.find((offer) => offer.products.some(prod => prod._id == product._id))?.name?.he || "-"}
+              </span>
+            </TableCell>
+
+            {/* categories */}
+            <TableCell className='text-center'>
+              <span className="text-sm">
+                {product?.categories?.map(cat => showingTranslateValue(cat?.name)).join(", ") || "-"}
+              </span>
+            </TableCell>
+
+            {/* stock */}
+            <TableCell className='text-center'>
+              <span className="text-sm">
+                {product.manageStock ? (product.stock || 0) : t("UnlimitedStock")}
+              </span>
+            </TableCell>
+
+            {/* barcode */}
+            <TableCell className='text-center'>
+              <span className="text-sm">
+                {product?.barcode || "-"}
+              </span>
+            </TableCell>
+
+            {/* zoom in */}
+            <TableCell className='text-center'>
+              <Link
+                to={`/product/${product._id}`}
+                className="flex justify-center text-gray-400 hover:text-customGreen-dark"
+              >
+                <Tooltip
+                  id="view"
+                  Icon={FiZoomIn}
+                  title={t("DetailsTbl")}
+                  bgColor="#10B981"
+                />
+              </Link>
+            </TableCell>
+
+            {/* edit & delete */}
+            <TableCell className='text-center'>
+              <div className="flex justify-center items-center">
                 <EditDeleteButton
                   id={product._id}
                   product={product}
@@ -160,11 +161,12 @@ const ProductTable = ({
                   handleModalOpen={handleModalOpen}
                   title={showingTranslateValue(product?.title)}
                 />
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
+              </div>
+            </TableCell>
+          </TableRow>
+        );
+      })}
+    </TableBody>
   );
 };
 

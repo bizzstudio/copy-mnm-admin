@@ -224,12 +224,14 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                   <div className="grid grid-cols-12 gap-5 mt-2">
                     {/* ניהול מלאי */}
                     <div className="col-span-12 flex items-center gap-3">
-                      <LabelArea label={t("ManageStock")} />
-                      <SwitchToggle
+                      <input
+                        type="checkbox"
                         id="manageStock"
-                        handleProcess={(checked) => setValue("manageStock", checked)}
-                        processOption={manageStock}
+                        checked={manageStock || false}
+                        onChange={(e) => setValue("manageStock", e.target.checked)}
+                        className="w-4 h-4"
                       />
+                      <LabelArea label={t("ManageStock")} />
                     </div>
 
                     {/* מלאי */}

@@ -5,7 +5,6 @@ import {
   CardBody,
   Input,
   Label,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -35,6 +34,7 @@ import StatusServices from "@/services/StatusService";
 import DeliveryServices from "@/services/DeliveryServices";
 import CheckBox from "@/components/form/others/CheckBox";
 import SelectWithCheckbox from "@/components/form/SelectWithCheckbox";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Orders = () => {
   const {
@@ -406,7 +406,7 @@ const Orders = () => {
       )}
 
       {loading ? (
-        <TableLoading row={12} col={7} width={160} height={20} />
+        <TableLoading row={12} col={9} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -431,12 +431,13 @@ const Orders = () => {
           </Table>
 
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={data?.totalDoc}
               resultsPerPage={100}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

@@ -52,17 +52,6 @@ const EditDeleteButton = ({
           </>
         ) : (
           <>
-            <div
-              className="opacity-0 p-2 text-gray-400 hover:text-customGreen-dark focus:outline-none"
-            >
-              <Tooltip
-                id="view"
-                Icon={FiZoomIn}
-                title={t("View")}
-                bgColor="#10B981"
-              />
-            </div>
-
             <button
               disabled={isCheck?.length > 0}
               onClick={() => handleUpdate(id)}

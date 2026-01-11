@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardBody,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -30,6 +29,7 @@ import CategoryServices from "@/services/CategoryServices";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import CategoryDrawer from "@/components/drawer/CategoryDrawer";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const ChildCategory = () => {
   const { id } = useParams();
@@ -100,6 +100,7 @@ const ChildCategory = () => {
     dataTable,
     serviceData,
     handleChangePage,
+    currentPage,
   } = useFilter(childCategory);
 
   const handleSelectAll = () => {
@@ -150,7 +151,7 @@ const ChildCategory = () => {
       </div>
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
-      <CardBody>
+        <CardBody>
           <div className="flex justify-end items-end gap-3">
             <Button onClick={toggleDrawer} className="rounded-md h-12">
               <span className="me-1.5">
@@ -228,12 +229,13 @@ const ChildCategory = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

@@ -1,10 +1,9 @@
 import {
-  // Pagination,
-  // Table,
-  // TableCell,
-  // TableContainer,
-  // TableFooter,
-  // TableHeader,
+  Table,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHeader,
   WindmillContext,
 } from "@windmill/react-ui";
 import dayjs from "dayjs";
@@ -23,18 +22,19 @@ import { TbCalendarRepeat } from "react-icons/tb";
 
 // Internal import
 import useAsync from "@/hooks/useAsync";
-// import useFilter from "@/hooks/useFilter";
+import useFilter from "@/hooks/useFilter";
 import LineChart from "@/components/chart/LineChart/LineChart";
 import PieChart from "@/components/chart/Pie/PieChart";
 import CardItem from "@/components/dashboard/CardItem";
 import CardItemTwo from "@/components/dashboard/CardItemTwo";
 import ChartCard from "@/components/chart/ChartCard";
-// import OrderTable from "@/components/order/OrderTable";
-// import TableLoading from "@/components/preloader/TableLoading";
-// import NotFound from "@/components/table/NotFound";
+import OrderTable from "@/components/order/OrderTable";
+import TableLoading from "@/components/preloader/TableLoading";
+import NotFound from "@/components/table/NotFound";
 import PageTitle from "@/components/Typography/PageTitle";
 import OrderServices from "@/services/OrderServices";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import CustomPagination from "@/components/table/CustomPagination";
 
 
 
@@ -66,9 +66,9 @@ const Dashboard = () => {
     error,
   } = useAsync(OrderServices.getBestSellerProductChart);
 
-  // const { data: dashboardRecentOrder, loading: loadingRecentOrder } = useAsync(
-  //   () => OrderServices.getDashboardRecentOrder({ page: currentPage, limit: 8 })
-  // );
+  const { data: dashboardRecentOrder, loading: loadingRecentOrder } = useAsync(
+    () => OrderServices.getDashboardRecentOrder({ page: 1, limit: 8 })
+  );
 
   const { data: dashboardOrderCount, loading: loadingOrderCount } = useAsync(
     OrderServices.getDashboardCount
@@ -78,7 +78,7 @@ const Dashboard = () => {
     OrderServices.getDashboardAmount
   );
 
-  // const { dataTable, serviceData } = useFilter(dashboardRecentOrder?.orders);
+  const { dataTable, serviceData, totalResults, resultsPerPage, handleChangePage, currentPage } = useFilter(dashboardRecentOrder?.orders || []);
 
   // חישוב הגרף הזמנות
   useEffect(() => {
@@ -419,7 +419,7 @@ const Dashboard = () => {
       {/* <PageTitle>{t("RecentOrder")}</PageTitle>
       
       {loadingRecentOrder ? (
-        <TableLoading row={5} col={4} />
+        <TableLoading row={12} col={8} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -441,12 +441,13 @@ const Dashboard = () => {
             <OrderTable orders={dataTable} />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
-              totalResults={dashboardRecentOrder?.totalOrder}
+            <CustomPagination
+              totalResults={dashboardRecentOrder?.totalOrder || totalResults}
               resultsPerPage={8}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loadingRecentOrder}
             />
           </TableFooter>
         </TableContainer>

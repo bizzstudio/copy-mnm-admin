@@ -6,7 +6,6 @@ import {
   CardBody,
   Input,
   Label,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -31,6 +30,7 @@ import OrderTable from "@/components/order/OrderTable";
 import TableLoading from "@/components/preloader/TableLoading";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const CashierOrders = () => {
   const {
@@ -321,7 +321,7 @@ const CashierOrders = () => {
       )}
 
       {loading ? (
-        <TableLoading row={12} col={7} width={160} height={20} />
+        <TableLoading row={12} col={11} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -347,12 +347,13 @@ const CashierOrders = () => {
           </Table>
 
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={data?.totalDoc}
               resultsPerPage={100}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

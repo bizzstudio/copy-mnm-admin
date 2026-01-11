@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardBody,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -29,6 +28,8 @@ import useFilter from "@/hooks/useFilter";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import AttributeServices from "@/services/AttributeServices";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import CustomPagination from "@/components/table/CustomPagination";
+import { t } from "i18next";
 
 const ChildAttributes = () => {
   let { id } = useParams();
@@ -56,6 +57,7 @@ const ChildAttributes = () => {
     dataTable,
     serviceData,
     handleChangePage,
+    currentPage,
   } = useFilter(data?.variants);
 
   // react hook
@@ -199,12 +201,13 @@ const ChildAttributes = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

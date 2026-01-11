@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -29,6 +28,7 @@ import TableLoading from "@/components/preloader/TableLoading";
 import CheckBox from "@/components/form/others/CheckBox";
 import CurrencyTable from "@/components/currency/CurrencyTable";
 import NotFound from "@/components/table/NotFound";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Currencies = () => {
   const { toggleDrawer } = useContext(SidebarContext);
@@ -42,6 +42,7 @@ const Currencies = () => {
     handleChangePage,
     handleSubmitCurrency,
     currencyRef,
+    currentPage,
   } = useFilter(data);
 
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -128,7 +129,7 @@ const Currencies = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={7} width={163} height={20} />
+        <TableLoading row={12} col={5} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : (
@@ -172,12 +173,13 @@ const Currencies = () => {
               />
             </Table>
             <TableFooter>
-              <Pagination
-                className="pagination-ltr"
+              <CustomPagination
                 totalResults={totalResults}
                 resultsPerPage={resultsPerPage}
                 onChange={handleChangePage}
-                label="Table navigation"
+                label={t("Table navigation")}
+                currentPage={currentPage}
+                loading={loading}
               />
             </TableFooter>
           </TableContainer>

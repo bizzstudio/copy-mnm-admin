@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -30,6 +29,7 @@ import useAsync from "@/hooks/useAsync";
 import useFilter from "@/hooks/useFilter";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import AttributeServices from "@/services/AttributeServices";
+import CustomPagination from "@/components/table/CustomPagination";
 
 // Internal import
 
@@ -61,6 +61,7 @@ const Attributes = () => {
     handleSubmitAttribute,
     handleUploadMultiple,
     handleRemoveSelectFile,
+    currentPage,
   } = useFilter(data);
 
   // react hooks
@@ -196,7 +197,7 @@ const Attributes = () => {
       </Card>
 
       {loading ? (
-        <TableLoading row={12} col={6} width={180} height={20} />
+        <TableLoading row={12} col={8} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -237,12 +238,13 @@ const Attributes = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

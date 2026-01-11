@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -36,6 +35,7 @@ import CategoryTable from "@/components/category/CategoryTable";
 import NotFound from "@/components/table/NotFound";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import { notifyError } from "@/utils/toast";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Category = () => {
   const { toggleDrawer, lang } = useContext(SidebarContext);
@@ -68,6 +68,7 @@ const Category = () => {
     filename,
     isDisabled,
     setCategoryType,
+    currentPage,
     handleSelectFile,
     handleUploadMultiple,
     handleRemoveSelectFile,
@@ -289,7 +290,7 @@ const Category = () => {
         name={showChild}
       />
       {loading ? (
-        <TableLoading row={12} col={6} width={190} height={20} />
+        <TableLoading row={12} col={8} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -336,12 +337,13 @@ const Category = () => {
           </Table>
 
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

@@ -4,7 +4,6 @@ import {
   CardBody,
   Input,
   Label,
-  Pagination,
   Select,
   Table,
   TableCell,
@@ -31,18 +30,16 @@ import BulkActionDrawer from "@/components/drawer/BulkActionDrawer";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import StatusDrawer from "@/components/drawer/StatusDrawer";
 import CheckBox from "@/components/form/others/CheckBox";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Statuses = () => {
   const {
     status,
     setStatus,
-    currentPage,
     searchText,
     searchRef,
     setSearchText,
-    handleChangePage,
     handleSubmitForAll,
-    resultsPerPage,
     toggleDrawer,
   } = useContext(SidebarContext);
   const { title, allId, handleDeleteMany, handleUpdateMany } = useToggleDrawer();
@@ -57,7 +54,14 @@ const Statuses = () => {
 
   const [serviceId, setServiceId] = useState('');
 
-  // const { dataTable, serviceData } = useFilter(data);
+  const {
+    dataTable,
+    serviceData,
+    totalResults,
+    resultsPerPage,
+    handleChangePage,
+    currentPage,
+  } = useFilter(data || []);
 
   const handleResetField = () => {
     setStatus("");
@@ -142,10 +146,10 @@ const Statuses = () => {
       </Card>
 
       {loading ? (
-        <TableLoading row={12} col={7} width={160} height={20} />
+        <TableLoading row={12} col={7} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
-      ) : data?.length !== 0 ? (
+      ) : serviceData?.length !== 0 ? (
         <TableContainer className="mb-8 dark:bg-gray-900">
           <Table>
             <TableHeader>
@@ -170,7 +174,7 @@ const Statuses = () => {
               </tr>
             </TableHeader>
 
-            <StatusTable statuses={data.sort((a, b) => {
+            <StatusTable statuses={dataTable.sort((a, b) => {
               if (a.phone && !b.phone) return 1;
               if (!a.phone && b.phone) return -1;
               return 0;
@@ -180,16 +184,16 @@ const Statuses = () => {
               setServiceId={setServiceId}
             />
           </Table>
-
-          {/* <TableFooter>
-               <Pagination
-              className="pagination-ltr"
-              totalResults={data?.totalDoc}
+          <TableFooter>
+            <CustomPagination
+              totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
-          </TableFooter> */}
+          </TableFooter>
         </TableContainer>
       ) : (
         <NotFound title={t("NoStatuses")} />

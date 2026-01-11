@@ -960,6 +960,7 @@ const useFilter = (data) => {
     handleChangePage,
     totalResults,
     resultsPerPage,
+    currentPage,
     handleOnDrop,
     setSearchCoupon,
     setAttributeTitle,

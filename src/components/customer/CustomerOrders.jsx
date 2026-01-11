@@ -6,7 +6,6 @@ import {
     TableCell,
     TableFooter,
     TableContainer,
-    Pagination,
     Card,
     CardBody,
 } from "@windmill/react-ui";
@@ -18,13 +17,14 @@ import useFilter from "@/hooks/useFilter";
 import CustomerOrderTable from "@/components/customer/CustomerOrderTable";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import InfoField from "@/components/common/InfoField";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const CustomerOrders = ({ customer }) => {
     const { orders = [] } = customer || {};
     const { t } = useTranslation();
     const { currency, getNumberTwo } = useUtilsFunction();
 
-    const { handleChangePage, totalResults, resultsPerPage, dataTable } = useFilter(orders);
+    const { handleChangePage, totalResults, resultsPerPage, dataTable, currentPage } = useFilter(orders);
 
     // Helper function to get customer type translation
     const getCustomerTypeLabel = (type) => {
@@ -131,12 +131,12 @@ const CustomerOrders = ({ customer }) => {
                                 <CustomerOrderTable orders={dataTable} />
                             </Table>
                             <TableFooter>
-                                <Pagination
-                                    className="pagination-ltr"
+                                <CustomPagination
                                     totalResults={totalResults}
                                     resultsPerPage={resultsPerPage}
                                     onChange={handleChangePage}
-                                    label="Table navigation"
+                                    label={t("Table navigation")}
+                                    currentPage={currentPage}
                                 />
                             </TableFooter>
                         </TableContainer>

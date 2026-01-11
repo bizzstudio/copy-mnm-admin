@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -30,6 +29,7 @@ import CheckBox from "@/components/form/others/CheckBox";
 import PopupTable from "@/components/popup/PopupTable";
 import NotFound from "@/components/table/NotFound";
 import PopupDrawer from "@/components/drawer/PopupDrawer";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Popups = () => {
   const { t } = useTranslation();
@@ -46,6 +46,7 @@ const Popups = () => {
     totalResults,
     resultsPerPage,
     handleChangePage,
+    currentPage,
   } = useFilter(data);
 
   const handleSelectAll = () => {
@@ -110,7 +111,7 @@ const Popups = () => {
         </CardBody>
       </Card>
       {loading ? (
-        <TableLoading row={12} col={8} width={140} height={20} />
+        <TableLoading row={12} col={6} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -143,12 +144,13 @@ const Popups = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Select,
   Table,
   TableCell,
@@ -31,6 +30,7 @@ import { SidebarContext } from "@/context/SidebarContext";
 import AdminServices from "@/services/AdminServices";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import DeleteModal from "@/components/modal/DeleteModal";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Staff = () => {
   const { state } = useContext(AdminContext);
@@ -50,6 +50,7 @@ const Staff = () => {
     serviceData,
     handleChangePage,
     handleSubmitUser,
+    currentPage,
   } = useFilter(data);
 
   const { title, serviceId, handleModalOpen } = useToggleDrawer();
@@ -130,7 +131,7 @@ const Staff = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={7} width={163} height={20} />
+        <TableLoading row={12} col={8} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -159,12 +160,13 @@ const Staff = () => {
             <StaffTable staffs={dataTable} lang={lang} handleModalOpen={handleModalOpen} />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

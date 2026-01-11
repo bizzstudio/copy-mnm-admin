@@ -5,7 +5,6 @@ import {
   CardBody,
   Input,
   Label,
-  Pagination,
   Select,
   Table,
   TableCell,
@@ -33,6 +32,7 @@ import DeliveryDrawer from "@/components/drawer/DeliveryDrawer";
 import { SidebarContext } from "@/context/SidebarContext";
 import DeliveryTable from "@/components/delivery/DeliveryTable";
 import CheckBox from "@/components/form/others/CheckBox";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Deliveries = () => {
   const {
@@ -40,7 +40,6 @@ const Deliveries = () => {
     setSearchText,
     handleChangePage,
     handleSubmitForAll,
-    resultsPerPage,
     toggleDrawer,
     setSortedField,
   } = useContext(SidebarContext);
@@ -61,6 +60,9 @@ const Deliveries = () => {
     serviceData,
     deliveryRef,
     handleSubmitDelivery,
+    totalResults,
+    resultsPerPage,
+    currentPage,
   } = useFilter(data);
 
   // react hooks
@@ -203,7 +205,7 @@ const Deliveries = () => {
       </Card> */}
 
       {loading ? (
-        <TableLoading row={12} col={7} width={160} height={20} />
+        <TableLoading row={12} col={5} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -236,17 +238,18 @@ const Deliveries = () => {
             />
           </Table>
 
-          {/* {dataTable.length >= resultsPerPage && (
+          {dataTable.length >= resultsPerPage && (
             <TableFooter>
-                 <Pagination
-              className="pagination-ltr"
-                totalResults={dataTable.length}
+              <CustomPagination
+                totalResults={totalResults}
                 resultsPerPage={resultsPerPage}
                 onChange={handleChangePage}
-                label="Table navigation"
+                label={t("Table navigation")}
+                currentPage={currentPage}
+                loading={loading}
               />
             </TableFooter>
-          )} */}
+          )}
         </TableContainer>
       ) : (
         <NotFound title={t("NoDeliveries")} />

@@ -6,7 +6,6 @@ import {
   TableCell,
   TableFooter,
   TableContainer,
-  Pagination,
 } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { IoBagHandle } from "react-icons/io5";
@@ -18,6 +17,7 @@ import useFilter from "@/hooks/useFilter";
 import PageTitle from "@/components/Typography/PageTitle";
 import Loading from "@/components/preloader/Loading";
 import CustomerOrderTable from "@/components/customer/CustomerOrderTable";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const CustomerOrder = () => {
   const { id } = useParams();
@@ -27,7 +27,13 @@ const CustomerOrder = () => {
     OrderServices.getOrderCustomer(id)
   );
 
-  const { handleChangePage, totalResults, resultsPerPage, dataTable } = useFilter(data);
+  const {
+    handleChangePage,
+    totalResults,
+    resultsPerPage,
+    dataTable,
+    currentPage,
+  } = useFilter(data);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
@@ -70,12 +76,13 @@ const CustomerOrder = () => {
             <CustomerOrderTable orders={dataTable} />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>

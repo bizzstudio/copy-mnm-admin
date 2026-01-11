@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -29,6 +28,7 @@ import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
 import LanguageDrawer from "@/components/drawer/LanguageDrawer";
 import MainDrawer from "@/components/drawer/MainDrawer";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Languages = () => {
   const { toggleDrawer } = useContext(SidebarContext);
@@ -43,6 +43,7 @@ const Languages = () => {
     languageRef,
     handleSubmitLanguage,
     handleChangePage,
+    currentPage,
   } = useFilter(data);
 
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -170,12 +171,13 @@ const Languages = () => {
               />
             </Table>
             <TableFooter>
-              <Pagination
-                className="pagination-ltr"
+              <CustomPagination
                 totalResults={totalResults}
                 resultsPerPage={resultsPerPage}
                 onChange={handleChangePage}
-                label="Table navigation"
+                label={t("Table navigation")}
+                currentPage={currentPage}
+                loading={loading}
               />
             </TableFooter>
           </TableContainer>

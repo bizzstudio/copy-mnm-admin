@@ -4,7 +4,6 @@ import {
   Button,
   CardBody,
   Input,
-  Pagination,
   Table,
   TableCell,
   TableContainer,
@@ -27,6 +26,7 @@ import useFilter from "@/hooks/useFilter";
 import CustomerServices from "@/services/CustomerServices";
 import DeleteModal from "@/components/modal/DeleteModal";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
+import CustomPagination from "@/components/table/CustomPagination";
 
 const Customers = () => {
   const { data, loading, error } = useAsync(CustomerServices.getAllCustomers);
@@ -49,6 +49,7 @@ const Customers = () => {
     handleChangePage,
     handleUploadMultiple,
     handleRemoveSelectFile,
+    currentPage,
   } = useFilter(data);
 
   const { t } = useTranslation();
@@ -136,7 +137,7 @@ const Customers = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={6} width={190} height={20} />
+        <TableLoading row={12} col={7} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -158,12 +159,13 @@ const Customers = () => {
             <CustomerTable customers={dataTable} handleModalOpen={handleModalOpen} />
           </Table>
           <TableFooter>
-            <Pagination
-              className="pagination-ltr"
+            <CustomPagination
               totalResults={totalResults}
               resultsPerPage={resultsPerPage}
               onChange={handleChangePage}
-              label="Table navigation"
+              label={t("Table navigation")}
+              currentPage={currentPage}
+              loading={loading}
             />
           </TableFooter>
         </TableContainer>
