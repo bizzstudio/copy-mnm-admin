@@ -50,6 +50,10 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       isVatFree: true,
       isWarehouseProduct: false,
       manageStock: false,
+      sortCode: "",
+      weight: null,
+      weightUnit: "",
+      managementNotes: "",
     },
   });
 
@@ -131,6 +135,10 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         isWarehouseProduct: isWarehouseProduct,
         isVatFree: isVatFree,
         status: data.status || "show",
+        sortCode: data.sortCode || "",
+        weight: data.weight ? Number(data.weight) : null,
+        weightUnit: data.weightUnit || "",
+        managementNotes: data.managementNotes || "",
       };
 
       console.log("productData :>>", productData);
@@ -176,21 +184,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       setLastStockUpdate(null);
 
       // איפוס טופס
-      reset({
-        title: "",
-        description: "",
-        slug: "",
-        barcode: "",
-        supplier: "",
-        stock: 0,
-        expiryDate: null,
-        minStockThreshold: null,
-        status: "show",
-        language: lang,
-        isVatFree: true,
-        isWarehouseProduct: false,
-        manageStock: false,
-      });
+      reset();
 
       // איפוס מחירים
       if (priceLists && priceLists.length > 0) {
@@ -235,6 +229,10 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
               isVatFree: res.isVatFree !== undefined ? res.isVatFree : true,
               isWarehouseProduct: res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false,
               manageStock: res.manageStock !== undefined ? res.manageStock : false,
+              sortCode: res.sortCode || "",
+              weight: res.weight || null,
+              weightUnit: res.weightUnit || "",
+              managementNotes: res.managementNotes || "",
             });
 
             if (res.categories && Array.isArray(res.categories)) {

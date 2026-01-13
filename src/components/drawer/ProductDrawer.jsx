@@ -6,6 +6,7 @@ import {
   Textarea,
   Card,
   CardBody,
+  Select,
 } from "@windmill/react-ui";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -187,6 +188,54 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                       </div>
                     </div>
 
+                    {/* קוד מיון */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("SortCode")} />
+                      <div className="col-span-6">
+                        <Input
+                          {...register("sortCode")}
+                          type="text"
+                          placeholder={t("SortCode")}
+                        />
+                      </div>
+                    </div>
+
+                    {/* משקל */}
+                    <div className="flex flex-col gap-1 md:col-span-3 col-span-6">
+                      <LabelArea label={t("Weight")} />
+                      <div className="col-span-6">
+                        <Input
+                          {...register("weight", { valueAsNumber: true })}
+                          type="number"
+                          step="0.01"
+                          placeholder={t("Weight")}
+                        />
+                      </div>
+                    </div>
+
+                    {/* יחידת משקל */}
+                    <div className="flex flex-col gap-1 md:col-span-3 col-span-6">
+                      <LabelArea label={t("WeightUnit")} />
+                      <div className="col-span-6">
+                        <Select
+                          {...register("weightUnit")}
+                          name="weightUnit"
+                        >
+                          <option value="" defaultValue hidden>
+                            {t("SelectWeightUnit")}
+                          </option>
+                          <option value="גרם">גרם</option>
+                          <option value="קילו">קילו</option>
+                          <option value="ליטר">ליטר</option>
+                          <option value="מ״ל">מ״ל</option>
+                          <option value="יחידה">יחידה</option>
+                          <option value="מ״ק">מ״ק</option>
+                          <option value="ק״ג">ק״ג</option>
+                          <option value="מ״ג">מ״ג</option>
+                        </Select>
+                      </div>
+                    </div>
+
                     {/* כשרויות */}
                     <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
                       <LabelArea label={t("Kashrut")} />
@@ -340,6 +389,24 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                             processOption={isWarehouseProduct}
                           />
                         </div>
+                      </div>
+                    </div>
+
+                    {/* הערות לניהול */}
+                    <div className="flex flex-col gap-1 col-span-12">
+                      <LabelArea label={t("ManagementNotes")} />
+                      <div className="col-span-12">
+                        <Textarea
+                          className="text-sm block w-full"
+                          {...register("managementNotes", {
+                            required: false,
+                          })}
+                          name="managementNotes"
+                          placeholder={t("ManagementNotes")}
+                          rows="4"
+                          spellCheck="false"
+                        />
+                        <Error errorName={errors.managementNotes} />
                       </div>
                     </div>
                   </div>
