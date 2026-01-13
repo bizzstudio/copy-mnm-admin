@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import {
   Table,
   TableCell,
@@ -10,7 +11,7 @@ import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import isToday from "dayjs/plugin/isToday";
 import isYesterday from "dayjs/plugin/isYesterday";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FiCheck, FiTruck } from "react-icons/fi";
 import { ImCreditCard } from "react-icons/im";
@@ -45,10 +46,6 @@ const Dashboard = () => {
   const { mode } = useContext(WindmillContext);
   const { getNumber } = useUtilsFunction();
 
-  dayjs.extend(isBetween);
-  dayjs.extend(isToday);
-  dayjs.extend(isYesterday);
-
   // react hook
   const [salesReport, setSalesReport] = useState([]);
   // const [todayCashPayment, setTodayCashPayment] = useState(0);
@@ -78,20 +75,43 @@ const Dashboard = () => {
     OrderServices.getDashboardAmount
   );
 
-  const { dataTable, serviceData, totalResults, resultsPerPage, handleChangePage, currentPage } = useFilter(dashboardRecentOrder?.orders || []);
+  // Memoize orders to prevent useFilter from re-running unnecessarily
+  const recentOrders = useMemo(() => {
+    return dashboardRecentOrder?.orders || [];
+  }, [dashboardRecentOrder?.orders]);
+
+  const { dataTable, serviceData, totalResults, resultsPerPage, handleChangePage, currentPage } = useFilter(recentOrders);
+
+  // Initialize dayjs plugins once
+  useEffect(() => {
+    dayjs.extend(isBetween);
+    dayjs.extend(isToday);
+    dayjs.extend(isYesterday);
+  }, []);
+
+  // Memoize ordersData to prevent unnecessary re-renders
+  const ordersDataMemo = useMemo(() => {
+    return dashboardOrderAmount?.ordersData;
+  }, [dashboardOrderAmount?.ordersData]);
 
   // חישוב הגרף הזמנות
   useEffect(() => {
+    // Only process if we have data
+    if (!ordersDataMemo || ordersDataMemo.length === 0) {
+      setSalesReport([]);
+      return;
+    }
+
     // today orders show
-    // const todayOrder = dashboardOrderAmount?.ordersData?.filter((order) =>
+    // const todayOrder = ordersDataMemo?.filter((order) =>
     //   dayjs(order.updatedAt).isToday()
     // );
-    // //  console.log('todayOrder',dashboardOrderAmount.ordersData)
+    // //  console.log('todayOrder',ordersDataMemo)
     // const todayReport = todayOrder?.reduce((pre, acc) => pre + acc.total, 0);
     // setTodayOrderAmount(todayReport);
 
     // // yesterday orders
-    // const yesterdayOrder = dashboardOrderAmount?.ordersData?.filter((order) =>
+    // const yesterdayOrder = ordersDataMemo?.filter((order) =>
     //   dayjs(order.updatedAt).set(-1, "day").isYesterday()
     // );
 
@@ -102,7 +122,7 @@ const Dashboard = () => {
     // setYesterdayOrderAmount(yesterdayReport);
 
     // sales orders chart data
-    const salesOrderChartData = dashboardOrderAmount?.ordersData?.filter(
+    const salesOrderChartData = ordersDataMemo.filter(
       (order) =>
         dayjs(order.updatedAt).isBetween(
           new Date().setDate(new Date().getDate() - 7),
@@ -110,19 +130,25 @@ const Dashboard = () => {
         )
     );
 
-    salesOrderChartData?.reduce((res, value) => {
+    if (!salesOrderChartData || salesOrderChartData.length === 0) {
+      setSalesReport([]);
+      return;
+    }
+
+    const newSalesReport = [];
+    salesOrderChartData.reduce((res, value) => {
       let onlyDate = value.updatedAt.split("T")[0];
 
       if (!res[onlyDate]) {
         res[onlyDate] = { date: onlyDate, total: 0, order: 0 };
-        salesReport.push(res[onlyDate]);
+        newSalesReport.push(res[onlyDate]);
       }
       res[onlyDate].total += value.total;
       res[onlyDate].order += 1;
       return res;
     }, {});
 
-    setSalesReport(salesReport);
+    setSalesReport(newSalesReport);
 
     // const todayPaymentMethodData = [];
     // const yesterDayPaymentMethodData = [];
@@ -239,7 +265,7 @@ const Dashboard = () => {
     // setYesterdayCreditPayment(yesterday_credit_payment?.total);
 
     // // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dashboardOrderAmount]);
+  }, [ordersDataMemo]);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
