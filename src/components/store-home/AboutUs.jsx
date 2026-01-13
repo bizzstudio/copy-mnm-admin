@@ -18,40 +18,41 @@ import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import Uploader from "@/components/image-uploader/Uploader";
 
-const AboutUs = ({
-  isSave,
-  register,
-  errors,
-  setAboutHeaderBg,
-  aboutHeaderBg,
-  setAboutPageHeader,
-  aboutPageHeader,
-  setAboutTopContentLeft,
-  aboutTopContentLeft,
-  setAboutTopContentRight,
-  aboutTopContentRight,
-  setAboutTopContentRightImage,
-  aboutTopContentRightImage,
-  setAboutMiddleContentSection,
-  aboutMiddleContentSection,
-  setAboutMiddleContentImage,
-  aboutMiddleContentImage,
-  setOurFounderSection,
-  ourFounderSection,
-  setOurFounderOneImage,
-  ourFounderOneImage,
-  setOurFounderTwoImage,
-  ourFounderTwoImage,
-  setOurFounderThreeImage,
-  ourFounderThreeImage,
-  setOurFounderFourImage,
-  ourFounderFourImage,
-  setOurFounderFiveImage,
-  ourFounderFiveImage,
-  setOurFounderSixImage,
-  ourFounderSixImage,
-  isSubmitting,
-}) => {
+const AboutUs = ({ storeHomeProps }) => {
+  const {
+    isSave,
+    register,
+    errors,
+    setAboutHeaderBg,
+    aboutHeaderBg,
+    setAboutPageHeader,
+    aboutPageHeader,
+    setAboutTopContentLeft,
+    aboutTopContentLeft,
+    setAboutTopContentRight,
+    aboutTopContentRight,
+    setAboutTopContentRightImage,
+    aboutTopContentRightImage,
+    setAboutMiddleContentSection,
+    aboutMiddleContentSection,
+    setAboutMiddleContentImage,
+    aboutMiddleContentImage,
+    setOurFounderSection,
+    ourFounderSection,
+    setOurFounderOneImage,
+    ourFounderOneImage,
+    setOurFounderTwoImage,
+    ourFounderTwoImage,
+    setOurFounderThreeImage,
+    ourFounderThreeImage,
+    setOurFounderFourImage,
+    ourFounderFourImage,
+    setOurFounderFiveImage,
+    ourFounderFiveImage,
+    setOurFounderSixImage,
+    ourFounderSixImage,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (
@@ -836,7 +837,7 @@ const AboutUs = ({
                       </div>
                     </div>
                     <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
-                      <label className="block md:md:text-sm md:col-span-1 sm:col-span-2 text-xs text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
+                      <label className="block md:md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
                         {t("OurFounderSixSubTitle")}
                       </label>
                       <div className="sm:col-span-4">

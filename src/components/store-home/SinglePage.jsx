@@ -8,14 +8,15 @@ import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 
-const SinglePageSetting = ({
-  isSave,
-  register,
-  errors,
-  isSubmitting,
-  singleProductPageRightBox,
-  setSingleProductPageRightBox,
-}) => {
+const SinglePageSetting = ({ storeHomeProps }) => {
+  const {
+    isSave,
+    register,
+    errors,
+    isSubmitting,
+    singleProductPageRightBox,
+    setSingleProductPageRightBox,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

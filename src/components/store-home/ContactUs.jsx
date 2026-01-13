@@ -11,28 +11,29 @@ import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import Uploader from "@/components/image-uploader/Uploader";
 
-const ContactUs = ({
-  isSave,
-  errors,
-  register,
-  setContactPageHeader,
-  contactPageHeader,
-  setContactHeaderBg,
-  contactHeaderBg,
-  setEmailUsBox,
-  emailUsBox,
-  setCallUsBox,
-  callUsBox,
-  setAddressBox,
-  addressBox,
-  setContactMidLeftColStatus,
-  contactMidLeftColStatus,
-  setContactMidLeftColImage,
-  contactMidLeftColImage,
-  setContactFormStatus,
-  contactFormStatus,
-  isSubmitting,
-}) => {
+const ContactUs = ({ storeHomeProps }) => {
+  const {
+    isSave,
+    errors,
+    register,
+    setContactPageHeader,
+    contactPageHeader,
+    setContactHeaderBg,
+    contactHeaderBg,
+    setEmailUsBox,
+    emailUsBox,
+    setCallUsBox,
+    callUsBox,
+    setAddressBox,
+    addressBox,
+    setContactMidLeftColStatus,
+    contactMidLeftColStatus,
+    setContactMidLeftColImage,
+    contactMidLeftColImage,
+    setContactFormStatus,
+    contactFormStatus,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

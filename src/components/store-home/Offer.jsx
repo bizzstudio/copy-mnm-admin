@@ -10,18 +10,19 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import Uploader from "@/components/image-uploader/Uploader";
 
-const Offer = ({
-  errors,
-  isSave,
-  register,
-  setOffersPageHeader,
-  offersPageHeader,
-  setOffersHeaderBg,
-  offersHeaderBg,
-  couponList1,
-  setCouponList1,
-  isSubmitting,
-}) => {
+const Offer = ({ storeHomeProps }) => {
+  const {
+    errors,
+    isSave,
+    register,
+    setOffersPageHeader,
+    offersPageHeader,
+    setOffersHeaderBg,
+    offersHeaderBg,
+    couponList1,
+    setCouponList1,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

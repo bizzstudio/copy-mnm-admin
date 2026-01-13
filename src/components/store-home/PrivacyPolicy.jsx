@@ -11,24 +11,25 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import Uploader from "@/components/image-uploader/Uploader";
 
-const PrivacyPolicy = ({
-  isSave,
-  errors,
-  register,
-  textEdit,
-  setTextEdit,
-  privacyPolicy,
-  setPrivacyPolicy,
-  setPrivacyPolicyHeaderBg,
-  privacyPolicyHeaderBg,
-  setTermsConditions,
-  termsConditions,
-  setTermsConditionsHeaderBg,
-  termsConditionsHeaderBg,
-  termsConditionsTextEdit,
-  setTermsConditionsTextEdit,
-  isSubmitting,
-}) => {
+const PrivacyPolicy = ({ storeHomeProps }) => {
+  const {
+    isSave,
+    errors,
+    register,
+    textEdit,
+    setTextEdit,
+    privacyPolicy,
+    setPrivacyPolicy,
+    setPrivacyPolicyHeaderBg,
+    privacyPolicyHeaderBg,
+    setTermsConditions,
+    termsConditions,
+    setTermsConditionsHeaderBg,
+    termsConditionsHeaderBg,
+    termsConditionsTextEdit,
+    setTermsConditionsTextEdit,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

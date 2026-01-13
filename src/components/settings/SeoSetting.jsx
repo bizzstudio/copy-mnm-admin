@@ -8,16 +8,17 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import Uploader from "@/components/image-uploader/Uploader";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 
-const SeoSetting = ({
-  errors,
-  register,
-  isSave,
-  favicon,
-  setFavicon,
-  metaImg,
-  setMetaImg,
-  isSubmitting,
-}) => {
+const SeoSetting = ({ storeHomeProps }) => {
+  const {
+    errors,
+    register,
+    isSave,
+    favicon,
+    setFavicon,
+    metaImg,
+    setMetaImg,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

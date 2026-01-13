@@ -11,22 +11,23 @@ import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import Uploader from "@/components/image-uploader/Uploader";
 
-const Faq = ({
-  isSave,
-  errors,
-  register,
-  setFaqStatus,
-  faqStatus,
-  setFaqHeaderBg,
-  faqHeaderBg,
-  setFaqLeftColImage,
-  faqLeftColImage,
-  setFaqLeftColStatus,
-  faqLeftColStatus,
-  setFaqRightColStatus,
-  faqRightColStatus,
-  isSubmitting,
-}) => {
+const Faq = ({ storeHomeProps }) => {
+  const {
+    isSave,
+    errors,
+    register,
+    setFaqStatus,
+    faqStatus,
+    setFaqHeaderBg,
+    faqHeaderBg,
+    setFaqLeftColImage,
+    faqLeftColImage,
+    setFaqLeftColStatus,
+    faqLeftColStatus,
+    setFaqRightColStatus,
+    faqRightColStatus,
+    isSubmitting,
+  } = storeHomeProps;
   const { t } = useTranslation();
 
   return (

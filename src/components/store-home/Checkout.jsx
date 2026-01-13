@@ -8,7 +8,8 @@ import Error from "@/components/form/others/Error";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 
-const Checkout = ({ isSave, errors, register, isSubmitting }) => {
+const Checkout = ({ storeHomeProps }) => {
+  const { isSave, errors, register, isSubmitting } = storeHomeProps;
   const { t } = useTranslation();
   return (
     <>
