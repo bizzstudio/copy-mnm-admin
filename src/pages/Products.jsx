@@ -1,41 +1,41 @@
 // src/pages/Products.jsx
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   Table,
   TableHeader,
   TableCell,
   TableFooter,
   TableContainer,
-  Select,
-  Input,
   Button,
   Card,
   CardBody,
 } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
-import { FiPlus } from "react-icons/fi";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { FiCamera } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiDownload, FiUpload, FiCamera } from "react-icons/fi";
 
 // Internal import
 import useAsync from "@/hooks/useAsync";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
-import UploadManyTwo from "@/components/common/UploadManyTwo";
+import useExport from "@/hooks/useExport";
+import useImport from "@/hooks/useImport";
+import useProductFilter from "@/hooks/useProductFilter";
 import NotFound from "@/components/table/NotFound";
 import ProductServices from "@/services/ProductServices";
 import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
 import ProductTable from "@/components/product/ProductTable";
+import ProductFilters from "@/components/product/ProductFilters";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import ProductDrawer from "@/components/drawer/ProductDrawer";
 import CheckBox from "@/components/form/others/CheckBox";
-import useProductFilter from "@/hooks/useProductFilter";
 import DeleteModal from "@/components/modal/DeleteModal";
 import BulkActionDrawer from "@/components/drawer/BulkActionDrawer";
 import TableLoading from "@/components/preloader/TableLoading";
-import SelectCategory from "@/components/form/selectOption/SelectCategory";
 import BarcodeScannerModal from "@/components/modal/BarcodeScannerModal";
 import CustomPagination from "@/components/table/CustomPagination";
+import SearchInput from "@/components/form/input/SearchInput";
+import DropdownMenu from "@/components/menu/DropdownMenu";
+import ImportResultsModal from "@/components/modal/ImportResultsModal";
 
 const Products = () => {
   const {
@@ -54,41 +54,77 @@ const Products = () => {
     lang,
     currentPage,
     handleChangePage,
-    searchText,
-    category,
-    setCategory,
-    searchRef,
-    handleSubmitForAll,
-    sortedField,
-    setSortedField,
     limitData,
     isDrawerOpen,
     priceLists,
   } = useContext(SidebarContext);
 
+  // Filters hook - uses SidebarContext under the hood
+  const filters = useProductFilter();
+
+  // Import/Export hooks
+  const { exportProductsToExcel } = useExport();
+  const {
+    handleSelectFile,
+    handleUploadMultiple,
+    fileInputRef,
+    importResults,
+    isImportModalOpen,
+    importStage,
+    handleCloseImportModal,
+  } = useImport();
+
   // State for barcode scanner modal
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  // State for managing barcode from scanner
   const [pendingBarcode, setPendingBarcode] = useState(null);
-  // State for selected price list (default to the default price list)
   const [selectedPriceListId, setSelectedPriceListId] = useState(null);
 
+  // State for checkbox
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const [isCheck, setIsCheck] = useState([]);
+
+  // Local search state for debounce
+  const [localSearchValue, setLocalSearchValue] = useState("");
+
+  // Debounce ref for search
+  const searchDebounceRef = useRef(null);
+
+  // Fetch products using useAsync (app convention)
   const { data, loading, error } = useAsync(() =>
     ProductServices.getAllProducts({
       page: currentPage,
       limit: limitData,
-      category: category,
-      title: searchText,
-      price: sortedField,
+      category: filters.category,
+      title: filters.searchText,
+      price: filters.sortedField,
     })
   );
 
-  // console.log("product page", data);
+  // Auto-search with debounce (300ms) when localSearchValue changes
+  useEffect(() => {
+    // Clear previous timeout
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
 
-  // react hooks
-  const [isCheckAll, setIsCheckAll] = useState(false);
-  const [isCheck, setIsCheck] = useState([]);
+    // Set new timeout for debounce
+    searchDebounceRef.current = setTimeout(() => {
+      filters.setSearchText(localSearchValue || null);
+    }, 300);
 
+    return () => {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+      }
+    };
+  }, [localSearchValue]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setLocalSearchValue(e.target.value);
+  };
+
+  // Handle select all checkbox
   const handleSelectAll = () => {
     setIsCheckAll(!isCheckAll);
     setIsCheck(data?.products.map((li) => li._id));
@@ -96,11 +132,15 @@ const Products = () => {
       setIsCheck([]);
     }
   };
-  // handle reset field
+
+  // Handle reset filters
   const handleResetField = () => {
-    setCategory("");
-    setSortedField("");
-    searchRef.current.value = "";
+    filters.resetFilters();
+    setLocalSearchValue("");
+    if (filters.searchRef.current) {
+      filters.searchRef.current.value = "";
+    }
+    setSelectedPriceListId(null);
     // Reset to default price list
     if (priceLists && priceLists.length > 0) {
       const defaultPriceList = priceLists.find(pl => pl.isDefault);
@@ -112,19 +152,18 @@ const Products = () => {
     }
   };
 
-  // console.log('productss',products)
-  const {
-    serviceData,
-    filename,
-    isDisabled,
-    handleSelectFile,
-    handleUploadMultiple,
-    handleRemoveSelectFile,
-  } = useProductFilter(data?.products);
+  // Export function
+  const handleExportToExcel = async () => {
+    await exportProductsToExcel(isCheck);
+  };
+
+  // Import function - called from modal when user clicks "Upload to System"
+  const handleImportProducts = async () => {
+    await handleUploadMultiple();
+  };
 
   // Handle product found from barcode scanner
   const handleProductFound = (product) => {
-    // Open drawer with existing product for adding stock
     const productId = product._id || product.id;
     if (productId) {
       setServiceId(productId);
@@ -134,7 +173,6 @@ const Products = () => {
 
   // Handle product not found - open drawer with barcode pre-filled
   const handleProductNotFound = (barcode) => {
-    // Open drawer for new product with barcode pre-filled
     setServiceId(null);
     setPendingBarcode(barcode);
     toggleDrawer();
@@ -154,7 +192,6 @@ const Products = () => {
       if (defaultPriceList) {
         setSelectedPriceListId(defaultPriceList._id);
       } else {
-        // If no default, use the first one
         setSelectedPriceListId(priceLists[0]._id);
       }
     }
@@ -165,7 +202,7 @@ const Products = () => {
       <PageTitle>{t("ProductsPage")}</PageTitle>
 
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
-      
+
       {isCheck?.length < 1 && <DeleteModal id={serviceId} title={title} />}
 
       {isCheck?.length > 1 && (
@@ -174,10 +211,10 @@ const Products = () => {
 
       <MainDrawer width='700px'>
         <ProductDrawer
-         id={serviceId}
+          id={serviceId}
           pendingBarcode={pendingBarcode}
-           onBarcodeUsed={() => setPendingBarcode(null)}
-            />
+          onBarcodeUsed={() => setPendingBarcode(null)}
+        />
       </MainDrawer>
 
       <BarcodeScannerModal
@@ -187,162 +224,131 @@ const Products = () => {
         onProductNotFound={handleProductNotFound}
       />
 
+      <ImportResultsModal
+        isOpen={isImportModalOpen}
+        onClose={handleCloseImportModal}
+        results={importResults}
+        isLoading={loading}
+        stage={importStage}
+        onUpload={handleImportProducts}
+      />
+
+      {/* Hidden file input for import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".xlsx,.xls"
+        onChange={handleSelectFile}
+        style={{ display: 'none' }}
+      />
+
+      {/* Actions Card */}
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
-      <CardBody>
-          <form
-            onSubmit={handleSubmitForAll}
-            className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6 xl:flex"
-          >
-            <div className="grow-0 sm:grow md:grow lg:grow xl:grow">
-              <UploadManyTwo
-                title="Products"
-                filename={filename}
-                isDisabled={isDisabled}
-                totalDoc={data?.totalDoc}
-                handleSelectFile={handleSelectFile}
-                handleUploadMultiple={handleUploadMultiple}
-                handleRemoveSelectFile={handleRemoveSelectFile}
+        <CardBody>
+          <div className="flex flex-col sm:flex-row gap-2 items-stretch py-3">
+            <DropdownMenu
+              title=""
+              addMenu={true}
+              options={[
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiPlus size={20} className="mb-px" />
+                      {t("AddProduct")}
+                    </div>
+                  ),
+                  onClick: toggleDrawer
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiCamera size={17} />
+                      {t("ScanProduct")}
+                    </div>
+                  ),
+                  onClick: () => setIsScannerOpen(true)
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiDownload size={17} />
+                      {isCheck.length > 0 ? t("ExportSelected") : t("ExportAll")}
+                    </div>
+                  ),
+                  onClick: handleExportToExcel,
+                  disabled: !data?.products || data.products.length === 0
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiUpload size={17} />
+                      {t("ImportFromExcel")}
+                    </div>
+                  ),
+                  onClick: () => {
+                    fileInputRef.current?.click();
+                  }
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiTrash2 size={17} />
+                      {t("Delete")}
+                    </div>
+                  ),
+                  onClick: () => handleDeleteMany(isCheck, data?.products),
+                  disabled: isCheck.length < 1
+                },
+              ]}
+            />
+
+            <div className="grow">
+              <SearchInput
+                ref={filters.searchRef}
+                placeholder={t("SearchProduct")}
+                value={localSearchValue}
+                onChange={handleSearchChange}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // Clear debounce and search immediately
+                  if (searchDebounceRef.current) {
+                    clearTimeout(searchDebounceRef.current);
+                  }
+                  const value = filters.searchRef.current?.value || localSearchValue;
+                  filters.setSearchText(value || null);
+                }}
+                onReset={handleResetField}
+                name="search"
+                className="w-full"
+                showReset={filters.hasActiveFilters()}
               />
             </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* <div className="grow-0 md:grow lg:grow xl:grow">
-                <Button
-                  disabled={isCheck.length < 1}
-                  onClick={() => handleUpdateMany(isCheck)}
-                  className="w-full rounded-md h-12 btn-gray text-gray-600"
-                >
-                  <span className="ml-2">
-                    <FiEdit />
-                  </span>
-                  {t("BulkAction")}
-                </Button>
-              </div> */}
-              <div className="grow-0 md:grow lg:grow xl:grow">
-                <Button
-                  disabled={isCheck?.length < 1}
-                  onClick={() => handleDeleteMany(isCheck, data.products)}
-                  className="w-full rounded-md h-12 bg-red-300 disabled btn-red"
-                >
-                  <span className="ml-2">
-                    <FiTrash2 />
-                  </span>
-
-                  {t("Delete")}
-                </Button>
-              </div>
-              <div className="grow-0 md:grow lg:grow xl:grow">
-                <Button
-                  onClick={toggleDrawer}
-                  className="w-full rounded-md h-12"
-                >
-                  <span className="ml-2">
-                    <FiPlus />
-                  </span>
-                  {t("AddProduct")}
-                </Button>
-              </div>
-              <div className="grow-0 md:grow lg:grow xl:grow">
-                <Button
-                  onClick={() => setIsScannerOpen(true)}
-                  className="w-full rounded-md h-12 bg-blue-600 hover:bg-blue-700"
-                >
-                  <span className="ml-2">
-                    <FiCamera />
-                  </span>
-                  {t("ScanProduct")}
-                </Button>
-              </div>
-            </div>
-          </form>
+          </div>
         </CardBody>
       </Card>
 
+      {/* Filters Card */}
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 rounded-t-lg rounded-0 mb-4">
         <CardBody>
-          <form
-            onSubmit={handleSubmitForAll}
-            className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
-          >
-            <div className="grow-0 md:grow lg:grow xl:grow">
-              <Input
-                ref={searchRef}
-                type="search"
-                name="search"
-                placeholder={t("SearchProduct")}
-              />
-              <button
-                type="submit"
-                className="absolute right-0 top-0 mt-5 mr-1"
-              ></button>
-            </div>
-
-            <div className="grow-0 md:grow lg:grow xl:grow">
-              <SelectCategory setCategory={setCategory} lang={lang} />
-            </div>
-
-            <div className="grow-0 md:grow lg:grow xl:grow">
-              <Select 
-                value={selectedPriceListId || ""} 
-                onChange={(e) => setSelectedPriceListId(e.target.value)}
-              >
-                {priceLists && priceLists.length > 0 ? (
-                  priceLists.map((priceList) => (
-                    <option key={priceList._id} value={priceList._id}>
-                      {priceList.name}
-                    </option>
-                  ))
-                ) : (
-                  <option value="">{t("PriceListTitle")}</option>
-                )}
-              </Select>
-            </div>
-
-            <div className="grow-0 md:grow lg:grow xl:grow">
-              <Select onChange={(e) => setSortedField(e.target.value)}>
-                <option value="All" defaultValue hidden>
-                  {t("Price")}
-                </option>
-                <option value="low">{t("LowtoHigh")}</option>
-                <option value="high">{t("HightoLow")}</option>
-                <option value="published">{t("Published")}</option>
-                <option value="unPublished">{t("Unpublished")}</option>
-                <option value="status-selling">{t("StatusSelling")}</option>
-                <option value="status-out-of-stock">{t("StatusStock")}</option>
-                <option value="date-added-asc">{t("DateAddedAsc")}</option>
-                <option value="date-added-desc">{t("DateAddedDesc")}</option>
-                <option value="date-updated-asc">{t("DateUpdatedAsc")}</option>
-                <option value="date-updated-desc">
-                  {t("DateUpdatedDesc")}
-                </option>
-              </Select>
-            </div>
-            <div className="flex items-center gap-2 grow-0 md:grow lg:grow xl:grow">
-              <div className="w-full mx-1">
-                <Button type="submit" className="h-12 w-full bg-customGreen-dark">
-                  {t("Filter")}
-                </Button>
-              </div>
-
-              <div className="w-full mx-1">
-                <Button
-                  layout="outline"
-                  onClick={handleResetField}
-                  type="reset"
-                  className="px-4 md:py-1 py-2 h-12 text-sm dark:bg-gray-700"
-                >
-                  <span className="text-black dark:text-gray-200">{t("Reset")}</span>
-                </Button>
-              </div>
-            </div>
-          </form>
+          <ProductFilters
+            sortedField={filters.sortedField}
+            setSortedField={filters.setSortedField}
+            category={filters.category}
+            setCategory={filters.setCategory}
+            selectedPriceListId={selectedPriceListId}
+            setSelectedPriceListId={setSelectedPriceListId}
+            priceLists={priceLists}
+            lang={lang}
+          />
         </CardBody>
       </Card>
 
+      {/* Products Table */}
       {loading ? (
         <TableLoading row={12} col={10} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
-      ) : serviceData?.length !== 0 ? (
+      ) : data?.products?.length !== 0 ? (
         <TableContainer className="mb-8 rounded-b-lg">
           <Table>
             <TableHeader>
@@ -397,7 +403,7 @@ const Products = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Product" />
+        <NotFound title={t("NoProducts")} />
       )}
     </div>
   );
