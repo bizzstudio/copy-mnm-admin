@@ -1,6 +1,7 @@
 // src/hooks/useToggleDrawer.js
 import { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "@/context/SidebarContext";
+import { t } from "i18next";
 
 const useToggleDrawer = () => {
   const [allId, setAllId] = useState([]);
@@ -36,10 +37,10 @@ const useToggleDrawer = () => {
     }
   }, [isDrawerOpen]);
 
-  const handleDeleteMany = async (id, products) => {
+  const handleDeleteMany = async (id) => {
     setAllId(id);
     toggleModal();
-    setTitle("Selected items");
+    setTitle(t("Selected items"));
   };
 
   return {

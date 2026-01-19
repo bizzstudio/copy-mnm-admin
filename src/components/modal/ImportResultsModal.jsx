@@ -42,7 +42,7 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
 
             <div className="fixed inset-0 overflow-y-auto">
                 <div className="flex min-h-full items-center justify-center p-4">
-                    <DialogPanel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-xl transition-all">
+                    <DialogPanel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-xl transition-all">
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-600">
                             <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">

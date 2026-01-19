@@ -26,8 +26,6 @@ const useExport = () => {
 
             // Fetch products from server
             if (selectedProductIds.length > 0) {
-                // TODO: Need to implement a way to get specific products by IDs
-                // For now, we'll fetch all and filter
                 const res = await ProductServices.getAllProducts({});
                 products = res.products.filter(p => selectedProductIds.includes(p._id));
             } else {
@@ -72,7 +70,19 @@ const useExport = () => {
                 // Categories - export as comma-separated slugs
                 if (product.categories && Array.isArray(product.categories)) {
                     row['categories'] = product.categories
-                        .map(cat => cat.slug || cat)
+                        .map(cat => {
+                            // If cat is an object with slug, return the slug
+                            if (typeof cat === 'object' && cat !== null && cat.slug) {
+                                return cat.slug;
+                            }
+                            // If cat is a string, return it
+                            if (typeof cat === 'string') {
+                                return cat;
+                            }
+                            // Otherwise return empty string
+                            return '';
+                        })
+                        .filter(slug => slug !== '') // Filter out empty strings
                         .join(',');
                 } else {
                     row['categories'] = '';
