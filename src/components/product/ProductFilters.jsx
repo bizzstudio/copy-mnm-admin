@@ -20,7 +20,8 @@ const ProductFilters = ({
     selectedPriceListId,
     setSelectedPriceListId,
     priceLists,
-    lang
+    lang,
+    handleChangePage
 }) => {
     return (
         <CollapsibleSection
@@ -32,7 +33,10 @@ const ProductFilters = ({
                 {/* Category Filter */}
                 <div>
                     <SelectCategory
-                        setCategory={setCategory}
+                        setCategory={(value) => {
+                            setCategory(value);
+                            handleChangePage(1);
+                        }}
                         lang={lang}
                     />
                 </div>
@@ -41,7 +45,10 @@ const ProductFilters = ({
                 <div>
                     <Select
                         value={selectedPriceListId || ""}
-                        onChange={(e) => setSelectedPriceListId(e.target.value)}
+                        onChange={(e) => {
+                            setSelectedPriceListId(e.target.value);
+                            handleChangePage(1);
+                        }}
                         className="h-12"
                     >
                         <option value="">{t("PriceListTitle")}</option>
@@ -59,7 +66,10 @@ const ProductFilters = ({
                 <div>
                     <Select
                         value={sortedField || ""}
-                        onChange={(e) => setSortedField(e.target.value)}
+                        onChange={(e) => {
+                            setSortedField(e.target.value);
+                            handleChangePage(1);
+                        }}
                         className="h-12"
                     >
                         <option value="">{t("AllProducts")}</option>

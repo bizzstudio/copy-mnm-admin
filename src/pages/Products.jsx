@@ -110,6 +110,8 @@ const Products = () => {
     // Set new timeout for debounce
     searchDebounceRef.current = setTimeout(() => {
       filters.setSearchText(localSearchValue || null);
+      // Reset to page 1 when search text changes
+      handleChangePage(1);
     }, 300);
 
     return () => {
@@ -316,6 +318,8 @@ const Products = () => {
                   }
                   const value = filters.searchRef.current?.value || localSearchValue;
                   filters.setSearchText(value || null);
+                  // Reset to page 1 when submitting search
+                  handleChangePage(1);
                 }}
                 onReset={handleResetField}
                 name="search"
@@ -339,6 +343,7 @@ const Products = () => {
             setSelectedPriceListId={setSelectedPriceListId}
             priceLists={priceLists}
             lang={lang}
+            handleChangePage={handleChangePage}
           />
         </CardBody>
       </Card>

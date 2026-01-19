@@ -17,8 +17,8 @@ const SelectCategory = ({ setCategory }) => {
   return (
     <>
       <Select onChange={(e) => setCategory(e.target.value)}>
-        <option value="All" defaultValue hidden>
-          {t("Category")}
+        <option value="">
+          {t("AllCategories")}
         </option>
         {data?.map((cat) => (
           <option key={cat._id} value={cat._id}>
