@@ -73,7 +73,7 @@ const OrderInvoice = () => {
                 </h1>
                 <div className="flex items-center gap-3 mt-2">
                   <Status status={data?.status} />
-                  {data?.cardcom?.isPaid ? (
+                  {data?.[data?.paymentProvider]?.isPaid ? (
                     <Badge type="success">{t("Paid")}</Badge>
                   ) : (
                     <Badge type="warning">{t("Unpaid")}</Badge>
@@ -187,7 +187,7 @@ const OrderInvoice = () => {
               <InfoField
                 label={t("Payment Status")}
                 value={
-                  data?.cardcom?.isPaid ? (
+                  data?.[data?.paymentProvider]?.isPaid ? (
                     <Badge type="success">{t("Paid")}</Badge>
                   ) : (
                     <Badge type="warning">{t("Unpaid")}</Badge>
@@ -200,11 +200,11 @@ const OrderInvoice = () => {
               />
               <InfoField
                 label={t("Payment Amount")}
-                value={data?.cardcom?.isPaid ? `${currency}${getNumberTwo(data?.total)}` : "-"}
+                value={data?.[data?.paymentProvider]?.isPaid ? `${currency}${getNumberTwo(data?.total)}` : "-"}
               />
               <InfoField
                 label={t("Payment Date")}
-                value={data?.cardcom?.paidAt ? showDateTimeFormat(data?.cardcom?.paidAt) : "-"}
+                value={data?.[data?.paymentProvider]?.paidAt ? showDateTimeFormat(data[data.paymentProvider].paidAt) : "-"}
               />
             </div>
           </div>

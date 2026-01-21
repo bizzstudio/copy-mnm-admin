@@ -1,5 +1,5 @@
 // src/pages/CustomerPage.jsx
-import React from "react";
+import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BiUser, BiReceipt, BiFile } from "react-icons/bi";
@@ -27,32 +27,7 @@ const CustomerPage = () => {
 
     console.log('customer :>> ', customer);
 
-    if (loading) {
-        return (
-            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-                <Loading loading={loading} />
-            </div>
-        );
-    }
-
-    if (error || !customer) {
-        return (
-            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-                <div className="max-w-7xl mx-auto">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                            {t("CustomerNotFound")}
-                        </h2>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            {error || t("CustomerNotFoundMessage")}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    const tabs = [
+    const tabs = useMemo(() => [
         {
             id: "personal",
             label: (
@@ -83,27 +58,52 @@ const CustomerPage = () => {
             ),
             content: <CustomerDocuments customer={customer} customerId={id} />,
         },
-    ];
+    ], [customer, id, t]);
+
+    if (loading) {
+        return (
+            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+                <Loading loading={loading} />
+            </div>
+        );
+    }
+
+    if (error || !customer) {
+        return (
+            <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+                <div className="max-w-7xl mx-auto">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                            {t("CustomerNotFound")}
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            {error || t("CustomerNotFoundMessage")}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-                <div className="flex items-center justify-between mt-8 w-full">
-                    <PageTitle>
-                        {customer.name} {customer.lastName}
-                    </PageTitle>
-                    <Button
-                        onClick={() => navigate("/customers")}
-                        layout="outline"
-                        className="flex items-center gap-2 w-fit!"
-                    >
-                        <span>{t("Back")}</span>
-                        <FiArrowLeft size={16} />
-                    </Button>
-                </div>
+            <div className="flex items-center justify-between mt-8 w-full">
+                <PageTitle>
+                    {customer.name} {customer.lastName}
+                </PageTitle>
+                <Button
+                    onClick={() => navigate("/customers")}
+                    layout="outline"
+                    className="flex items-center gap-2 w-fit!"
+                >
+                    <span>{t("Back")}</span>
+                    <FiArrowLeft size={16} />
+                </Button>
+            </div>
 
-                <div className="mt-6 w-full">
-                    <Tabs tabs={tabs} tab="tab" />
-                </div>
+            <div className="mt-6 w-full">
+                <Tabs tabs={tabs} tab="tab" />
+            </div>
         </div>
     );
 };

@@ -50,11 +50,22 @@ const CustomerOrderTable = ({ orders }) => {
 
           {/* Payment Status */}
           <TableCell className="text-center">
-            {order.cardcom?.isPaid ? (
+            {order[order.paymentProvider]?.isPaid ? (
               <Badge type="success">{t("Paid")}</Badge>
             ) : (
               <Badge type="warning">{t("Unpaid")}</Badge>
             )}
+          </TableCell>
+
+          {/* Payment Method */}
+          <TableCell className="text-center">
+            <span className="text-sm">
+              {order?.paymentMethod === "credit"
+                ? t("Credit")
+                : order?.paymentMethod === "card"
+                ? t("CreditCard")
+                : t(order?.paymentMethod || "N/A")}
+            </span>
           </TableCell>
 
           {/* Order Status - Interactive */}
