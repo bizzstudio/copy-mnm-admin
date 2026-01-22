@@ -71,15 +71,13 @@ const CustomerPage = () => {
     if (error || !customer) {
         return (
             <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-                <div className="max-w-7xl mx-auto">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                            {t("CustomerNotFound")}
-                        </h2>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            {error || t("CustomerNotFoundMessage")}
-                        </p>
-                    </div>
+                <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                        {t("CustomerNotFound")}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        {error || t("CustomerNotFoundMessage")}
+                    </p>
                 </div>
             </div>
         );
@@ -87,7 +85,7 @@ const CustomerPage = () => {
 
     return (
         <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-            <div className="flex items-center justify-between mt-8 w-full">
+            <div className="flex items-center justify-between mt-6 w-full">
                 <PageTitle>
                     {customer.name} {customer.lastName}
                 </PageTitle>

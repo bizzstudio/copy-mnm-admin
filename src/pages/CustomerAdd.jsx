@@ -15,22 +15,20 @@ const CustomerAdd = () => {
 
     return (
         <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <PageTitle>{t("AddCustomer")}</PageTitle>
-                    <Button
-                        onClick={() => navigate("/customers")}
-                        layout="outline"
-                        className="flex items-center gap-2 w-fit!"
-                    >
-                        <span>{t("Back")}</span>
-                        <FiArrowLeft size={16} />
-                    </Button>
-                </div>
+            <div className="w-full flex items-center justify-between mt-6">
+                <PageTitle>{t("AddCustomer")}</PageTitle>
+                <Button
+                    onClick={() => navigate("/customers")}
+                    layout="outline"
+                    className="flex items-center gap-2 w-fit!"
+                >
+                    <span>{t("Back")}</span>
+                    <FiArrowLeft size={16} />
+                </Button>
+            </div>
 
-                <div className="mt-6">
-                    <CustomerPersonalDetails customer={null} customerId={null} />
-                </div>
+            <div className="mt-1">
+                <CustomerPersonalDetails customer={null} customerId={null} />
             </div>
         </div>
     );

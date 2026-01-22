@@ -63,7 +63,7 @@ const Customers = () => {
   };
 
   return (
-    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+    <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden mt-2">
       <DeleteModal id={serviceId} title={title} />
       <PageTitle>{t("CustomersPage")}</PageTitle>
 
