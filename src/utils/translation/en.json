@@ -1509,5 +1509,18 @@
   "ErrorsDetails": "Error Details",
   "Row": "Row",
   "NoDataToImport": "No data to import",
-  "UploadToSystem": "Upload to System"
+  "UploadToSystem": "Upload to System",
+  "AllDocuments": "All Documents",
+  "DateRange": "Date Range",
+  "Newer": "Newer",
+  "Older": "Older",
+  "Page": "Page",
+  "Of": "of",
+  "NoDocumentsFound": "No documents found",
+  "DocumentType": "Document Type",
+  "DocumentNumber": "Document Number",
+  "Time": "Time",
+  "Comments": "Comments",
+  "CustomerNotLinkedToRivhit": "The customer is not linked to Rivhit yet, please create a first document to link the customer and start showing documents.",
+  "DocumentLinkNotFound": "No link available for this document"
 }

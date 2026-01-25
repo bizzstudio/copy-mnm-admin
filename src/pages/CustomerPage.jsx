@@ -1,13 +1,15 @@
 // src/pages/CustomerPage.jsx
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BiUser, BiReceipt, BiFile } from "react-icons/bi";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button } from "@windmill/react-ui";
+import dayjs from "dayjs";
 
 // Internal import
 import useAsync from "@/hooks/useAsync";
+import useAsyncWithRefetch from "@/hooks/useAsyncWithRefetch";
 import CustomerServices from "@/services/CustomerServices";
 import PageTitle from "@/components/Typography/PageTitle";
 import Loading from "@/components/preloader/Loading";
@@ -25,7 +27,62 @@ const CustomerPage = () => {
         CustomerServices.getCustomerById(id)
     );
 
+    // חישוב טווח התאריכים של העמוד הראשון (מהיום עד לפני 6 חודשים)
+    const getInitialDateRange = () => {
+        const today = dayjs();
+        const sixMonthsAgo = today.subtract(6, 'month');
+        return {
+            from: sixMonthsAgo.format('YYYY-MM-DD'),
+            to: today.format('YYYY-MM-DD')
+        };
+    };
+
+    const externalCustomerId = customer?.accounting?.externalCustomerId;
+
+    // סטייט לשמירת טווח התאריכים הנוכחי
+    const [dateRange, setDateRange] = useState(getInitialDateRange());
+
+    // יצירת פונקציה לטעינת מסמכים - תלויה ב-externalCustomerId ו-dateRange
+    const documentsFetchFunction = useMemo(() => {
+        if (!externalCustomerId) {
+            return () => Promise.resolve(null);
+        }
+        return () => CustomerServices.getRivhitDocuments(
+            externalCustomerId,
+            dateRange.from,
+            dateRange.to
+        );
+    }, [externalCustomerId, dateRange.from, dateRange.to]);
+
+    // Hook לטעינת מסמכים - טעינה אוטומטית כשהלקוח או התאריכים משתנים
+    const {
+        data: rivhitDocuments,
+        loading: documentsLoading,
+        error: documentsError,
+        refetch: refetchDocuments
+    } = useAsyncWithRefetch(
+        documentsFetchFunction,
+        [externalCustomerId, dateRange.from, dateRange.to],
+        { autoFetch: !!externalCustomerId }
+    );
+
+    console.log('rivhitDocuments :>> ', rivhitDocuments);
     console.log('customer :>> ', customer);
+
+    // פונקציה לעדכון מסמכים עם תאריכים חדשים
+    const handleDocumentsFetch = useCallback(async (from, to) => {
+        const currentExternalCustomerId = customer?.accounting?.externalCustomerId;
+        if (!currentExternalCustomerId) {
+            return Promise.resolve(null);
+        }
+
+        // עדכון טווח התאריכים - זה יגרום ל-hook לטעון מחדש אוטומטית
+        setDateRange({ from, to });
+
+        // החזרת Promise שממתין לטעינה
+        // נשתמש ב-refetch כדי לוודא שהנתונים נטענים מיד
+        return refetchDocuments();
+    }, [customer?.accounting?.externalCustomerId, refetchDocuments]);
 
     const tabs = useMemo(() => [
         {
@@ -56,9 +113,18 @@ const CustomerPage = () => {
                     <span className="md:block hidden">{t("Documents")}</span>
                 </span>
             ),
-            content: <CustomerDocuments customer={customer} customerId={id} />,
+            content: (
+                <CustomerDocuments
+                    customer={customer}
+                    customerId={id}
+                    rivhitDocuments={rivhitDocuments}
+                    documentsLoading={documentsLoading}
+                    documentsError={documentsError?.message || documentsError}
+                    onDocumentsFetch={handleDocumentsFetch}
+                />
+            ),
         },
-    ], [customer, id, t]);
+    ], [customer, id, t, rivhitDocuments, documentsLoading, documentsError, handleDocumentsFetch]);
 
     if (loading) {
         return (

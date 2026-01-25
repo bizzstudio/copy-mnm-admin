@@ -1544,5 +1544,18 @@
   "ErrorsDetails": "פרטי שגיאות",
   "Row": "שורה",
   "NoDataToImport": "אין נתונים לייבוא",
-  "UploadToSystem": "העלאת מוצרים"
+  "UploadToSystem": "העלאת מוצרים",
+  "AllDocuments": "כל המסמכים",
+  "DateRange": "טווח תאריכים",
+  "Newer": "חדש יותר",
+  "Older": "ישן יותר",
+  "Page": "עמוד",
+  "Of": "מתוך",
+  "NoDocumentsFound": "לא נמצאו מסמכים",
+  "DocumentType": "סוג מסמך",
+  "DocumentNumber": "מספר מסמך",
+  "Time": "שעה",
+  "Comments": "הערות",
+  "CustomerNotLinkedToRivhit": "הלקוח עדיין לא מקושר לריווחית, יש ליצור מסמך ראשון כדי לקשר את הלקוח ולהתחיל להציג מסמכים.",
+  "DocumentLinkNotFound": "אין קישור זמין למסמך זה"
 }

@@ -40,6 +40,15 @@ const CustomerServices = {
   createCustomerByAdmin: async (body) => {
     return requests.post(`/customer/admin/create`, body);
   },
+
+  // משיכת מסמכים מריווחית
+  getRivhitDocuments: async (customerId, from, to) => {
+    const params = new URLSearchParams();
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+    const queryString = params.toString();
+    return requests.get(`/rivhit/customers/${customerId}/documents${queryString ? `?${queryString}` : ''}`);
+  },
 };
 
 export default CustomerServices;
