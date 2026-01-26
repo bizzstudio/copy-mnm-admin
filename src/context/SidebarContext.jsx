@@ -2,6 +2,7 @@
 import AdminServices from "@/services/AdminServices";
 import StatusServices from "@/services/StatusService";
 import PriceListServices from "@/services/PriceListServices";
+import CustomerServices from "@/services/CustomerServices";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -42,6 +43,7 @@ export const SidebarProvider = ({ children }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [serviceId, setServiceId] = useState("");
   const [priceLists, setPriceLists] = useState([]);
+  const [paymentTypes, setPaymentTypes] = useState([]);
 
   // const { socket } = useNotification();
 
@@ -122,8 +124,19 @@ export const SidebarProvider = ({ children }) => {
       }
     };
 
+    // טעינת שיטות התשלום מריווחית בעת עליית המערכת
+    const fetchPaymentTypes = async () => {
+      try {
+        const data = await CustomerServices.getPaymentTypes();
+        setPaymentTypes(data || []);
+      } catch (error) {
+        console.error("Error fetching payment types:", error);
+      }
+    };
+
     facthStatusesData();
     fetchPriceLists();
+    fetchPaymentTypes();
   }, []);
 
   // ווידוא שהטוקן עדיין תקין
@@ -226,6 +239,8 @@ export const SidebarProvider = ({ children }) => {
         cities,
         priceLists,
         setPriceLists,
+        paymentTypes,
+        setPaymentTypes,
       }}
     >
       {children}

@@ -27,8 +27,8 @@ const SelectWithOptions = ({
 
     // עבור multiple select, value צריך להיות מערך
     // עבור single select, value צריך להיות string
-    const selectedValue = multiple 
-        ? (Array.isArray(value) ? value : []) 
+    const selectedValue = multiple
+        ? (Array.isArray(value) ? value : [])
         : (value || "");
 
     return (

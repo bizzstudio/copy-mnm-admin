@@ -23,7 +23,7 @@ const DocumentTypeBadges = ({ groups, selectedType, onTypeSelect }) => {
                             px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200
                             ${isSelected
                                 ? 'bg-mainColor text-white shadow-md'
-                                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                                : 'cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                             }
                         `}
                     >

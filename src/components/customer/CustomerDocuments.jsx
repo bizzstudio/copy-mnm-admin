@@ -9,6 +9,11 @@ import DocumentTypeBadges from "@/components/customer/DocumentTypeBadges";
 import DocumentTable from "@/components/customer/DocumentTable";
 import DateRangePagination from "@/components/customer/DateRangePagination";
 import Loading from "@/components/preloader/Loading";
+import DropdownMenu from "@/components/menu/DropdownMenu";
+import DocumentIssueModal from "@/components/modal/DocumentIssueModal";
+import InvoiceReceiptForm from "@/components/customer/InvoiceReceiptForm";
+import DeliveryNoteForm from "@/components/customer/DeliveryNoteForm";
+import CreditInvoiceForm from "@/components/customer/CreditInvoiceForm";
 import { getDateRangeByPage } from "@/utils/dateUtils";
 
 /**
@@ -33,6 +38,10 @@ const CustomerDocuments = ({
 
     // שימוש ב-ref כדי לעקוב אחרי אם זה הטעינה הראשונה
     const isFirstRender = useRef(true);
+
+    // סטייט למודאל הפקת מסמכים
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalDocumentType, setModalDocumentType] = useState(null);
 
     // משיכת מסמכים כאשר משתנה העמוד (רק אם זה לא טעינה ראשונית)
     useEffect(() => {
@@ -97,17 +106,61 @@ const CustomerDocuments = ({
         setSelectedDocumentType(type);
     };
 
+    // פונקציה לפתיחת המודאל לפי סוג מסמך
+    const handleOpenModal = (type) => {
+        setModalDocumentType(type);
+        setIsModalOpen(true);
+    };
+
+    // סגירת המודאל ורענון המסמכים
+    const handleModalClose = (result) => {
+        setIsModalOpen(false);
+        setModalDocumentType(null);
+
+        // אם הפקת המסמך הצליחה, נרענן את רשימת המסמכים
+        if (result && onDocumentsFetch) {
+            const range = getDateRangeByPage(currentDatePage);
+            onDocumentsFetch(range.from, range.to);
+        }
+    };
+
     return (
         <div className="my-6">
             <Card className="bg-white dark:bg-gray-800 shadow-lg">
                 <CardBody className="p-6">
                     <div className="space-y-6">
                         {/* Header */}
-                        <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-                            <BiFile size={24} className="text-mainColor" />
-                            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                {t("Documents")}
-                            </h2>
+                        <div className="flex items-center justify-between gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center gap-3">
+                                <BiFile size={24} className="text-mainColor" />
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                    {t("Documents")}
+                                </h2>
+                            </div>
+
+                            {/* כפתור הפקת מסמך - רק אם יש externalCustomerId */}
+                            {customer?.accounting?.externalCustomerId && (
+                                <div className="relative">
+                                    <DropdownMenu
+                                        addMenu
+                                        title={t("IssueDocument")}
+                                        options={[
+                                            {
+                                                label: t("InvoiceReceipt"),
+                                                onClick: () => handleOpenModal('invoice-receipt'),
+                                            },
+                                            {
+                                                label: t("DeliveryNote"),
+                                                onClick: () => handleOpenModal('delivery-note'),
+                                            },
+                                            {
+                                                label: t("CreditInvoice"),
+                                                onClick: () => handleOpenModal('credit-invoice'),
+                                            },
+                                        ]}
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         {/* הודעת שגיאה */}
@@ -211,6 +264,34 @@ const CustomerDocuments = ({
                     </div>
                 </CardBody>
             </Card>
+
+            {/* מודאל הפקת מסמכים */}
+            {isModalOpen && (
+                <DocumentIssueModal
+                    isOpen={isModalOpen}
+                    onClose={() => handleModalClose(null)}
+                    documentType={modalDocumentType}
+                >
+                    {modalDocumentType === 'invoice-receipt' && (
+                        <InvoiceReceiptForm
+                            customer={customer}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
+                    {modalDocumentType === 'delivery-note' && (
+                        <DeliveryNoteForm
+                            customer={customer}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
+                    {modalDocumentType === 'credit-invoice' && (
+                        <CreditInvoiceForm
+                            customer={customer}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
+                </DocumentIssueModal>
+            )}
         </div>
     );
 };

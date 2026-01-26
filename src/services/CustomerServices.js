@@ -49,6 +49,26 @@ const CustomerServices = {
     const queryString = params.toString();
     return requests.get(`/rivhit/customers/${customerId}/documents${queryString ? `?${queryString}` : ''}`);
   },
+
+  // קבלת רשימת שיטות תשלום מריווחית
+  getPaymentTypes: async () => {
+    return requests.get('/rivhit/payment-types');
+  },
+
+  // הנפקת חשבונית מס קבלה ידנית
+  issueInvoiceReceipt: async (body) => {
+    return requests.post('/rivhit/manual/invoice-receipt', body);
+  },
+
+  // הנפקת תעודת משלוח ידנית
+  issueDeliveryNote: async (body) => {
+    return requests.post('/rivhit/manual/delivery-note', body);
+  },
+
+  // הנפקת חשבונית מס זיכוי ידנית
+  issueCreditInvoice: async (body) => {
+    return requests.post('/rivhit/manual/credit-invoice', body);
+  },
 };
 
 export default CustomerServices;
