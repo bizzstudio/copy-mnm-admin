@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Label, Textarea } from "@windmill/react-ui";
+import { Label, Textarea, Input } from "@windmill/react-ui";
 import InputArea from "@/components/form/input/InputArea";
 import CustomerServices from "@/services/CustomerServices";
 import notifyApiResponse from "@/utils/notifyApiResponse";
@@ -39,6 +39,8 @@ const CreditInvoiceForm = ({ customer, onSuccess }) => {
                 customerDbId: customer._id,
                 amount: parseFloat(data.amount),
                 notes: data.notes || "",
+                issue_date: data.issue_date || undefined,
+                issue_time: data.issue_time || undefined,
             });
 
             notifyApiResponse(response, true);
@@ -100,6 +102,36 @@ const CreditInvoiceForm = ({ customer, onSuccess }) => {
                         {errors.amount.message}
                     </p>
                 )}
+            </div>
+
+            {/* תאריך ושעת הנפקה */}
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <Label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("IssueDate")}
+                    </Label>
+                    <Input
+                        type="date"
+                        {...register("issue_date")}
+                        className="w-full"
+                    />
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        {t("IssueDateHelp")}
+                    </p>
+                </div>
+                <div>
+                    <Label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("IssueTime")}
+                    </Label>
+                    <Input
+                        type="time"
+                        {...register("issue_time")}
+                        className="w-full"
+                    />
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        {t("IssueTimeHelp")}
+                    </p>
+                </div>
             </div>
 
             {/* הערות */}

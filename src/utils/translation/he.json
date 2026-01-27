@@ -1586,6 +1586,7 @@
   "PaymentDetails": "פרטי תשלום",
   "AddPayment": "הוספת תשלום",
   "Payment": "תשלום",
+  "PaymentAmount": "סכום תשלום",
   "DueDate": "תאריך פרעון",
   "PaymentDescription": "תיאור התשלום",
   "BankCode": "קוד בנק",
@@ -1594,7 +1595,17 @@
   "CheckNumber": "מספר שיק",
   "NumberOfPayments": "מספר תשלומים",
   "PaymentsHelp": "יחלק את התקבול למספר שורות עם תאריכי פרעון בחודשים עוקבים",
-  "PaymentsSplit": "הסכום הכולל יחולק שווה בשווה בין כל התשלומים",
   "MinOnePayment": "חייב להיות לפחות תשלום אחד",
-  "SelectPaymentAll": "נא לבחור שיטת תשלום לכל התשלומים"
+  "SelectPaymentAll": "נא לבחור שיטת תשלום לכל התשלומים",
+  "EnterAmountAll": "נא להזין סכום לכל התשלומים",
+  "PaymentsMustEqualTotal": "סכום התשלומים חייב להיות שווה לסכום החשבונית",
+  "AmountsMatch": "סכום התשלומים תואם",
+  "RemainingAmount": "סכום נותר להקצות",
+  "PaymentsLessThanTotal": "סכום התשלומים קטן מסכום החשבונית",
+  "PaymentsMoreThanTotal": "סכום התשלומים גדול מסכום החשבונית",
+  "IssueDate": "תאריך הנפקה",
+  "IssueTime": "שעת הנפקה",
+  "IssueDateHelp": "אם לא יוזן, יקבע אוטומטית לפי זמן ההנפקה",
+  "IssueTimeHelp": "אם לא תוזן, תיקבע אוטומטית לפי זמן ההנפקה",
+  "SelectAll": "בחר הכל"
 }

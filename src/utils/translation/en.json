@@ -1551,6 +1551,7 @@
   "PaymentDetails": "Payment Details",
   "AddPayment": "Add Payment",
   "Payment": "Payment",
+  "PaymentAmount": "Payment Amount",
   "DueDate": "Due Date",
   "PaymentDescription": "Payment Description",
   "BankCode": "Bank Code",
@@ -1559,7 +1560,17 @@
   "CheckNumber": "Check Number",
   "NumberOfPayments": "Number of Payments",
   "PaymentsHelp": "Will split the payment into multiple rows with due dates in consecutive months",
-  "PaymentsSplit": "The total amount will be divided equally among all payments",
   "MinOnePayment": "Must have at least one payment",
-  "SelectPaymentAll": "Please select payment method for all payments"
+  "SelectPaymentAll": "Please select payment method for all payments",
+  "EnterAmountAll": "Please enter an amount for all payments",
+  "PaymentsMustEqualTotal": "Total payments must equal invoice total",
+  "AmountsMatch": "Amounts match",
+  "RemainingAmount": "Remaining to allocate",
+  "PaymentsLessThanTotal": "Payments total is less than invoice total",
+  "PaymentsMoreThanTotal": "Payments total exceeds invoice total",
+  "IssueDate": "Issue Date",
+  "IssueTime": "Issue Time",
+  "IssueDateHelp": "If not provided, will be set automatically based on issue time",
+  "IssueTimeHelp": "If not provided, will be set automatically based on issue time",
+  "SelectAll": "Select All"
 }

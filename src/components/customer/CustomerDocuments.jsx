@@ -123,7 +123,7 @@ const CustomerDocuments = ({
         if (result && onDocumentsFetch) {
             const range = getDateRangeByPage(currentDatePage);
             onDocumentsFetch(range.from, range.to);
-            // setIsUpdate(true);
+            setIsUpdate(true);
         }
     };
 
