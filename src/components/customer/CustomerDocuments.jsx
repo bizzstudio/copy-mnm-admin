@@ -1,5 +1,5 @@
 // src/components/customer/CustomerDocuments.jsx
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useContext } from "react";
 import { Card, CardBody, Table, TableHeader, TableCell, TableContainer } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { BiFile } from "react-icons/bi";
@@ -15,6 +15,7 @@ import InvoiceReceiptForm from "@/components/customer/InvoiceReceiptForm";
 import DeliveryNoteForm from "@/components/customer/DeliveryNoteForm";
 import CreditInvoiceForm from "@/components/customer/CreditInvoiceForm";
 import { getDateRangeByPage } from "@/utils/dateUtils";
+import { SidebarContext } from "@/context/SidebarContext";
 
 /**
  * קומפוננטת מסמכים מעודכנת - משיכת מסמכים מריווחית
@@ -29,6 +30,7 @@ const CustomerDocuments = ({
     onDocumentsFetch
 }) => {
     const { t } = useTranslation();
+    const { setIsUpdate } = useContext(SidebarContext);
 
     // סטייט לסינון לפי סוג מסמך
     const [selectedDocumentType, setSelectedDocumentType] = useState("all");
@@ -121,6 +123,7 @@ const CustomerDocuments = ({
         if (result && onDocumentsFetch) {
             const range = getDateRangeByPage(currentDatePage);
             onDocumentsFetch(range.from, range.to);
+            // setIsUpdate(true);
         }
     };
 
@@ -139,28 +142,26 @@ const CustomerDocuments = ({
                             </div>
 
                             {/* כפתור הפקת מסמך - רק אם יש externalCustomerId */}
-                            {customer?.accounting?.externalCustomerId && (
-                                <div className="relative">
-                                    <DropdownMenu
-                                        addMenu
-                                        title={t("IssueDocument")}
-                                        options={[
-                                            {
-                                                label: t("InvoiceReceipt"),
-                                                onClick: () => handleOpenModal('invoice-receipt'),
-                                            },
-                                            {
-                                                label: t("DeliveryNote"),
-                                                onClick: () => handleOpenModal('delivery-note'),
-                                            },
-                                            {
-                                                label: t("CreditInvoice"),
-                                                onClick: () => handleOpenModal('credit-invoice'),
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            )}
+                            <div className="relative">
+                                <DropdownMenu
+                                    addMenu
+                                    title={t("IssueDocument")}
+                                    options={[
+                                        {
+                                            label: t("InvoiceReceipt"),
+                                            onClick: () => handleOpenModal('invoice-receipt'),
+                                        },
+                                        {
+                                            label: t("DeliveryNote"),
+                                            onClick: () => handleOpenModal('delivery-note'),
+                                        },
+                                        {
+                                            label: t("CreditInvoice"),
+                                            onClick: () => handleOpenModal('credit-invoice'),
+                                        },
+                                    ]}
+                                />
+                            </div>
                         </div>
 
                         {/* הודעת שגיאה */}

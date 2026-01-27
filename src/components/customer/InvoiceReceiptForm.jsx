@@ -2,16 +2,17 @@
 import React, { useState, useContext, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { BiPlus, BiTrash } from "react-icons/bi";
 import { SidebarContext } from "@/context/SidebarContext";
 import SelectWithOptions from "@/components/form/selectOption/SelectWithOptions";
-import { Label, Textarea } from "@windmill/react-ui";
+import { Label, Textarea, Input } from "@windmill/react-ui";
 import CustomerServices from "@/services/CustomerServices";
 import notifyApiResponse from "@/utils/notifyApiResponse";
 import { notifyError } from "@/utils/toast";
 
 /**
  * טופס הנפקת חשבונית מס קבלה (חמ"ק)
- * מאפשר בחירת הזמנות בהקפה שלא שולמו + בחירת שיטת תשלום + הערות
+ * מאפשר בחירת הזמנות בהקפה שלא שולמו + בחירת שיטת תשלום + פרטי תשלום + הערות
  */
 const InvoiceReceiptForm = ({ customer, onSuccess }) => {
     const { t } = useTranslation();
@@ -19,25 +20,33 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [selectedOrders, setSelectedOrders] = useState([]);
 
+    // מערך תשלומים - כל תשלום כולל payment_type ופרטים נוספים
+    const defaultPayment = {
+        payment_type: "",
+        due_date: "",
+        description: "",
+        bank_code: "",
+        branch_number: "",
+        bank_account_number: "",
+        check_number: "",
+        number_of_payments: 1,
+    };
+
     const {
         register,
         handleSubmit,
         watch,
         setValue,
         formState: { errors },
-    } = useForm();
-
-    // רישום field עם validation
-    register("paymentMethodKey", {
-        required: t("PleaseSelectPaymentMethod"),
+    } = useForm({
+        defaultValues: {
+            payments: [defaultPayment],
+            notes: "",
+        },
     });
 
-    const paymentMethodKey = watch("paymentMethodKey");
-
-    // פונקציה לטיפול בשינוי שיטת התשלום
-    const handlePaymentMethodChange = (value) => {
-        setValue("paymentMethodKey", value, { shouldValidate: true, shouldDirty: true });
-    };
+    // קריאת payments מ-useForm
+    const payments = watch("payments") || [defaultPayment];
 
     // סינון הזמנות בהקפה שלא שולמו מההזמנות של הלקוח
     const orders = useMemo(() => {
@@ -62,6 +71,51 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
         );
     };
 
+    // הוספת תשלום חדש
+    const handleAddPayment = () => {
+        const currentPayments = watch("payments") || [];
+        setValue("payments", [
+            ...currentPayments,
+            {
+                payment_type: "",
+                due_date: "",
+                description: "",
+                bank_code: "",
+                branch_number: "",
+                bank_account_number: "",
+                check_number: "",
+                number_of_payments: 1,
+            }
+        ], { shouldValidate: true, shouldDirty: true });
+    };
+
+    // הסרת תשלום
+    const handleRemovePayment = (index) => {
+        const currentPayments = watch("payments") || [];
+        if (currentPayments.length === 1) {
+            notifyError(t("MinOnePayment"));
+            return;
+        }
+        setValue("payments", currentPayments.filter((_, i) => i !== index), { shouldValidate: true, shouldDirty: true });
+    };
+
+    // עדכון פרטי תשלום
+    const handlePaymentChange = (index, field, value) => {
+        const currentPayments = watch("payments") || [];
+        const updatedPayments = [...currentPayments];
+        updatedPayments[index] = {
+            ...updatedPayments[index],
+            [field]: value,
+        };
+        setValue("payments", updatedPayments, { shouldValidate: true, shouldDirty: true });
+    };
+
+    // קבלת שם שיטת התשלום
+    const getPaymentTypeName = (paymentType) => {
+        const pt = paymentTypes.find(p => p.payment_type === Number(paymentType));
+        return pt?.payment_name || "";
+    };
+
     // טיפול בשליחת הטופס
     const onSubmit = async (data) => {
         if (selectedOrders.length === 0) {
@@ -69,17 +123,47 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
             return;
         }
 
-        if (!data.paymentMethodKey) {
-            notifyError(t("PleaseSelectPaymentMethod"));
+        // וולידציה של תשלומים
+        const formPayments = data.payments || [];
+        const invalidPayments = formPayments.filter(p => !p.payment_type);
+        if (invalidPayments.length > 0) {
+            notifyError(t("SelectPaymentAll"));
             return;
         }
+
+        // בניית מערך תשלומים לשליחה לשרת
+        const paymentsToSend = formPayments.map(p => {
+            const payment = {
+                payment_type: Number(p.payment_type),
+            };
+
+            // שדות אופציונליים - רק אם מולאו
+            if (p.due_date) payment.due_date = p.due_date;
+            if (p.description) payment.description = p.description;
+            if (p.bank_code) payment.bank_code = p.bank_code;
+            if (p.branch_number) payment.branch_number = p.branch_number;
+            if (p.bank_account_number) payment.bank_account_number = p.bank_account_number;
+            if (p.check_number) payment.check_number = p.check_number;
+            if (p.number_of_payments && Number(p.number_of_payments) > 1) {
+                payment.number_of_payments = Number(p.number_of_payments);
+            }
+
+            return payment;
+        });
+
+        // בניית paymentMethodKey מכל ה-payment_type-ים עם הפרדה של "_"
+        const paymentMethodKey = formPayments
+            .map(p => p.payment_type)
+            .filter(Boolean)
+            .join("_");
 
         try {
             setLoading(true);
             const response = await CustomerServices.issueInvoiceReceipt({
                 orderIds: selectedOrders,
-                paymentMethodKey: data.paymentMethodKey,
+                paymentMethodKey: paymentMethodKey, // שולחים את כל ה-payment_type-ים מופרדים ב-"_"
                 notes: data.notes || "",
+                payments: paymentsToSend, // מערך תשלומים מפורט
             });
 
             notifyApiResponse(response, true);
@@ -103,7 +187,7 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* בחירת הזמנות */}
             <div>
-                <Label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Label className="mb-1.5 block text-base font-medium text-gray-700 dark:text-gray-300">
                     {t("SelectOrders")}
                 </Label>
                 {orders.length === 0 ? (
@@ -161,27 +245,176 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
                 )}
             </div>
 
-            {/* בחירת שיטת תשלום */}
+            {/* רשימת תשלומים */}
             <div>
-                <Label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {t("PaymentMethod")}
-                </Label>
-                <SelectWithOptions
-                    options={paymentTypes.map((pt) => ({
-                        _id: pt.payment_type,
-                        name: pt.payment_name,
-                    }))}
-                    value={paymentMethodKey || ""}
-                    onChange={handlePaymentMethodChange}
-                    valueKey="_id"
-                    labelKey="name"
-                    placeholder={t("SelectPaymentMethod")}
-                    className={errors.paymentMethodKey ? "border-red-500" : ""}
-                />
-                {errors.paymentMethodKey && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {t("PleaseSelectPaymentMethod")}
-                    </p>
+                <div className="flex items-center justify-between mb-3">
+                    <Label className="text-base font-medium text-gray-700 dark:text-gray-300">
+                        {t("PaymentDetails")}
+                    </Label>
+                    <button
+                        type="button"
+                        onClick={handleAddPayment}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-mainColor border border-mainColor rounded-lg hover:bg-mainColor/10 transition-colors"
+                    >
+                        <BiPlus size={18} />
+                        <span>{t("AddPayment")}</span>
+                    </button>
+                </div>
+
+                <div className="space-y-4">
+                    {(payments || []).map((payment, index) => (
+                        <div
+                            key={index}
+                            className="p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg space-y-3"
+                        >
+                            {/* Header של תשלום */}
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                                    {t("Payment")} #{index + 1}
+                                </h4>
+                                {(payments || []).length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemovePayment(index)}
+                                        className="text-red-600 hover:text-red-700 transition-colors"
+                                    >
+                                        <BiTrash size={18} />
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* בחירת סוג תשלום */}
+                            <div>
+                                <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                    {t("PaymentMethod")} *
+                                </Label>
+                                <SelectWithOptions
+                                    options={paymentTypes.map((pt) => ({
+                                        _id: pt.payment_type,
+                                        name: pt.payment_name,
+                                    }))}
+                                    value={payment.payment_type}
+                                    onChange={(value) => handlePaymentChange(index, "payment_type", value)}
+                                    valueKey="_id"
+                                    labelKey="name"
+                                    placeholder={t("SelectPaymentMethod")}
+                                />
+                            </div>
+
+                            {/* שדות דינמיים בהתאם לסוג התשלום */}
+                            {payment.payment_type && (
+                                <>
+                                    {/* תאריך פרעון */}
+                                    <div>
+                                        <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            {t("DueDate")}
+                                        </Label>
+                                        <Input
+                                            type="date"
+                                            value={payment.due_date}
+                                            onChange={(e) => handlePaymentChange(index, "due_date", e.target.value)}
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* תיאור */}
+                                    <div>
+                                        <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            {t("Description")}
+                                        </Label>
+                                        <Input
+                                            type="text"
+                                            value={payment.description}
+                                            onChange={(e) => handlePaymentChange(index, "description", e.target.value)}
+                                            placeholder={t("PaymentDescription")}
+                                            maxLength={250}
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* שדות נוספים לשיק (payment_type === 1) */}
+                                    {Number(payment.payment_type) === 1 && (
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    {t("BankCode")}
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    value={payment.bank_code}
+                                                    onChange={(e) => handlePaymentChange(index, "bank_code", e.target.value)}
+                                                    placeholder="12"
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    {t("BranchNumber")}
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    value={payment.branch_number}
+                                                    onChange={(e) => handlePaymentChange(index, "branch_number", e.target.value)}
+                                                    placeholder="123"
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    {t("BankAccountNumber")}
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    value={payment.bank_account_number}
+                                                    onChange={(e) => handlePaymentChange(index, "bank_account_number", e.target.value)}
+                                                    placeholder="123456"
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    {t("CheckNumber")}
+                                                </Label>
+                                                <Input
+                                                    type="text"
+                                                    value={payment.check_number}
+                                                    onChange={(e) => handlePaymentChange(index, "check_number", e.target.value)}
+                                                    placeholder="123456"
+                                                    className="w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* מספר תשלומים (לחלוקה אוטומטית בחודשים עוקבים) */}
+                                    <div>
+                                        <Label className="mb-1 text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            {t("NumberOfPayments")}
+                                        </Label>
+                                        <Input
+                                            type="number"
+                                            min="1"
+                                            value={payment.number_of_payments}
+                                            onChange={(e) => handlePaymentChange(index, "number_of_payments", e.target.value)}
+                                            className="w-full"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                            {t("PaymentsHelp")}
+                                        </p>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* הסבר על חלוקת סכומים */}
+                {(payments || []).length > 1 && (
+                    <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p className="text-sm text-green-700 dark:text-green-300">
+                            {t("PaymentsSplit")}
+                        </p>
+                    </div>
                 )}
             </div>
 
@@ -214,7 +447,7 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`px-6 py-2 text-sm font-medium text-white bg-mainColor rounded-lg hover:bg-mainColor-dark transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${selectedOrders.length === 0 || !paymentMethodKey ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                    className={`px-6 py-2 text-sm font-medium text-white bg-mainColor rounded-lg hover:bg-mainColor-dark transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${selectedOrders.length === 0 || (payments || []).some(p => !p?.payment_type) ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                 >
                     {loading && (
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>

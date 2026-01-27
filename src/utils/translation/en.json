@@ -1547,5 +1547,19 @@
   "PleaseEnterValidAmount": "Please enter a valid amount",
   "AmountMustBePositive": "Amount must be positive",
   "CreditAmountToIssue": "Credit amount to issue",
-  "ErrorFetchingOrders": "Error fetching orders"
+  "ErrorFetchingOrders": "Error fetching orders",
+  "PaymentDetails": "Payment Details",
+  "AddPayment": "Add Payment",
+  "Payment": "Payment",
+  "DueDate": "Due Date",
+  "PaymentDescription": "Payment Description",
+  "BankCode": "Bank Code",
+  "BranchNumber": "Branch Number",
+  "BankAccountNumber": "Bank Account Number",
+  "CheckNumber": "Check Number",
+  "NumberOfPayments": "Number of Payments",
+  "PaymentsHelp": "Will split the payment into multiple rows with due dates in consecutive months",
+  "PaymentsSplit": "The total amount will be divided equally among all payments",
+  "MinOnePayment": "Must have at least one payment",
+  "SelectPaymentAll": "Please select payment method for all payments"
 }

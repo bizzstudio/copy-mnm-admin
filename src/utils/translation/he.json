@@ -1582,5 +1582,19 @@
   "PleaseEnterValidAmount": "נא להזין סכום תקין",
   "AmountMustBePositive": "הסכום חייב להיות חיובי",
   "CreditAmountToIssue": "סכום זיכוי להפקה",
-  "ErrorFetchingOrders": "שגיאה בטעינת הזמנות"
+  "ErrorFetchingOrders": "שגיאה בטעינת הזמנות",
+  "PaymentDetails": "פרטי תשלום",
+  "AddPayment": "הוספת תשלום",
+  "Payment": "תשלום",
+  "DueDate": "תאריך פרעון",
+  "PaymentDescription": "תיאור התשלום",
+  "BankCode": "קוד בנק",
+  "BranchNumber": "מספר סניף",
+  "BankAccountNumber": "מספר חשבון",
+  "CheckNumber": "מספר שיק",
+  "NumberOfPayments": "מספר תשלומים",
+  "PaymentsHelp": "יחלק את התקבול למספר שורות עם תאריכי פרעון בחודשים עוקבים",
+  "PaymentsSplit": "הסכום הכולל יחולק שווה בשווה בין כל התשלומים",
+  "MinOnePayment": "חייב להיות לפחות תשלום אחד",
+  "SelectPaymentAll": "נא לבחור שיטת תשלום לכל התשלומים"
 }

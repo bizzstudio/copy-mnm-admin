@@ -1,5 +1,5 @@
 // src/pages/StoreHome.jsx
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { BiHome, BiFile, BiInfoCircle, BiShield, BiHelpCircle, BiGift, BiEnvelope, BiCart, BiGridAlt, BiSearch } from "react-icons/bi";
 import "react-tabs/style/react-tabs.css";
@@ -50,33 +50,33 @@ const StoreHome = () => {
 
   useEffect(() => {
     isCoupon && setIsSliderFullWidth(false);
-  }, [isCoupon, setIsSliderFullWidth]);
+  }, [isCoupon]);
 
   useEffect(() => {
     leftRightArrow && setBottomDots(false);
-  }, [leftRightArrow, setBottomDots]);
+  }, [leftRightArrow]);
 
   useEffect(() => {
     leftRightArrow && setBothSliderOption(false);
-  }, [leftRightArrow, setBothSliderOption]);
+  }, [leftRightArrow]);
 
   useEffect(() => {
     bottomDots && setBothSliderOption(false);
-  }, [bottomDots, setBothSliderOption]);
+  }, [bottomDots]);
 
   useEffect(() => {
     bottomDots && setLeftRightArrow(false);
-  }, [bottomDots, setLeftRightArrow]);
+  }, [bottomDots]);
 
   useEffect(() => {
     bothSliderOption && setLeftRightArrow(false);
-  }, [bothSliderOption, setLeftRightArrow]);
+  }, [bothSliderOption]);
 
   useEffect(() => {
     bothSliderOption && setBottomDots(false);
-  }, [bothSliderOption, setBottomDots]);
+  }, [bothSliderOption]);
 
-  const tabs = [
+  const tabs = useMemo(() => [
     {
       id: "home-settings",
       label: (
@@ -287,7 +287,7 @@ const StoreHome = () => {
       ),
       onClick: () => setTabIndex(9),
     },
-  ];
+  ], [t, setTabIndex]);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
