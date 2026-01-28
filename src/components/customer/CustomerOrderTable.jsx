@@ -3,7 +3,7 @@ import React from "react";
 import { TableCell, TableBody, TableRow, Badge } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { FiZoomIn } from "react-icons/fi";
+import { FiZoomIn, FiFileText, FiPackage } from "react-icons/fi";
 
 // Internal import
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -72,10 +72,46 @@ const CustomerOrderTable = ({ orders }) => {
 
           {/* Actions */}
           <TableCell className="text-center">
-            <div className="flex justify-center items-center gap-2">
+            <div className="flex justify-center items-center">
               <PrintReceipt orderId={order._id} isCashierOrder={false} />
 
-              <span className="cursor-pointer text-gray-400 hover:text-customGreen-dark">
+              {order?.accountingDocs?.invoiceReceipt?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.invoiceReceipt.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewInvoiceReceipt")}
+                  >
+                    <Tooltip
+                      id={`invoice-receipt-${order._id}`}
+                      Icon={FiFileText}
+                      title={t("ViewInvoiceReceipt")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              {order?.accountingDocs?.deliveryNote?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.deliveryNote.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewDeliveryNote")}
+                  >
+                    <Tooltip
+                      id={`delivery-note-${order._id}`}
+                      Icon={FiPackage}
+                      title={t("ViewDeliveryNote")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
                 <Link to={`/order/${order._id}`}>
                   <Tooltip
                     id="view"

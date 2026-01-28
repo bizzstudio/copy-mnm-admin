@@ -94,7 +94,7 @@ const PrintReceipt = ({ orderId, isCashierOrder = false }) => {
       <button
         onClick={() => handlePrintReceipt(orderId)}
         type="button"
-        className="ml-2 p-2 cursor-pointer text-gray-500 hover:text-customGreen-dark focus:outline-none"
+        className="p-1.5 cursor-pointer text-gray-500 hover:text-customGreen-dark focus:outline-none"
       >
         <Tooltip
           id="receipt"
