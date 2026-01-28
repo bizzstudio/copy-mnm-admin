@@ -155,10 +155,10 @@ const CustomerDocuments = ({
                                             label: t("DeliveryNote"),
                                             onClick: () => handleOpenModal('delivery-note'),
                                         },
-                                        {
-                                            label: t("CreditInvoice"),
-                                            onClick: () => handleOpenModal('credit-invoice'),
-                                        },
+                                        // {
+                                        //     label: t("CreditInvoice"),
+                                        //     onClick: () => handleOpenModal('credit-invoice'),
+                                        // },
                                     ]}
                                 />
                             </div>

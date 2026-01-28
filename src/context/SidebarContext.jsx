@@ -128,6 +128,7 @@ export const SidebarProvider = ({ children }) => {
     const fetchPaymentTypes = async () => {
       try {
         const data = await CustomerServices.getPaymentTypes();
+        console.log("PaymentTypes :>> ", data);
         setPaymentTypes(data || []);
       } catch (error) {
         console.error("Error fetching payment types:", error);

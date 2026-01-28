@@ -10,6 +10,7 @@ import useUtilsFunction from "@/hooks/useUtilsFunction";
 import SelectStatus from "@/components/form/selectOption/SelectStatus";
 import PrintReceipt from "@/components/form/others/PrintReceipt";
 import Tooltip from "@/components/tooltip/Tooltip";
+import PaymentMethodDisplay from "@/components/customer/PaymentMethodDisplay";
 
 const CustomerOrderTable = ({ orders }) => {
   const { showDateTimeFormat, getNumberTwo, currency } = useUtilsFunction();
@@ -59,13 +60,7 @@ const CustomerOrderTable = ({ orders }) => {
 
           {/* Payment Method */}
           <TableCell className="text-center">
-            <span className="text-sm">
-              {order?.paymentMethod === "credit"
-                ? t("Credit")
-                : order?.paymentMethod === "card"
-                ? t("CreditCard")
-                : t(order?.paymentMethod || "N/A")}
-            </span>
+            <PaymentMethodDisplay paymentMethod={order?.paymentMethod} />
           </TableCell>
 
           {/* Order Status - Interactive */}
