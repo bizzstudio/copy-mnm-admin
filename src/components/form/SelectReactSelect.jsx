@@ -1,18 +1,19 @@
-// src/components/form/SelectWithCheckbox.jsx
+// src/components/form/SelectReactSelect.jsx
 import React, { useContext } from 'react';
 import Select, { components } from 'react-select';
 import { WindmillContext } from "@windmill/react-ui";
 import { FaUser } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 
-const SelectWithCheckbox = ({
+const SelectReactSelect = ({
     placeholder,
     options,
     onChange,
     value,
     images = true,
-    isMulti = true,
-    showColor = false
+    isSearchable = false,
+    minWidth = 200,
+    isLoading = false
 }) => {
     const { mode } = useContext(WindmillContext);
     const { t } = useTranslation();
@@ -20,16 +21,7 @@ const SelectWithCheckbox = ({
     // קומפוננטת עיצוב מותאמת אישית להצגת התמונה ליד שם המשתמש
     const CustomOption = (props) => (
         <components.Option {...props}>
-            {showColor ? (
-                <div className="flex items-center gap-2 p-1">
-                    {/* עיגול צבע */}
-                    <div
-                        className="w-3 h-3 rounded-full shrink-0"
-                        style={{ backgroundColor: props.data.color || '#ccc' }}
-                    />
-                    <span>{props.data.label}</span>
-                </div>
-            ) : images ? (
+            {images ?
                 <div className="flex items-center gap-2 p-1">
                     {/* תמונה */}
                     {props.data.image ? (
@@ -44,30 +36,11 @@ const SelectWithCheckbox = ({
                         </div>
                     )}
                     {props.data.label}
-                </div>
-            ) : (
+                </div> :
                 <>{props.data.label}</>
-            )}
+            }
         </components.Option>
     );
-
-    // קומפוננטת עיצוב מותאמת אישית להצגת הערך הנבחר עם עיגול צבע
-    const CustomMultiValueLabel = (props) => {
-        if (showColor && props.data.color) {
-            return (
-                <components.MultiValueLabel {...props}>
-                    <div className="flex items-center gap-2">
-                        <div
-                            className="w-3 h-3 rounded-full shrink-0"
-                            style={{ backgroundColor: props.data.color }}
-                        />
-                        <span>{props.data.label}</span>
-                    </div>
-                </components.MultiValueLabel>
-            );
-        }
-        return <components.MultiValueLabel {...props} />;
-    };
 
     const customStyles = {
         control: (provided, state) => ({
@@ -159,23 +132,21 @@ const SelectWithCheckbox = ({
     return (
         <Select
             placeholder={placeholder}
-            isMulti={isMulti}
+            isMulti={false}
             options={options}
-            components={{
-                Option: CustomOption,
-                ...(showColor ? { MultiValueLabel: CustomMultiValueLabel } : {})
-            }}
+            components={{ Option: CustomOption }}
             onChange={onChange}
-            closeMenuOnSelect={false}
-            hideSelectedOptions={true}
+            closeMenuOnSelect={true}
             styles={customStyles}
             menuPlacement='auto'
             value={value}
             menuPortalTarget={document.body}
             menuPosition="fixed"
+            isSearchable={isSearchable}
+            isLoading={isLoading}
             noOptionsMessage={() => t('noOptionsMessage')}
         />
     );
 };
 
-export default SelectWithCheckbox;
+export default SelectReactSelect;

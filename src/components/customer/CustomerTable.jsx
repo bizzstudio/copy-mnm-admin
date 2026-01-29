@@ -3,7 +3,7 @@ import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import dayjs from "dayjs";
 import { t } from "i18next";
 import React from "react";
-import { FiZoomIn, FiTrash2 } from "react-icons/fi";
+import { FiZoomIn, FiTrash2, FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 // Internal import
@@ -27,6 +27,22 @@ const CustomerTable = ({ customers, handleModalOpen }) => {
             <span className="text-sm">
               {dayjs(user.createdAt).format("MMM D, YYYY")}
             </span>
+          </TableCell>
+
+          <TableCell className="text-center">
+            <div className="flex justify-center">
+              {user?.image ? (
+                <img
+                  src={user.image}
+                  alt={user.name}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                  <FiUser className="text-gray-500 dark:text-gray-400" size={20} />
+                </div>
+              )}
+            </div>
           </TableCell>
 
           <TableCell className="text-center">

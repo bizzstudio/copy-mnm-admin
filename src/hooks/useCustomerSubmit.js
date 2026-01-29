@@ -11,10 +11,8 @@ import { notifyError, notifySuccess } from "@/utils/toast";
 const useCustomerSubmit = (customerId, customer) => {
   const { t } = useTranslation();
   const [imageUrl, setImageUrl] = useState("");
-  const [documents, setDocuments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [initialImageUrl, setInitialImageUrl] = useState("");
-  const [initialDocuments, setInitialDocuments] = useState([]);
   const { setIsUpdate, priceLists } = useContext(SidebarContext);
 
   const isNewCustomer = !customerId;
@@ -39,6 +37,27 @@ const useCustomerSubmit = (customerId, customer) => {
       return getDefaultPriceListId();
     };
 
+    const emptyAddress = {
+      city: null,
+      street: "",
+      houseNumber: "",
+      apartmentNumber: "",
+      floor: "",
+      entryCode: "",
+      postalCode: "",
+    };
+    const addressFromCustomer = (customer?.address && typeof customer.address === "object")
+      ? {
+        city: customer.address.city || null,
+        street: customer.address.street || "",
+        houseNumber: customer.address.houseNumber || "",
+        apartmentNumber: customer.address.apartmentNumber || "",
+        floor: customer.address.floor || "",
+        entryCode: customer.address.entryCode || "",
+        postalCode: customer.address.postalCode || "",
+      }
+      : emptyAddress;
+
     if (customer) {
       return {
         name: customer.name || "",
@@ -50,6 +69,9 @@ const useCustomerSubmit = (customerId, customer) => {
         priceList: getDefaultPriceList(customer.priceList),
         paymentTerms: customer.paymentTerms || "current",
         creditLimit: customer.creditLimit || 0,
+        institutionType: customer.institutionType || "",
+        weeklyDeliveryDay: customer.weeklyDeliveryDay !== undefined && customer.weeklyDeliveryDay !== null ? String(customer.weeklyDeliveryDay) : "",
+        address: addressFromCustomer,
       };
     }
     return {
@@ -62,6 +84,9 @@ const useCustomerSubmit = (customerId, customer) => {
       priceList: getDefaultPriceListId(),
       paymentTerms: "current",
       creditLimit: 0,
+      institutionType: "",
+      weeklyDeliveryDay: "",
+      address: emptyAddress,
     };
   };
 
@@ -105,51 +130,21 @@ const useCustomerSubmit = (customerId, customer) => {
 
       setImageUrl(customer.image || "");
       setInitialImageUrl(customer.image || "");
-
-      // המרת documents לפורמט שהשרת מצפה (מערך של אובייקטים עם name ו-url)
-      const formattedDocs = (customer.documents || []).map((doc) => {
-        if (typeof doc === "string") {
-          return { name: doc.split("/").pop(), url: doc };
-        }
-        return { name: doc.name || doc.url?.split("/").pop() || "document", url: doc.url || doc.link || doc };
-      });
-      setDocuments(formattedDocs);
-      setInitialDocuments(formattedDocs);
     } else if (isNewCustomer) {
       reset(getDefaultValues());
       setImageUrl("");
       setInitialImageUrl("");
-      setDocuments([]);
-      setInitialDocuments([]);
     }
   }, [customer, reset, isNewCustomer, priceLists]);
 
-  // בדיקת שינויים - שילוב של isDirty מה-form עם שינויים ב-image ו-documents
+  // בדיקת שינויים - שילוב של isDirty מה-form עם שינויים ב-image
   const hasChanges = isNewCustomer
     ? true // תמיד להציג כפתור שמירה בהוספה חדשה
-    : isDirty ||
-    imageUrl !== initialImageUrl ||
-    JSON.stringify(documents) !== JSON.stringify(initialDocuments);
+    : isDirty || imageUrl !== initialImageUrl;
 
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
-
-      // המרת documents לפורמט הנכון (מערך של אובייקטים עם name ו-url)
-      const formattedDocuments = Array.isArray(documents)
-        ? documents.map((doc) => {
-          if (typeof doc === "string") {
-            return { name: doc.split("/").pop(), url: doc };
-          }
-          if (doc.link) {
-            return { name: doc.name || doc.link.split("/").pop(), url: doc.link };
-          }
-          if (doc.url) {
-            return { name: doc.name || doc.url.split("/").pop(), url: doc.url };
-          }
-          return doc;
-        })
-        : [];
 
       // אם סוג הלקוח הוא לא casual ולא נבחר מחירון, נבחר את המחירון עם isDefault: true
       let finalPriceList = data.priceList;
@@ -165,6 +160,19 @@ const useCustomerSubmit = (customerId, customer) => {
       // אם הלקוח הוא casual, מסגרת האשראי חייבת להיות 0
       const finalCreditLimit = data.customerType === "casual" ? 0 : (data.creditLimit || 0);
 
+      // בניית אובייקט כתובת מהטופס (השרת מבצע merge עם כתובת קיימת)
+      const address = data.address && typeof data.address === "object"
+        ? {
+          city: data.address.city || undefined,
+          street: data.address.street || undefined,
+          houseNumber: data.address.houseNumber || undefined,
+          apartmentNumber: data.address.apartmentNumber || undefined,
+          floor: data.address.floor || undefined,
+          entryCode: data.address.entryCode || undefined,
+          postalCode: data.address.postalCode || undefined,
+        }
+        : {};
+
       const customerData = {
         name: data.name,
         lastName: data.lastName,
@@ -176,9 +184,16 @@ const useCustomerSubmit = (customerId, customer) => {
         paymentTerms: data.paymentTerms,
         creditLimit: finalCreditLimit,
         image: imageUrl,
-        documents: formattedDocuments,
-        address: customer?.address || {},
+        address,
+        institutionType: data.institutionType || undefined,
+        weeklyDeliveryDay: data.weeklyDeliveryDay !== "" && data.weeklyDeliveryDay !== undefined && data.weeklyDeliveryDay !== null
+          ? Number(data.weeklyDeliveryDay)
+          : undefined,
       };
+
+      if (data.newPassword && String(data.newPassword).trim()) {
+        customerData.password = data.newPassword;
+      }
 
       if (isNewCustomer) {
         // הוספת לקוח חדש
@@ -198,7 +213,6 @@ const useCustomerSubmit = (customerId, customer) => {
         // עדכון הערכים הראשוניים - reset יגרום ל-isDirty להיות false
         reset(data);
         setInitialImageUrl(imageUrl);
-        setInitialDocuments(formattedDocuments);
         setIsUpdate(true);
       }
     } catch (err) {
@@ -217,8 +231,6 @@ const useCustomerSubmit = (customerId, customer) => {
     watch,
     setImageUrl,
     imageUrl,
-    documents,
-    setDocuments,
     isSubmitting,
     hasChanges,
     customerType,

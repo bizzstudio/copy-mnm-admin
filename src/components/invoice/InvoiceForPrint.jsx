@@ -210,11 +210,11 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
                 <TableCell className="text-center py-2 text-sm font-bold">{item.quantity}</TableCell>
                 <TableCell className="text-center py-2 text-sm font-bold">
                   {currency}
-                  {getNumberTwo(item.discountedPrice ? item.discountedPrice / item.quantity : item.itemTotal / item.quantity)}
+                  {getNumberTwo(item.finalPriceAtPurchase?.perUnit)}
                 </TableCell>
                 <TableCell className="text-right py-2 text-sm font-bold text-red-500">
                   {currency}
-                  {getNumberTwo(item.discountedPrice ? item.discountedPrice : item.itemTotal)}
+                  {getNumberTwo(item.finalPriceAtPurchase?.total)}
                 </TableCell>
               </TableRow>
             ))}

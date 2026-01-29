@@ -137,7 +137,7 @@ const Customers = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={7} width={163} height={20} />
+        <TableLoading row={12} col={8} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -147,6 +147,7 @@ const Customers = () => {
               <tr>
                 <TableCell className="text-center">{t("CustomersId")}</TableCell>
                 <TableCell className="text-center">{t("CustomersJoiningDate")}</TableCell>
+                <TableCell className="text-center">{t("ProfileImage")}</TableCell>
                 <TableCell className="text-center">{t("CustomersName")}</TableCell>
                 <TableCell className="text-center">{t("CustomersEmail")}</TableCell>
                 <TableCell className="text-center">{t("CustomersPhone")}</TableCell>

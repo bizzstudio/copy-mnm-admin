@@ -22,12 +22,12 @@ const Invoice = ({ data, currency, getNumberTwo }) => {
           </TableCell>
           <TableCell className="px-6 py-1 whitespace-nowrap font-bold text-center">
             {currency}
-            {getNumberTwo(item.discountedPrice ? item.discountedPrice / item.quantity : item.itemTotal / item.quantity)}
+            {getNumberTwo(item.finalPriceAtPurchase?.perUnit)}
           </TableCell>
 
           <TableCell className="px-6 py-1 whitespace-nowrap text-right font-bold text-red-500 dark:text-customGreen">
             {currency}
-            {getNumberTwo(item.discountedPrice ? item.discountedPrice : item.itemTotal)}
+            {getNumberTwo(item.finalPriceAtPurchase?.total)}
           </TableCell>
         </TableRow>
       ))}
