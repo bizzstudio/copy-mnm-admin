@@ -1,5 +1,5 @@
 // src/pages/StoreHome.jsx
-import { useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { BiHome, BiFile, BiInfoCircle, BiShield, BiHelpCircle, BiGift, BiEnvelope, BiCart, BiGridAlt, BiSearch } from "react-icons/bi";
 import "react-tabs/style/react-tabs.css";
@@ -22,6 +22,23 @@ import DashboardSetting from "@/components/store-home/DashboardSetting";
 import SelectLanguageTwo from "@/components/form/selectOption/SelectLanguageTwo";
 import Tabs from "@/components/common/Tabs";
 
+const StoreHomePropsContext = createContext(null);
+
+const useStoreHomeProps = () => useContext(StoreHomePropsContext);
+
+const StoreHomeTabContent = ({ containerClassName, render }) => {
+  const storeHomeProps = useStoreHomeProps();
+  const { handleSubmit, onSubmit } = storeHomeProps;
+
+  return (
+    <div className={containerClassName}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {render(storeHomeProps)}
+      </form>
+    </div>
+  );
+};
+
 const StoreHome = () => {
   let query = useQuery();
   const { t } = useTranslation();
@@ -43,8 +60,6 @@ const StoreHome = () => {
     setLeftRightArrow,
     bothSliderOption,
     handleSelectLanguage,
-    handleSubmit,
-    onSubmit,
     register,
   } = storeHomeProps;
 
@@ -90,11 +105,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <HomePage storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <HomePage storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(0),
     },
@@ -111,11 +125,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container w-full md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <SinglePage storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container w-full md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <SinglePage storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(1),
     },
@@ -132,11 +145,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <AboutUs storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <AboutUs storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(2),
     },
@@ -153,11 +165,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <PrivacyPolicy storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 mx-auto bg-white dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <PrivacyPolicy storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(3),
     },
@@ -174,11 +185,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 mx-auto w-full bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Faq storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 mx-auto w-full bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <Faq storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(4),
     },
@@ -195,11 +205,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Offer storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <Offer storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(5),
     },
@@ -216,11 +225,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ContactUs storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <ContactUs storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(6),
     },
@@ -237,11 +245,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Checkout storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <Checkout storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(7),
     },
@@ -258,11 +265,10 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <DashboardSetting storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <DashboardSetting storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(8),
     },
@@ -279,15 +285,14 @@ const StoreHome = () => {
         </span>
       ),
       content: (
-        <div className="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <SeoSetting storeHomeProps={storeHomeProps} />
-          </form>
-        </div>
+        <StoreHomeTabContent
+          containerClassName="sm:container md:p-6 p-4 w-full mx-auto bg-white  dark:bg-gray-800 dark:text-gray-200 rounded-lg"
+          render={(props) => <SeoSetting storeHomeProps={props} />}
+        />
       ),
       onClick: () => setTabIndex(9),
     },
-  ], [t, setTabIndex, storeHomeProps.customizationDataLoaded]);
+  ], [t, setTabIndex]);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
@@ -304,7 +309,9 @@ const StoreHome = () => {
       </div>
 
       <div className="mt-6 w-full">
-        <Tabs tabs={tabs} tab="storeTab" fitContent={true} />
+        <StoreHomePropsContext.Provider value={storeHomeProps}>
+          <Tabs tabs={tabs} tab="storeTab" fitContent={true} />
+        </StoreHomePropsContext.Provider>
       </div>
     </div>
   );

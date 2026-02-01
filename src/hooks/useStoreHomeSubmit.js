@@ -118,7 +118,6 @@ const useStoreHomeSubmit = () => {
   const [termsConditionsHeaderBg, setTermsConditionsHeaderBg] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [customizationDataLoaded, setCustomizationDataLoaded] = useState(false);
 
   // const { socket } = useNotification();
 
@@ -1859,8 +1858,6 @@ const useStoreHomeSubmit = () => {
           setValue("meta_description", res.seo.meta_description);
           setValue("meta_keywords", res.seo.meta_keywords);
           setValue("meta_url", res.seo.meta_url);
-
-          setCustomizationDataLoaded(true);
         }
       } catch (err) {
         console.error('error :>> ', err);
@@ -2068,7 +2065,6 @@ const useStoreHomeSubmit = () => {
     setAllowLogosCarousel,
     logosCarousel,
     setLogosCarousel,
-    customizationDataLoaded,
   };
 };
 
