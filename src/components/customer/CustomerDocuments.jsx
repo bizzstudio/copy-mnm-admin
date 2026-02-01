@@ -24,6 +24,7 @@ import { SidebarContext } from "@/context/SidebarContext";
 const CustomerDocuments = ({
     customer,
     customerId,
+    externalCustomerId,
     rivhitDocuments,
     documentsLoading,
     documentsError,
@@ -142,26 +143,28 @@ const CustomerDocuments = ({
                             </div>
 
                             {/* כפתור הפקת מסמך - רק אם יש externalCustomerId */}
-                            <div className="relative">
-                                <DropdownMenu
-                                    addMenu
-                                    title={t("IssueDocument")}
-                                    options={[
-                                        {
-                                            label: t("InvoiceReceipt"),
-                                            onClick: () => handleOpenModal('invoice-receipt'),
-                                        },
-                                        {
-                                            label: t("DeliveryNote"),
-                                            onClick: () => handleOpenModal('delivery-note'),
-                                        },
-                                        // {
-                                        //     label: t("CreditInvoice"),
-                                        //     onClick: () => handleOpenModal('credit-invoice'),
-                                        // },
-                                    ]}
-                                />
-                            </div>
+                            {externalCustomerId ? (
+                                <div className="relative">
+                                    <DropdownMenu
+                                        addMenu
+                                        title={t("IssueDocument")}
+                                        options={[
+                                            {
+                                                label: t("InvoiceReceipt"),
+                                                onClick: () => handleOpenModal('invoice-receipt'),
+                                            },
+                                            {
+                                                label: t("DeliveryNote"),
+                                                onClick: () => handleOpenModal('delivery-note'),
+                                            },
+                                            // {
+                                            //     label: t("CreditInvoice"),
+                                            //     onClick: () => handleOpenModal('credit-invoice'),
+                                            // },
+                                        ]}
+                                    />
+                                </div>
+                            ) : null}
                         </div>
 
                         {/* הודעת שגיאה */}
@@ -173,8 +176,8 @@ const CustomerDocuments = ({
                             </div>
                         )}
 
-                        {/* בדיקה אם יש externalCustomerId */}
-                        {!customer?.accounting?.externalCustomerId && (
+                        {/* בדיקה אם יש externalCustomerId (נמצא על תת-לקוח) */}
+                        {!externalCustomerId && (
                             <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                                 <p className="text-sm text-yellow-700 dark:text-yellow-300">
                                     {t("CustomerNotLinkedToRivhit")}
@@ -254,7 +257,7 @@ const CustomerDocuments = ({
                         {!documentsLoading &&
                             !rivhitDocuments &&
                             !documentsError &&
-                            customer?.accounting?.externalCustomerId && (
+                            externalCustomerId && (
                                 <div className="text-center py-8">
                                     <BiFile className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                                     <p className="text-gray-600 dark:text-gray-400">

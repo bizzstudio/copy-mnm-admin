@@ -24,16 +24,17 @@ import PageTitle from "@/components/Typography/PageTitle";
 import useAsync from "@/hooks/useAsync";
 import useFilter from "@/hooks/useFilter";
 import CustomerServices from "@/services/CustomerServices";
+import CustomPagination from "@/components/table/CustomPagination";
 import DeleteModal from "@/components/modal/DeleteModal";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
-import CustomPagination from "@/components/table/CustomPagination";
 
 const Customers = () => {
-  const { data, loading, error } = useAsync(CustomerServices.getAllCustomers);
+  const { data, loading, error } = useAsync(CustomerServices.getAllMainCustomers);
   const navigate = useNavigate();
+
   const { title, serviceId, handleModalOpen } = useToggleDrawer();
 
-  // console.log('customer',data)
+  console.log('customers data :>> ', data);
 
   const {
     userRef,
@@ -137,7 +138,7 @@ const Customers = () => {
 
       {loading ? (
         // <Loading loading={loading} />
-        <TableLoading row={12} col={8} width={163} height={20} />
+        <TableLoading row={12} col={9} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -147,14 +148,13 @@ const Customers = () => {
               <tr>
                 <TableCell className="text-center">{t("CustomersId")}</TableCell>
                 <TableCell className="text-center">{t("CustomersJoiningDate")}</TableCell>
-                <TableCell className="text-center">{t("ProfileImage")}</TableCell>
                 <TableCell className="text-center">{t("CustomersName")}</TableCell>
                 <TableCell className="text-center">{t("CustomersEmail")}</TableCell>
                 <TableCell className="text-center">{t("CustomersPhone")}</TableCell>
-                <TableCell className="text-center">{t("CashierStatus")}</TableCell>
-                <TableCell className="text-center">
-                  {t("CustomersActions")}
-                </TableCell>
+                <TableCell className="text-center">{t("CustomerType")}</TableCell>
+                <TableCell className="text-center">{t("RivhitCustomerNumber")}</TableCell>
+                <TableCell className="text-center">{t("SubCustomers")}</TableCell>
+                <TableCell className="text-center">{t("CustomersActions")}</TableCell>
               </tr>
             </TableHeader>
             <CustomerTable customers={dataTable} handleModalOpen={handleModalOpen} />

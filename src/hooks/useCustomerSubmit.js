@@ -1,6 +1,6 @@
 // src/hooks/useCustomerSubmit.js
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 // Internal import
@@ -8,11 +8,33 @@ import { SidebarContext } from "@/context/SidebarContext";
 import CustomerServices from "@/services/CustomerServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
+const emptyAddress = {
+  city: null,
+  street: "",
+  houseNumber: "",
+  apartmentNumber: "",
+  floor: "",
+  entryCode: "",
+  postalCode: "",
+};
+
+const createEmptySubCustomer = () => ({
+  _id: undefined,
+  name: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  image: "",
+  creditLimit: 0,
+  weeklyDeliveryDay: "",
+  rivhitCustomerNumber: "",
+  newPassword: "",
+  address: { ...emptyAddress },
+});
+
 const useCustomerSubmit = (customerId, customer) => {
   const { t } = useTranslation();
-  const [imageUrl, setImageUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [initialImageUrl, setInitialImageUrl] = useState("");
   const { setIsUpdate, priceLists } = useContext(SidebarContext);
 
   const isNewCustomer = !customerId;
@@ -26,67 +48,77 @@ const useCustomerSubmit = (customerId, customer) => {
     return null;
   };
 
-  // הכנת defaultValues
-  const getDefaultValues = () => {
-    // קביעת מחירון ברירת מחדל - המחירון עם isDefault: true אם אין מחירון שנבחר
-    const getDefaultPriceList = (customerPriceList) => {
-      if (customerPriceList) {
-        return customerPriceList._id || customerPriceList;
-      }
-      // אם אין מחירון, נבחר את המחירון עם isDefault: true
-      return getDefaultPriceListId();
-    };
+  const getDefaultPriceList = (mainCustomerPriceList) => {
+    if (mainCustomerPriceList) {
+      return mainCustomerPriceList._id || mainCustomerPriceList;
+    }
+    return getDefaultPriceListId();
+  };
 
-    const emptyAddress = {
-      city: null,
-      street: "",
-      houseNumber: "",
-      apartmentNumber: "",
-      floor: "",
-      entryCode: "",
-      postalCode: "",
-    };
-    const addressFromCustomer = (customer?.address && typeof customer.address === "object")
-      ? {
-        city: customer.address.city || null,
-        street: customer.address.street || "",
-        houseNumber: customer.address.houseNumber || "",
-        apartmentNumber: customer.address.apartmentNumber || "",
-        floor: customer.address.floor || "",
-        entryCode: customer.address.entryCode || "",
-        postalCode: customer.address.postalCode || "",
-      }
-      : emptyAddress;
+  const getDefaultValues = () => {
+    const normalizedSubCustomers = Array.isArray(customer?.subCustomers)
+      ? customer.subCustomers.map((sc) => ({
+        _id: sc?._id,
+        name: sc?.name || "",
+        lastName: sc?.lastName || "",
+        email: sc?.email || "",
+        phone: sc?.phone || "",
+        image: sc?.image || "",
+        creditLimit: sc?.creditLimit || 0,
+        weeklyDeliveryDay:
+          sc?.weeklyDeliveryDay !== undefined && sc?.weeklyDeliveryDay !== null
+            ? String(sc.weeklyDeliveryDay)
+            : "",
+        rivhitCustomerNumber: sc?.accounting?.externalCustomerId
+          ? String(sc.accounting.externalCustomerId)
+          : "",
+        newPassword: "",
+        address:
+          sc?.address && typeof sc.address === "object"
+            ? {
+              city: sc.address.city || null,
+              street: sc.address.street || "",
+              houseNumber: sc.address.houseNumber || "",
+              apartmentNumber: sc.address.apartmentNumber || "",
+              floor: sc.address.floor || "",
+              entryCode: sc.address.entryCode || "",
+              postalCode: sc.address.postalCode || "",
+            }
+            : { ...emptyAddress },
+      }))
+      : [];
 
     if (customer) {
       return {
+        // MainCustomer fields
         name: customer.name || "",
-        lastName: customer.lastName || "",
         email: customer.email || "",
         phone: customer.phone || "",
         customerType: customer.customerType || "casual",
         companyNumber: customer.companyNumber || "",
+        institutionType: customer.institutionType || "",
         priceList: getDefaultPriceList(customer.priceList),
         paymentTerms: customer.paymentTerms || "current",
-        creditLimit: customer.creditLimit || 0,
-        institutionType: customer.institutionType || "",
-        weeklyDeliveryDay: customer.weeklyDeliveryDay !== undefined && customer.weeklyDeliveryDay !== null ? String(customer.weeklyDeliveryDay) : "",
-        address: addressFromCustomer,
+        mainRivhitCustomerNumber: customer.externalCustomerId
+          ? String(customer.externalCustomerId)
+          : "",
+
+        // Sub customers
+        subCustomers: normalizedSubCustomers.length > 0 ? normalizedSubCustomers : [createEmptySubCustomer()],
       };
     }
+
     return {
       name: "",
-      lastName: "",
       email: "",
       phone: "",
       customerType: "casual",
       companyNumber: "",
+      institutionType: "",
       priceList: getDefaultPriceListId(),
       paymentTerms: "current",
-      creditLimit: 0,
-      institutionType: "",
-      weeklyDeliveryDay: "",
-      address: emptyAddress,
+      mainRivhitCustomerNumber: "",
+      subCustomers: [createEmptySubCustomer()],
     };
   };
 
@@ -96,19 +128,28 @@ const useCustomerSubmit = (customerId, customer) => {
     setValue,
     watch,
     reset,
+    control,
     formState: { errors, isDirty },
   } = useForm({
     defaultValues: getDefaultValues(),
   });
 
+  const { fields: subCustomerFields, append, remove, replace } = useFieldArray({
+    control,
+    name: "subCustomers",
+  });
+
   const customerType = watch("customerType");
-  const watchedValues = watch();
   const currentPriceList = watch("priceList");
+
+  const isBusinessOrInstitutional = useMemo(
+    () => customerType === "business" || customerType === "institutional",
+    [customerType]
+  );
 
   // בחירת מחירון אוטומטית כשסוג הלקוח משתנה ל-non-casual
   useEffect(() => {
     if (customerType !== "casual" && priceLists && priceLists.length > 0) {
-      // אם אין מחירון נבחר או שהמחירון הוא null, נבחר את המחירון עם isDefault: true
       if (!currentPriceList || currentPriceList === null) {
         const defaultPriceListId = getDefaultPriceListId();
         if (defaultPriceListId) {
@@ -116,37 +157,39 @@ const useCustomerSubmit = (customerId, customer) => {
         }
       }
     } else if (customerType === "casual") {
-      // אם סוג הלקוח הוא casual, נאפס את המחירון ואת מסגרת האשראי
       setValue("priceList", null, { shouldDirty: false });
-      setValue("creditLimit", 0, { shouldDirty: false });
     }
   }, [customerType, priceLists, currentPriceList, setValue]);
+
+  // אם סוג הלקוח הוא לא עסקי/מוסדי - מוודאים שיש רק תת-לקוח אחד
+  useEffect(() => {
+    const currentSubCustomers = watch("subCustomers") || [];
+    if (!isBusinessOrInstitutional && currentSubCustomers.length > 1) {
+      replace([currentSubCustomers[0]]);
+    }
+    if (currentSubCustomers.length === 0) {
+      replace([createEmptySubCustomer()]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBusinessOrInstitutional]);
 
   // טעינת נתונים ראשוניים
   useEffect(() => {
     if (customer) {
-      const defaultValues = getDefaultValues();
-      reset(defaultValues);
-
-      setImageUrl(customer.image || "");
-      setInitialImageUrl(customer.image || "");
+      reset(getDefaultValues());
     } else if (isNewCustomer) {
       reset(getDefaultValues());
-      setImageUrl("");
-      setInitialImageUrl("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer, reset, isNewCustomer, priceLists]);
 
-  // בדיקת שינויים - שילוב של isDirty מה-form עם שינויים ב-image
-  const hasChanges = isNewCustomer
-    ? true // תמיד להציג כפתור שמירה בהוספה חדשה
-    : isDirty || imageUrl !== initialImageUrl;
+  const hasChanges = isNewCustomer ? true : isDirty;
 
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
 
-      // אם סוג הלקוח הוא לא casual ולא נבחר מחירון, נבחר את המחירון עם isDefault: true
+      // מחירון
       let finalPriceList = data.priceList;
       if (data.customerType !== "casual" && (!finalPriceList || finalPriceList === null)) {
         const defaultPriceListId = getDefaultPriceListId();
@@ -157,69 +200,101 @@ const useCustomerSubmit = (customerId, customer) => {
         finalPriceList = null;
       }
 
-      // אם הלקוח הוא casual, מסגרת האשראי חייבת להיות 0
-      const finalCreditLimit = data.customerType === "casual" ? 0 : (data.creditLimit || 0);
+      const subCustomersToSend = Array.isArray(data.subCustomers)
+        ? data.subCustomers
+          .filter((sc) => sc && sc.name && sc.email)
+          .map((sc) => {
+            const address =
+              sc.address && typeof sc.address === "object"
+                ? {
+                  city: sc.address.city || undefined,
+                  street: sc.address.street || undefined,
+                  houseNumber: sc.address.houseNumber || undefined,
+                  apartmentNumber: sc.address.apartmentNumber || undefined,
+                  floor: sc.address.floor || undefined,
+                  entryCode: sc.address.entryCode || undefined,
+                  postalCode: sc.address.postalCode || undefined,
+                }
+                : {};
 
-      // בניית אובייקט כתובת מהטופס (השרת מבצע merge עם כתובת קיימת)
-      const address = data.address && typeof data.address === "object"
-        ? {
-          city: data.address.city || undefined,
-          street: data.address.street || undefined,
-          houseNumber: data.address.houseNumber || undefined,
-          apartmentNumber: data.address.apartmentNumber || undefined,
-          floor: data.address.floor || undefined,
-          entryCode: data.address.entryCode || undefined,
-          postalCode: data.address.postalCode || undefined,
-        }
-        : {};
+            const payload = {
+              ...(sc._id ? { _id: sc._id } : {}),
+              name: sc.name,
+              lastName: sc.lastName || "",
+              email: String(sc.email).toLowerCase(),
+              phone: sc.phone || "",
+              image: sc.image || "",
+              address,
+              creditLimit: Number(sc.creditLimit || 0),
+              weeklyDeliveryDay:
+                sc.weeklyDeliveryDay !== "" && sc.weeklyDeliveryDay !== undefined && sc.weeklyDeliveryDay !== null
+                  ? Number(sc.weeklyDeliveryDay)
+                  : undefined,
+            };
 
-      const customerData = {
+            if (sc.newPassword && String(sc.newPassword).trim()) {
+              payload.password = sc.newPassword;
+            }
+
+            if (sc.rivhitCustomerNumber != null && String(sc.rivhitCustomerNumber).trim()) {
+              payload.externalCustomerId = Number(String(sc.rivhitCustomerNumber).trim());
+            }
+
+            return payload;
+          })
+        : [];
+
+      const mainCustomerData = {
         name: data.name,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
+        email: String(data.email).toLowerCase(),
+        phone: data.phone || "",
         customerType: data.customerType,
         companyNumber: data.companyNumber || "",
         priceList: finalPriceList,
         paymentTerms: data.paymentTerms,
-        creditLimit: finalCreditLimit,
-        image: imageUrl,
-        address,
         institutionType: data.institutionType || undefined,
-        weeklyDeliveryDay: data.weeklyDeliveryDay !== "" && data.weeklyDeliveryDay !== undefined && data.weeklyDeliveryDay !== null
-          ? Number(data.weeklyDeliveryDay)
-          : undefined,
+        subCustomers: subCustomersToSend,
       };
 
-      if (data.newPassword && String(data.newPassword).trim()) {
-        customerData.password = data.newPassword;
+      // מספר לקוח בריווחית ללקוח ראשי – שדה ברמת השורש (externalCustomerId)
+      const mainRivhitValue = data.mainRivhitCustomerNumber != null && String(data.mainRivhitCustomerNumber).trim();
+      if (mainRivhitValue) {
+        mainCustomerData.externalCustomerId = Number(String(data.mainRivhitCustomerNumber).trim());
+      } else if (!isNewCustomer) {
+        mainCustomerData.externalCustomerId = "";
       }
 
       if (isNewCustomer) {
-        // הוספת לקוח חדש
-        const res = await CustomerServices.createCustomerByAdmin(customerData);
+        const res = await CustomerServices.createCustomerByAdmin(mainCustomerData);
         notifySuccess(res.message?.he || res.message || t("CustomerCreatedSuccessfully"));
-        // מעבר לעמוד הלקוח החדש
-        if (res.customer?._id) {
-          window.location.href = `/customer/${res.customer._id}`;
+        if (res.mainCustomer?._id) {
+          window.location.href = `/customer/${res.mainCustomer._id}`;
         } else {
           window.location.href = `/customers`;
         }
       } else {
-        // עדכון לקוח קיים
-        const res = await CustomerServices.updateCustomerByAdmin(customerId, customerData);
+        const res = await CustomerServices.updateCustomerByAdmin(customerId, mainCustomerData);
         notifySuccess(res.message?.he || res.message || t("CustomerUpdatedSuccessfully"));
-
-        // עדכון הערכים הראשוניים - reset יגרום ל-isDirty להיות false
-        reset(data);
-        setInitialImageUrl(imageUrl);
+        reset(getDefaultValues());
         setIsUpdate(true);
       }
     } catch (err) {
-      notifyError(err?.response?.data?.message?.he || err?.response?.data?.message || err?.message || t("UpdateFailed"));
+      notifyError(
+        err?.response?.data?.message?.he ||
+        err?.response?.data?.message ||
+        err?.message ||
+        t("UpdateFailed")
+      );
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const appendSubCustomer = () => append(createEmptySubCustomer());
+  const removeSubCustomer = (index) => {
+    const current = watch("subCustomers") || [];
+    if (current.length <= 1) return;
+    remove(index);
   };
 
   return {
@@ -229,13 +304,16 @@ const useCustomerSubmit = (customerId, customer) => {
     errors,
     setValue,
     watch,
-    setImageUrl,
-    imageUrl,
     isSubmitting,
     hasChanges,
     customerType,
-    watchedValues,
     isNewCustomer,
+
+    // Sub customers helpers
+    subCustomerFields,
+    appendSubCustomer,
+    removeSubCustomer,
+    isBusinessOrInstitutional,
   };
 };
 

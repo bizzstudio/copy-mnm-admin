@@ -51,11 +51,24 @@ const CustomerOrders = ({ customer }) => {
         return termsMap[paymentTerms] || paymentTerms;
     };
 
+    const isBusinessOrInstitutional =
+        customer?.customerType === "business" || customer?.customerType === "institutional";
+
+    const summary = customer?.summary || {};
+
+    // Backward compatibility (old customer model) + new main-customer summary
+    const totalCreditLimit =
+        summary?.totalCreditLimit !== undefined ? summary.totalCreditLimit : customer?.creditLimit;
+    const totalAvailableCredit =
+        summary?.totalAvailableCredit !== undefined ? summary.totalAvailableCredit : customer?.availableCredit;
+    const totalUnpaidBalance =
+        summary?.totalUnpaidBalance !== undefined ? summary.totalUnpaidBalance : customer?.unpaidBalance;
+
     // Check if there's any financial information to display
     const hasFinancialInfo =
-        customer?.creditLimit !== undefined ||
-        customer?.availableCredit !== undefined ||
-        customer?.unpaidBalance !== undefined ||
+        totalCreditLimit !== undefined ||
+        totalAvailableCredit !== undefined ||
+        totalUnpaidBalance !== undefined ||
         customer?.paymentTerms ||
         customer?.customerType;
 
@@ -67,22 +80,22 @@ const CustomerOrders = ({ customer }) => {
                     {hasFinancialInfo && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-                                {customer?.creditLimit !== undefined && (
+                                {totalCreditLimit !== undefined && (
                                     <InfoField
                                         label={t("CreditLimit")}
-                                        value={`${currency}${getNumberTwo(customer.creditLimit)}`}
+                                        value={`${currency}${getNumberTwo(totalCreditLimit)}`}
                                     />
                                 )}
-                                {customer?.availableCredit !== undefined && (
+                                {totalAvailableCredit !== undefined && (
                                     <InfoField
                                         label={t("AvailableCredit")}
-                                        value={`${currency}${getNumberTwo(customer.availableCredit)}`}
+                                        value={`${currency}${getNumberTwo(totalAvailableCredit)}`}
                                     />
                                 )}
-                                {customer?.unpaidBalance !== undefined && (
+                                {totalUnpaidBalance !== undefined && (
                                     <InfoField
                                         label={t("UnpaidBalance")}
-                                        value={`${currency}${getNumberTwo(customer.unpaidBalance)}`}
+                                        value={`${currency}${getNumberTwo(totalUnpaidBalance)}`}
                                     />
                                 )}
                                 {customer?.paymentTerms && (
@@ -122,6 +135,9 @@ const CustomerOrders = ({ customer }) => {
                                         <TableCell className="text-center">{t("OrderDate")}</TableCell>
                                         <TableCell className="text-center">{t("orderUpdate")}</TableCell>
                                         <TableCell className="text-center">{t("ShippingMethod")}</TableCell>
+                                        {isBusinessOrInstitutional && (
+                                            <TableCell className="text-center">{t("Customer")}</TableCell>
+                                        )}
                                         <TableCell className="text-center">{t("Total")}</TableCell>
                                         <TableCell className="text-center">{t("PaymentStatus")}</TableCell>
                                         <TableCell className="text-center">{t("PaymentMethod")}</TableCell>
@@ -129,7 +145,7 @@ const CustomerOrders = ({ customer }) => {
                                         <TableCell className="text-center">{t("Actions")}</TableCell>
                                     </tr>
                                 </TableHeader>
-                                <CustomerOrderTable orders={dataTable} />
+                                <CustomerOrderTable orders={dataTable} showCustomerColumn={isBusinessOrInstitutional} />
                             </Table>
                             <TableFooter>
                                 <CustomPagination

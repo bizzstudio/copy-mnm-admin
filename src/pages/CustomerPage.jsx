@@ -24,7 +24,7 @@ const CustomerPage = () => {
     const navigate = useNavigate();
 
     const { data: customer, loading, error } = useAsync(() =>
-        CustomerServices.getCustomerById(id)
+        CustomerServices.getMainCustomer(id)
     );
 
     // חישוב טווח התאריכים של העמוד הראשון (מהיום עד לפני 6 חודשים)
@@ -37,7 +37,15 @@ const CustomerPage = () => {
         };
     };
 
-    const externalCustomerId = customer?.accounting?.externalCustomerId;
+    // Rivhit externalCustomerId can be on main customer (root) or any sub-customer
+    const externalCustomerId = useMemo(() => {
+        if (customer?.externalCustomerId) {
+            return customer.externalCustomerId;
+        }
+        if (!customer?.subCustomers || !Array.isArray(customer.subCustomers)) return null;
+        const withRivhit = customer.subCustomers.find(sc => sc?.accounting?.externalCustomerId);
+        return withRivhit?.accounting?.externalCustomerId || null;
+    }, [customer]);
 
     // סטייט לשמירת טווח התאריכים הנוכחי
     const [dateRange, setDateRange] = useState(getInitialDateRange());
@@ -71,7 +79,7 @@ const CustomerPage = () => {
 
     // פונקציה לעדכון מסמכים עם תאריכים חדשים
     const handleDocumentsFetch = useCallback(async (from, to) => {
-        const currentExternalCustomerId = customer?.accounting?.externalCustomerId;
+        const currentExternalCustomerId = externalCustomerId;
         if (!currentExternalCustomerId) {
             return Promise.resolve(null);
         }
@@ -82,7 +90,7 @@ const CustomerPage = () => {
         // החזרת Promise שממתין לטעינה
         // נשתמש ב-refetch כדי לוודא שהנתונים נטענים מיד
         return refetchDocuments();
-    }, [customer?.accounting?.externalCustomerId, refetchDocuments]);
+    }, [externalCustomerId, refetchDocuments]);
 
     const tabs = useMemo(() => [
         {
@@ -117,6 +125,7 @@ const CustomerPage = () => {
                 <CustomerDocuments
                     customer={customer}
                     customerId={id}
+                    externalCustomerId={externalCustomerId}
                     rivhitDocuments={rivhitDocuments}
                     documentsLoading={documentsLoading}
                     documentsError={documentsError?.message || documentsError}
@@ -153,7 +162,7 @@ const CustomerPage = () => {
         <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
             <div className="flex items-center justify-between mt-6 w-full">
                 <PageTitle>
-                    {customer.name} {customer.lastName}
+                    {customer.name}
                 </PageTitle>
                 <Button
                     onClick={() => navigate("/customers")}

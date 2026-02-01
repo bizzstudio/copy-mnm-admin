@@ -1,6 +1,14 @@
 import requests from "./httpService";
 
 const CustomerServices = {
+  getAllMainCustomers: async () => {
+    return requests.get(`/customer/all/main`);
+  },
+
+  getMainCustomer: async (id) => {
+    return requests.get(`/customer/main/${id}`);
+  },
+
   getAllCustomers: async ({ searchText = "" }) => {
     return requests.get(`/customer?searchText=${searchText}`);
   },
@@ -39,6 +47,10 @@ const CustomerServices = {
 
   createCustomerByAdmin: async (body) => {
     return requests.post(`/customer/admin/create`, body);
+  },
+
+  deleteMainCustomer: async (id) => {
+    return requests.delete(`/customer/admin/main/${id}`);
   },
 
   // משיכת מסמכים מריווחית

@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { Card, CardBody, Button, Select } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { BiSolidUserDetail, BiMap } from "react-icons/bi";
+import { FiPlus, FiTrash2, FiUsers } from "react-icons/fi";
 
 // Internal import
 import InputArea from "@/components/form/input/InputArea";
@@ -24,15 +25,15 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
         errors,
         setValue,
         watch,
-        setImageUrl,
-        imageUrl,
         isSubmitting,
         hasChanges,
         customerType,
         isNewCustomer,
+        subCustomerFields,
+        appendSubCustomer,
+        removeSubCustomer,
+        isBusinessOrInstitutional,
     } = useCustomerSubmit(customerId, customer);
-
-    const addressCity = watch("address.city");
 
     return (
         <div className="my-6">
@@ -44,7 +45,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                     >
                         <div className="space-y-6">
 
-                            {/* Header Section */}
+                            {/* Main customer fields */}
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <BiSolidUserDetail size={24} className="text-mainColor" />
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
@@ -52,315 +53,434 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 </h2>
                             </div>
 
-                            <div className="flex xl:flex-row flex-col gap-4 md:gap-12 md:items-center">
-                                {/* תמונת פרופיל - בראש הטופס ממורכז */}
-                                <div className="flex justify-center">
-                                    <ProfileImageUploader
-                                        imageUrl={imageUrl}
-                                        setImageUrl={setImageUrl}
-                                        folder="mnm customers"
-                                        size="medium"
+                            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("Name")} />
+                                    <InputArea
+                                        register={register}
+                                        label={t("Name")}
+                                        name="name"
+                                        type="text"
+                                        placeholder={t("CustomerNamePlaceholder")}
+                                        isRequired={true}
+                                        autocomplete={isNewCustomer ? "off" : undefined}
                                     />
+                                    <Error errorName={errors.name} />
                                 </div>
 
-                                {/* Basic Information */}
-                                <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3! min-[1580px]:grid-cols-4! gap-6">
-                                    {/* שם פרטי */}
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("Name")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("Name")}
-                                            name="name"
-                                            type="text"
-                                            placeholder={t("CustomerNamePlaceholder")}
-                                            isRequired={true}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.name} />
-                                    </div>
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("Email")} />
+                                    <InputArea
+                                        register={register}
+                                        label={t("Email")}
+                                        name="email"
+                                        type="email"
+                                        placeholder={t("CustomerEmailPlaceholder")}
+                                        isRequired={true}
+                                        autocomplete={isNewCustomer ? "section-new-customer email" : undefined}
+                                    />
+                                    <Error errorName={errors.email} />
+                                </div>
 
-                                    {/* שם משפחה */}
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("Phone")} />
+                                    <InputArea
+                                        register={register}
+                                        label={t("Phone")}
+                                        name="phone"
+                                        type="tel"
+                                        placeholder={t("CustomerPhonePlaceholder")}
+                                        isRequired={false}
+                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                    />
+                                    <Error errorName={errors.phone} />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("CustomerType")} />
+                                    <Select
+                                        {...register("customerType", {
+                                            required: `${t("CustomerType")} ${t("isRequired")}!`,
+                                        })}
+                                    >
+                                        <option value="casual">{t("CasualCustomer")}</option>
+                                        <option value="regular">{t("RegularCustomer")}</option>
+                                        <option value="business">{t("BusinessCustomer")}</option>
+                                        <option value="institutional">{t("InstitutionalCustomer")}</option>
+                                    </Select>
+                                    <Error errorName={errors.customerType} />
+                                </div>
+
+                                {(customerType === "business" || customerType === "institutional") && (
                                     <div className="flex flex-col">
-                                        <LabelArea label={t("Last Name")} />
+                                        <LabelArea label={t("CompanyNumber")} />
                                         <InputArea
                                             register={register}
-                                            label={t("Last Name")}
-                                            name="lastName"
+                                            label={t("CompanyNumber")}
+                                            name="companyNumber"
                                             type="text"
-                                            placeholder={t("CustomerLastNamePlaceholder")}
+                                            placeholder={t("CompanyNumberPlaceholder")}
                                             isRequired={false}
                                             autocomplete={isNewCustomer ? "off" : undefined}
                                         />
-                                        <Error errorName={errors.lastName} />
+                                        <Error errorName={errors.companyNumber} />
                                     </div>
+                                )}
 
-                                    {/* אימייל */}
+                                {customerType === "institutional" && (
                                     <div className="flex flex-col">
-                                        <LabelArea label={t("Email")} />
+                                        <LabelArea label={t("InstitutionType")} />
                                         <InputArea
                                             register={register}
-                                            label={t("Email")}
-                                            name="email"
-                                            type="email"
-                                            placeholder={t("CustomerEmailPlaceholder")}
-                                            isRequired={true}
-                                            autocomplete={isNewCustomer ? "section-new-customer email" : undefined}
-                                        />
-                                        <Error errorName={errors.email} />
-                                    </div>
-
-                                    {/* טלפון */}
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("Phone")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("Phone")}
-                                            name="phone"
-                                            type="tel"
-                                            placeholder={t("CustomerPhonePlaceholder")}
-                                            isRequired={true}
+                                            label={t("InstitutionType")}
+                                            name="institutionType"
+                                            type="text"
+                                            placeholder={t("InstitutionTypePlaceholder")}
+                                            isRequired={false}
                                             autocomplete={isNewCustomer ? "off" : undefined}
                                         />
-                                        <Error errorName={errors.phone} />
+                                        <Error errorName={errors.institutionType} />
                                     </div>
+                                )}
 
-                                    {/* סוג לקוח */}
+                                {customerType !== "casual" && priceLists && priceLists.length > 0 && (
                                     <div className="flex flex-col">
-                                        <LabelArea label={t("CustomerType")} />
-                                        <Select
-                                            {...register("customerType", {
-                                                required: `${t("CustomerType")} ${t("isRequired")}!`,
-                                            })}
-                                        >
-                                            <option value="casual">{t("CasualCustomer")}</option>
-                                            <option value="regular">{t("RegularCustomer")}</option>
-                                            <option value="business">{t("BusinessCustomer")}</option>
-                                            <option value="institutional">{t("InstitutionalCustomer")}</option>
+                                        <LabelArea label={t("PriceList")} />
+                                        <Select {...register("priceList")}>
+                                            {priceLists.map((priceList) => (
+                                                <option key={priceList._id} value={priceList._id}>
+                                                    {priceList.name}
+                                                </option>
+                                            ))}
                                         </Select>
-                                        <Error errorName={errors.customerType} />
+                                        <Error errorName={errors.priceList} />
                                     </div>
+                                )}
 
-                                    {/* מספר חברה - רק אם זה לקוח עסקי או מוסדי */}
-                                    {(customerType === "business" || customerType === "institutional") && (
-                                        <div className="flex flex-col">
-                                            <LabelArea label={t("CompanyNumber")} />
-                                            <InputArea
-                                                register={register}
-                                                label={t("CompanyNumber")}
-                                                name="companyNumber"
-                                                type="text"
-                                                placeholder={t("CompanyNumberPlaceholder")}
-                                                isRequired={false}
-                                                autocomplete={isNewCustomer ? "off" : undefined}
-                                            />
-                                            <Error errorName={errors.companyNumber} />
-                                        </div>
-                                    )}
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("PaymentTerms")} />
+                                    <Select
+                                        {...register("paymentTerms", {
+                                            required: `${t("PaymentTerms")} ${t("isRequired")}!`,
+                                        })}
+                                    >
+                                        <option value="current">{t("Current")}</option>
+                                        <option value="+30">{t("Plus30Days")}</option>
+                                        <option value="+60">{t("Plus60Days")}</option>
+                                        <option value="+90">{t("Plus90Days")}</option>
+                                        <option value="noDueDate">{t("NoDueDate")}</option>
+                                    </Select>
+                                    <Error errorName={errors.paymentTerms} />
+                                </div>
 
-                                    {/* סוג מוסד - רק אם זה לקוח מוסדי */}
-                                    {customerType === "institutional" && (
-                                        <div className="flex flex-col">
-                                            <LabelArea label={t("InstitutionType")} />
-                                            <InputArea
-                                                register={register}
-                                                label={t("InstitutionType")}
-                                                name="institutionType"
-                                                type="text"
-                                                placeholder={t("InstitutionTypePlaceholder")}
-                                                isRequired={false}
-                                            />
-                                            <Error errorName={errors.institutionType} />
-                                        </div>
-                                    )}
-
-                                    {/* מחירון - רק אם לא לקוח מזדמן ויש מחירונים זמינים */}
-                                    {customerType !== "casual" && priceLists && priceLists.length > 0 && (
-                                        <div className="flex flex-col">
-                                            <LabelArea label={t("PriceList")} />
-                                            <Select {...register("priceList")}>
-                                                {priceLists.map((priceList) => (
-                                                    <option key={priceList._id} value={priceList._id}>
-                                                        {priceList.name}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                            <Error errorName={errors.priceList} />
-                                        </div>
-                                    )}
-
-                                    {/* מסגרת אשראי - רק אם לא לקוח מזדמן, אחרי המחירון */}
-                                    {customerType !== "casual" && (
-                                        <div className="flex flex-col">
-                                            <LabelArea label={t("CreditLimit")} />
-                                            <InputArea
-                                                register={register}
-                                                label={t("CreditLimit")}
-                                                name="creditLimit"
-                                                type="number"
-                                                min={0}
-                                                placeholder={t("CreditLimitPlaceholder")}
-                                                isRequired={false}
-                                                autocomplete={isNewCustomer ? "off" : undefined}
-                                            />
-                                            <Error errorName={errors.creditLimit} />
-                                        </div>
-                                    )}
-
-                                    {/* תנאי תשלום */}
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("PaymentTerms")} />
-                                        <Select
-                                            {...register("paymentTerms", {
-                                                required: `${t("PaymentTerms")} ${t("isRequired")}!`,
-                                            })}
-                                        >
-                                            <option value="current">{t("Current")}</option>
-                                            <option value="+30">{t("Plus30Days")}</option>
-                                            <option value="+60">{t("Plus60Days")}</option>
-                                            <option value="+90">{t("Plus90Days")}</option>
-                                            <option value="noDueDate">{t("NoDueDate")}</option>
-                                        </Select>
-                                        <Error errorName={errors.paymentTerms} />
-                                    </div>
-
-                                    {/* יום משלוח שבועי */}
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("WeeklyDeliveryDay")} />
-                                        <Select {...register("weeklyDeliveryDay")}>
-                                            <option value="">{t("WeeklyDeliveryDayPlaceholder")}</option>
-                                            <option value="0">{t("DaySunday")}</option>
-                                            <option value="1">{t("DayMonday")}</option>
-                                            <option value="2">{t("DayTuesday")}</option>
-                                            <option value="3">{t("DayWednesday")}</option>
-                                            <option value="4">{t("DayThursday")}</option>
-                                            <option value="5">{t("DayFriday")}</option>
-                                            <option value="6">{t("DaySaturday")}</option>
-                                        </Select>
-                                        <Error errorName={errors.weeklyDeliveryDay} />
-                                    </div>
-
-                                    {/* סיסמה חדשה */}
-                                    <div className="flex flex-col">
-                                        <LabelArea label={isNewCustomer ? t("PasswordOptional") : t("NewPassword")} />
-                                        <InputArea
-                                            register={register}
-                                            label={isNewCustomer ? t("PasswordOptional") : t("NewPassword")}
-                                            name="newPassword"
-                                            type="password"
-                                            placeholder={isNewCustomer ? t("NewPasswordPlaceholderCreate") : t("NewPasswordPlaceholderUpdate")}
-                                            isRequired={false}
-                                            autocomplete="section-new-customer new-password"
-                                        />
-                                        <Error errorName={errors.newPassword} />
-                                    </div>
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("RivhitCustomerNumber") || "Rivhit customer number"} />
+                                    <InputArea
+                                        register={register}
+                                        label={t("RivhitCustomerNumber") || "Rivhit customer number"}
+                                        name="mainRivhitCustomerNumber"
+                                        type="text"
+                                        placeholder="12345"
+                                        isRequired={false}
+                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                    />
+                                    <Error errorName={errors.mainRivhitCustomerNumber} />
                                 </div>
                             </div>
 
-                            {/* כתובת */}
+                            {/* Sub customers */}
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-                                    <BiMap size={24} className="text-mainColor" />
-                                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                                        {t("FullAddress")}
-                                    </h2>
+                                <div className="flex items-center justify-between gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                    <div className="flex items-center gap-3">
+                                        <FiUsers size={22} className="text-mainColor" />
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                            {t("SubCustomers") || "Sub Customers"}
+                                        </h2>
+                                    </div>
+
+                                    {isBusinessOrInstitutional && (
+                                        <button
+                                            type="button"
+                                            onClick={appendSubCustomer}
+                                            className="flex items-center gap-2 px-3 py-2 rounded-md bg-mainColor text-white hover:bg-mainColor/90 transition-colors cursor-pointer"
+                                        >
+                                            <FiPlus size={18} />
+                                            <span className="text-sm font-medium">
+                                                {t("AddSubCustomer") || "Add sub-customer"}
+                                            </span>
+                                        </button>
+                                    )}
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("City")} />
-                                        <City
-                                            value={addressCity}
-                                            setValue={(val) => setValue("address.city", val, { shouldDirty: true })}
-                                        />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("Street")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("Street")}
-                                            name="address.street"
-                                            type="text"
-                                            placeholder={t("StreetPlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.street} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("HouseNumber")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("HouseNumber")}
-                                            name="address.houseNumber"
-                                            type="text"
-                                            placeholder={t("HouseNumberPlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.houseNumber} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("ApartmentNumber")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("ApartmentNumber")}
-                                            name="address.apartmentNumber"
-                                            type="text"
-                                            placeholder={t("ApartmentNumberPlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.apartmentNumber} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("Floor")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("Floor")}
-                                            name="address.floor"
-                                            type="text"
-                                            placeholder={t("FloorPlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.floor} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("EntryCode")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("EntryCode")}
-                                            name="address.entryCode"
-                                            type="text"
-                                            placeholder={t("EntryCodePlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.entryCode} />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <LabelArea label={t("PostalCode")} />
-                                        <InputArea
-                                            register={register}
-                                            label={t("PostalCode")}
-                                            name="address.postalCode"
-                                            type="text"
-                                            placeholder={t("PostalCodePlaceholder")}
-                                            isRequired={false}
-                                            autocomplete={isNewCustomer ? "off" : undefined}
-                                        />
-                                        <Error errorName={errors.address?.postalCode} />
-                                    </div>
+
+                                <div className="space-y-4">
+                                    {subCustomerFields.map((field, idx) => {
+                                        const addressCity = watch(`subCustomers.${idx}.address.city`);
+
+                                        return (
+                                            <div
+                                                key={field.id}
+                                                className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30"
+                                            >
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                                        {t("SubCustomer") || "Sub-customer"} #{idx + 1}
+                                                    </div>
+
+                                                    {isBusinessOrInstitutional && subCustomerFields.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeSubCustomer(idx)}
+                                                            className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                                                        >
+                                                            <FiTrash2 size={16} />
+                                                            <span className="text-sm">
+                                                                {t("Remove") || "Remove"}
+                                                            </span>
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex xl:flex-row flex-col gap-4 md:gap-10 md:items-start">
+                                                    <div className="flex justify-center">
+                                                        <ProfileImageUploader
+                                                            imageUrl={watch(`subCustomers.${idx}.image`)}
+                                                            setImageUrl={(url) =>
+                                                                setValue(`subCustomers.${idx}.image`, url, { shouldDirty: true })
+                                                            }
+                                                            folder="mnm customers"
+                                                            size="medium"
+                                                        />
+                                                    </div>
+
+                                                    <div className="w-full space-y-6">
+                                                        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("Name")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("Name")}
+                                                                    name={`subCustomers.${idx}.name`}
+                                                                    type="text"
+                                                                    placeholder={t("CustomerNamePlaceholder")}
+                                                                    isRequired={true}
+                                                                    autocomplete={isNewCustomer ? "off" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.name} />
+                                                            </div>
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("Last Name")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("Last Name")}
+                                                                    name={`subCustomers.${idx}.lastName`}
+                                                                    type="text"
+                                                                    placeholder={t("CustomerLastNamePlaceholder")}
+                                                                    isRequired={false}
+                                                                    autocomplete={isNewCustomer ? "off" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.lastName} />
+                                                            </div>
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("Email")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("Email")}
+                                                                    name={`subCustomers.${idx}.email`}
+                                                                    type="email"
+                                                                    placeholder={t("CustomerEmailPlaceholder")}
+                                                                    isRequired={true}
+                                                                    autocomplete={isNewCustomer ? "section-new-customer email" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.email} />
+                                                            </div>
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("Phone")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("Phone")}
+                                                                    name={`subCustomers.${idx}.phone`}
+                                                                    type="tel"
+                                                                    placeholder={t("CustomerPhonePlaceholder")}
+                                                                    isRequired={false}
+                                                                    autocomplete={isNewCustomer ? "off" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.phone} />
+                                                            </div>
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("RivhitCustomerNumber") || "Rivhit customer number"} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("RivhitCustomerNumber") || "Rivhit customer number"}
+                                                                    name={`subCustomers.${idx}.rivhitCustomerNumber`}
+                                                                    type="text"
+                                                                    placeholder="12345"
+                                                                    isRequired={false}
+                                                                    autocomplete={isNewCustomer ? "off" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.rivhitCustomerNumber} />
+                                                            </div>
+
+                                                            {customerType !== "casual" && (
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("CreditLimit")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("CreditLimit")}
+                                                                        name={`subCustomers.${idx}.creditLimit`}
+                                                                        type="number"
+                                                                        min={0}
+                                                                        placeholder={t("CreditLimitPlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.creditLimit} />
+                                                                </div>
+                                                            )}
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("WeeklyDeliveryDay")} />
+                                                                <Select {...register(`subCustomers.${idx}.weeklyDeliveryDay`)}>
+                                                                    <option value="">{t("WeeklyDeliveryDayPlaceholder")}</option>
+                                                                    <option value="0">{t("DaySunday")}</option>
+                                                                    <option value="1">{t("DayMonday")}</option>
+                                                                    <option value="2">{t("DayTuesday")}</option>
+                                                                    <option value="3">{t("DayWednesday")}</option>
+                                                                    <option value="4">{t("DayThursday")}</option>
+                                                                    <option value="5">{t("DayFriday")}</option>
+                                                                    <option value="6">{t("DaySaturday")}</option>
+                                                                </Select>
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.weeklyDeliveryDay} />
+                                                            </div>
+
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={isNewCustomer ? t("PasswordOptional") : t("NewPassword")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={isNewCustomer ? t("PasswordOptional") : t("NewPassword")}
+                                                                    name={`subCustomers.${idx}.newPassword`}
+                                                                    type="password"
+                                                                    placeholder={isNewCustomer ? t("NewPasswordPlaceholderCreate") : t("NewPasswordPlaceholderUpdate")}
+                                                                    isRequired={false}
+                                                                    autocomplete="section-new-customer new-password"
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.newPassword} />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                                                                <BiMap size={22} className="text-mainColor" />
+                                                                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                                                                    {t("FullAddress")}
+                                                                </h3>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("City")} />
+                                                                    <City
+                                                                        value={addressCity}
+                                                                        setValue={(val) =>
+                                                                            setValue(`subCustomers.${idx}.address.city`, val, { shouldDirty: true })
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("Street")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("Street")}
+                                                                        name={`subCustomers.${idx}.address.street`}
+                                                                        type="text"
+                                                                        placeholder={t("StreetPlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.street} />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("HouseNumber")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("HouseNumber")}
+                                                                        name={`subCustomers.${idx}.address.houseNumber`}
+                                                                        type="text"
+                                                                        placeholder={t("HouseNumberPlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.houseNumber} />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ApartmentNumber")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ApartmentNumber")}
+                                                                        name={`subCustomers.${idx}.address.apartmentNumber`}
+                                                                        type="text"
+                                                                        placeholder={t("ApartmentNumberPlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.apartmentNumber} />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("Floor")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("Floor")}
+                                                                        name={`subCustomers.${idx}.address.floor`}
+                                                                        type="text"
+                                                                        placeholder={t("FloorPlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.floor} />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("EntryCode")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("EntryCode")}
+                                                                        name={`subCustomers.${idx}.address.entryCode`}
+                                                                        type="text"
+                                                                        placeholder={t("EntryCodePlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.entryCode} />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("PostalCode")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("PostalCode")}
+                                                                        name={`subCustomers.${idx}.address.postalCode`}
+                                                                        type="text"
+                                                                        placeholder={t("PostalCodePlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete={isNewCustomer ? "off" : undefined}
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.address?.postalCode} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             {/* כפתור עדכון/שמירה */}
                             {hasChanges && (
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-                                    <Button
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                    >
+                                    <Button type="submit" disabled={isSubmitting}>
                                         {isSubmitting
                                             ? (isNewCustomer ? t("Creating") : t("Updating")) + "..."
                                             : isNewCustomer

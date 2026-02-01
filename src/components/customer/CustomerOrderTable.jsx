@@ -12,7 +12,7 @@ import PrintReceipt from "@/components/form/others/PrintReceipt";
 import Tooltip from "@/components/tooltip/Tooltip";
 import PaymentMethodDisplay from "@/components/customer/PaymentMethodDisplay";
 
-const CustomerOrderTable = ({ orders }) => {
+const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
   const { showDateTimeFormat, getNumberTwo, currency } = useUtilsFunction();
   const { t } = useTranslation();
 
@@ -43,6 +43,20 @@ const CustomerOrderTable = ({ orders }) => {
                 : t("pickup")}
             </span>
           </TableCell>
+
+          {/* Sub-customer (for business/institutional main customers) */}
+          {showCustomerColumn && (
+            <TableCell className="text-center">
+              <div className="text-sm">
+                <div className="font-semibold text-gray-900 dark:text-gray-100">
+                  {order?.user?.name} {order?.user?.lastName}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {order?.user?.email || ""}
+                </div>
+              </div>
+            </TableCell>
+          )}
 
           {/* Total Amount */}
           <TableCell className="text-sm font-semibold text-center">

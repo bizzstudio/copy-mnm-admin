@@ -1642,5 +1642,15 @@
   "IssueTime": "שעת הנפקה",
   "IssueDateHelp": "אם לא יוזן, יקבע אוטומטית לפי זמן ההנפקה",
   "IssueTimeHelp": "אם לא תוזן, תיקבע אוטומטית לפי זמן ההנפקה",
-  "SelectAll": "בחר הכל"
+  "SelectAll": "בחר הכל",
+  "SubCustomers": "תתי לקוחות",
+  "NoSubCustomersFound": "לא נמצאו תתי לקוחות",
+  "AddSubCustomer": "הוסף תת לקוח",
+  "SubCustomer": "תת לקוח",
+  "Remove": "הסר",
+  "RivhitCustomerNumber": "מספר לקוח בריווחית",
+  "Rivhit": "ריווחית",
+  "Customer": "לקוח",
+  "DeleteMainCustomer": "מחק לקוח ראשי",
+  "CustomerDeletedSuccessfully": "לקוח נמחק בהצלחה"
 }

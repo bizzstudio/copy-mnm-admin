@@ -1607,5 +1607,15 @@
   "IssueTime": "Issue Time",
   "IssueDateHelp": "If not provided, will be set automatically based on issue time",
   "IssueTimeHelp": "If not provided, will be set automatically based on issue time",
-  "SelectAll": "Select All"
+  "SelectAll": "Select All",
+  "SubCustomers": "Sub Customers",
+  "NoSubCustomersFound": "No sub-customers found",
+  "AddSubCustomer": "Add sub-customer",
+  "SubCustomer": "Sub-customer",
+  "Remove": "Remove",
+  "RivhitCustomerNumber": "Rivhit customer number",
+  "Rivhit": "Rivhit",
+  "Customer": "Customer",
+  "DeleteMainCustomer": "Delete Main Customer",
+  "CustomerDeletedSuccessfully": "Customer deleted successfully"
 }

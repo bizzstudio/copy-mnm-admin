@@ -124,9 +124,9 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
       }
 
       if (location.pathname === "/customers") {
-        const res = await CustomerServices.deleteCustomer(id);
+        const res = await CustomerServices.deleteMainCustomer(id);
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifySuccess(res?.message?.he || res?.message || "Customer deleted successfully");
         setServiceId();
         closeModal();
         setIsSubmitting(false);
@@ -375,7 +375,9 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
       }
       
     } catch (err) {
-      notifyError(err ? err?.response?.data?.message : err?.message);
+      const msg = err?.response?.data?.message;
+      const messageText = typeof msg === "object" && msg !== null ? (msg.he || msg.en || msg) : (msg || err?.message);
+      notifyError(messageText);
       setServiceId();
       setIsCheck([]);
       closeModal();
