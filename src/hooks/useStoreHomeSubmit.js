@@ -118,6 +118,7 @@ const useStoreHomeSubmit = () => {
   const [termsConditionsHeaderBg, setTermsConditionsHeaderBg] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customizationDataLoaded, setCustomizationDataLoaded] = useState(false);
 
   // const { socket } = useNotification();
 
@@ -1051,35 +1052,13 @@ const useStoreHomeSubmit = () => {
       // setIsSubmitting(false);
       // return;
 
-      if (!isSave) {
-        const res = await SettingServices.updateStoreCustomizationSetting(
-          storeCustomizationSettingData
-        );
-        // await socket.emit("notification", {
-        //   message: `storeCustomizationSetting setting added`,
-        //   option: "storeCustomizationSetting",
-        // });
+      const res = await SettingServices.updateStoreCustomizationSetting(
+        storeCustomizationSettingData
+      );
 
-        setIsUpdate(true);
-        setIsSubmitting(false);
-
-        window.location.reload();
-        notifyApiResponse(res, true);
-      } else {
-        const res = await SettingServices.addStoreCustomizationSetting(
-          storeCustomizationSettingData
-        );
-        // await socket.emit("notification", {
-        //   message: `storeCustomizationSetting setting updated`,
-        //   option: "storeCustomizationSetting",
-        // });
-
-        setIsUpdate(true);
-        setIsSubmitting(false);
-
-        window.location.reload();
-        notifyApiResponse(res, true);
-      }
+      setIsUpdate(true);
+      setIsSubmitting(false);
+      notifyApiResponse(res, true);
     } catch (err) {
       notifyApiResponse(err, false);
       setIsSubmitting(false);
@@ -1880,6 +1859,8 @@ const useStoreHomeSubmit = () => {
           setValue("meta_description", res.seo.meta_description);
           setValue("meta_keywords", res.seo.meta_keywords);
           setValue("meta_url", res.seo.meta_url);
+
+          setCustomizationDataLoaded(true);
         }
       } catch (err) {
         console.error('error :>> ', err);
@@ -1887,10 +1868,6 @@ const useStoreHomeSubmit = () => {
       }
     };
     getStoreCustomizationData();
-    return () => {
-      const controller = new AbortController();
-      controller.abort();
-    };
   }, [language, setValue]);
 
   const handleSelectLanguage = (lang) => {
@@ -2091,6 +2068,7 @@ const useStoreHomeSubmit = () => {
     setAllowLogosCarousel,
     logosCarousel,
     setLogosCarousel,
+    customizationDataLoaded,
   };
 };
 

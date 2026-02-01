@@ -287,7 +287,7 @@ const StoreHome = () => {
       ),
       onClick: () => setTabIndex(9),
     },
-  ], [t, setTabIndex]);
+  ], [t, setTabIndex, storeHomeProps.customizationDataLoaded]);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
