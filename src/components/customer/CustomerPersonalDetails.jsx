@@ -45,7 +45,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                     >
                         <div className="space-y-6">
 
-                            {/* Main customer fields */}
+                            {/* כותרת פרטים אישיים */}
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <BiSolidUserDetail size={24} className="text-mainColor" />
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
@@ -53,7 +53,9 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 </h2>
                             </div>
 
+                            {/* רשת שדות: שם, אימייל, טלפון, סוג לקוח ועוד */}
                             <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {/* שם */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("Name")} />
                                     <InputArea
@@ -68,6 +70,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.name} />
                                 </div>
 
+                                {/* אימייל */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("Email")} />
                                     <InputArea
@@ -82,6 +85,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.email} />
                                 </div>
 
+                                {/* טלפון */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("Phone")} />
                                     <InputArea
@@ -96,6 +100,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.phone} />
                                 </div>
 
+                                {/* סוג לקוח */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("CustomerType")} />
                                     <Select
@@ -111,6 +116,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.customerType} />
                                 </div>
 
+                                {/* מספר עוסק (עסקי/מוסדי) */}
                                 {(customerType === "business" || customerType === "institutional") && (
                                     <div className="flex flex-col">
                                         <LabelArea label={t("CompanyNumber")} />
@@ -127,6 +133,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     </div>
                                 )}
 
+                                {/* סוג מוסד (מוסדי בלבד) */}
                                 {customerType === "institutional" && (
                                     <div className="flex flex-col">
                                         <LabelArea label={t("InstitutionType")} />
@@ -143,6 +150,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     </div>
                                 )}
 
+                                {/* מחירון */}
                                 {customerType !== "casual" && priceLists && priceLists.length > 0 && (
                                     <div className="flex flex-col">
                                         <LabelArea label={t("PriceList")} />
@@ -157,6 +165,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     </div>
                                 )}
 
+                                {/* תנאי תשלום */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("PaymentTerms")} />
                                     <Select
@@ -173,6 +182,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.paymentTerms} />
                                 </div>
 
+                                {/* מספר לקוח בריווחית (לקוח ראשי) */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("RivhitCustomerNumber") || "Rivhit customer number"} />
                                     <InputArea
@@ -188,7 +198,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 </div>
                             </div>
 
-                            {/* Sub customers */}
+                            {/* סעיף תת-לקוחות */}
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                     <div className="flex items-center gap-3">
@@ -212,6 +222,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     )}
                                 </div>
 
+                                {/* רשימת כרטיסי תת-לקוח */}
                                 <div className="space-y-4">
                                     {subCustomerFields.map((field, idx) => {
                                         const addressCity = watch(`subCustomers.${idx}.address.city`);
@@ -241,6 +252,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                 </div>
 
                                                 <div className="flex xl:flex-row flex-col gap-4 md:gap-10 md:items-start">
+                                                    {/* תמונת תת-לקוח */}
                                                     <div className="flex justify-center">
                                                         <ProfileImageUploader
                                                             imageUrl={watch(`subCustomers.${idx}.image`)}
@@ -252,8 +264,10 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                         />
                                                     </div>
 
+                                                    {/* שדות תת-לקוח: שם, משפחה, אימייל וכו' */}
                                                     <div className="w-full space-y-6">
                                                         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                            {/* שם פרטי */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("Name")} />
                                                                 <InputArea
@@ -268,6 +282,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.name} />
                                                             </div>
 
+                                                            {/* שם משפחה */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("Last Name")} />
                                                                 <InputArea
@@ -282,6 +297,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.lastName} />
                                                             </div>
 
+                                                            {/* אימייל */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("Email")} />
                                                                 <InputArea
@@ -296,6 +312,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.email} />
                                                             </div>
 
+                                                            {/* טלפון */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("Phone")} />
                                                                 <InputArea
@@ -310,6 +327,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.phone} />
                                                             </div>
 
+                                                            {/* מספר לקוח בריווחית (תת-לקוח) */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("RivhitCustomerNumber") || "Rivhit customer number"} />
                                                                 <InputArea
@@ -324,6 +342,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.rivhitCustomerNumber} />
                                                             </div>
 
+                                                            {/* מסגרת אשראי */}
                                                             {customerType !== "casual" && (
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("CreditLimit")} />
@@ -341,6 +360,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 </div>
                                                             )}
 
+                                                            {/* יום משלוח שבועי */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("WeeklyDeliveryDay")} />
                                                                 <Select {...register(`subCustomers.${idx}.weeklyDeliveryDay`)}>
@@ -356,6 +376,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.weeklyDeliveryDay} />
                                                             </div>
 
+                                                            {/* סיסמה (אופציונלי/חדשה) */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={isNewCustomer ? t("PasswordOptional") : t("NewPassword")} />
                                                                 <InputArea
@@ -371,6 +392,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                             </div>
                                                         </div>
 
+                                                        {/* כתובת מלאה */}
                                                         <div className="space-y-4">
                                                             <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
                                                                 <BiMap size={22} className="text-mainColor" />
@@ -380,6 +402,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                             </div>
 
                                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                                                {/* עיר */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("City")} />
                                                                     <City
@@ -389,6 +412,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                         }
                                                                     />
                                                                 </div>
+                                                                {/* רחוב */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("Street")} />
                                                                     <InputArea
@@ -402,6 +426,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     />
                                                                     <Error errorName={errors?.subCustomers?.[idx]?.address?.street} />
                                                                 </div>
+                                                                {/* מספר בית */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("HouseNumber")} />
                                                                     <InputArea
@@ -415,6 +440,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     />
                                                                     <Error errorName={errors?.subCustomers?.[idx]?.address?.houseNumber} />
                                                                 </div>
+                                                                {/* מספר דירה */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("ApartmentNumber")} />
                                                                     <InputArea
@@ -428,6 +454,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     />
                                                                     <Error errorName={errors?.subCustomers?.[idx]?.address?.apartmentNumber} />
                                                                 </div>
+                                                                {/* קומה */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("Floor")} />
                                                                     <InputArea
@@ -441,6 +468,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     />
                                                                     <Error errorName={errors?.subCustomers?.[idx]?.address?.floor} />
                                                                 </div>
+                                                                {/* קוד כניסה */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("EntryCode")} />
                                                                     <InputArea
@@ -454,6 +482,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     />
                                                                     <Error errorName={errors?.subCustomers?.[idx]?.address?.entryCode} />
                                                                 </div>
+                                                                {/* מיקוד */}
                                                                 <div className="flex flex-col">
                                                                     <LabelArea label={t("PostalCode")} />
                                                                     <InputArea
@@ -477,7 +506,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 </div>
                             </div>
 
-                            {/* כפתור עדכון/שמירה */}
+                            {/* כפתור שמירה / עדכון לקוח */}
                             {hasChanges && (
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
                                     <Button type="submit" disabled={isSubmitting}>

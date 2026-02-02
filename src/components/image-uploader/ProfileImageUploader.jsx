@@ -1,7 +1,7 @@
 // ProfileImageUploader.jsx
 import React, { useRef, useState } from "react";
 import { t } from "i18next";
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiX } from "react-icons/fi";
 import { BiLoader } from "react-icons/bi";
 
 // internal imports
@@ -79,8 +79,15 @@ const ProfileImageUploader = ({
     inputRef.current?.click();
   };
 
+  const handleRemoveImage = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (loading) return;
+    setImageUrl("");
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center group/avatar">
       <input
         ref={inputRef}
         type="file"
@@ -88,28 +95,41 @@ const ProfileImageUploader = ({
         className="hidden"
         onChange={handleFileChange}
       />
-      <button
-        type="button"
-        onClick={handleClick}
-        disabled={loading}
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${!loading ? "hover:border-mainColor" : "cursor-not-allowed"
-          }`}
-      >
-        {loading ? (
-          <BiLoader className="animate-spin text-mainColor" size={iconSizes[size]} />
-        ) : imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={t("ProfileImageLabel")}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <FiUser
-            className="text-gray-400 dark:text-gray-500"
-            size={iconSizes[size]}
-          />
+      <div className="relative">
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={loading}
+          className={`${sizeClasses[size]} rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${!loading ? "hover:border-mainColor" : "cursor-not-allowed"
+            }`}
+        >
+          {loading ? (
+            <BiLoader className="animate-spin text-mainColor" size={iconSizes[size]} />
+          ) : imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={t("ProfileImageLabel")}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <FiUser
+              className="text-gray-400 dark:text-gray-500"
+              size={iconSizes[size]}
+            />
+          )}
+        </button>
+        {/* כפתור הסרת תמונה – מופיע בריחוף */}
+        {imageUrl && !loading && (
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            aria-label={t("RemoveImage") || "Remove image"}
+            className="absolute -top-[5px] -right-[5px] w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center opacity-0 group-hover/avatar:opacity-50 hover:opacity-100 transition-opacity shadow-md cursor-pointer z-10"
+          >
+            <FiX size={14} />
+          </button>
         )}
-      </button>
+      </div>
       <p className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center mt-2">
         {t("ProfileImageLabel")}
       </p>
