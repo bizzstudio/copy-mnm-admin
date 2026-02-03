@@ -1652,5 +1652,22 @@
   "Rivhit": "ריווחית",
   "Customer": "לקוח",
   "DeleteMainCustomer": "מחק לקוח ראשי",
-  "CustomerDeletedSuccessfully": "לקוח נמחק בהצלחה"
+  "CustomerDeletedSuccessfully": "לקוח נמחק בהצלחה",
+  "IssueInvoice": "הנפקת חשבונית מס",
+  "IssueReceipt": "הנפקת קבלה",
+  "Invoice": "חשבונית מס",
+  "Receipt": "קבלה",
+  "PleaseSelectInvoice": "נא לבחור חשבונית",
+  "CreditAmountExceedsInvoice": "סכום הזיכוי לא יכול לעלות על סכום החשבונית המקורית",
+  "SelectInvoiceForCredit": "בחר חשבונית לזיכוי",
+  "NoInvoicesAvailableForCredit": "אין חשבוניות זמינות לזיכוי",
+  "SelectedInvoice": "חשבונית נבחרת",
+  "MaxCreditAmount": "סכום מקסימלי לזיכוי",
+  "OnInvoice": "על חשבונית",
+  "NoOrdersWithoutInvoice": "אין הזמנות ללא חשבונית",
+  "SelectInvoiceForReceipt": "בחר חשבונית מס לתשלום (קבלה)",
+  "NoInvoicesAvailableForReceipt": "אין חשבוניות מס זמינות לתשלום",
+  "ViewInvoiceDoc": "צפייה בחשבונית מס",
+  "ViewReceipt": "צפייה בקבלה",
+  "ViewCreditInvoice": "צפייה בחשבונית זיכוי"
 }

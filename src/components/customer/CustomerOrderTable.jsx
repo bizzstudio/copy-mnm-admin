@@ -3,7 +3,7 @@ import React from "react";
 import { TableCell, TableBody, TableRow, Badge } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { FiZoomIn, FiFileText, FiPackage } from "react-icons/fi";
+import { FiZoomIn, FiFileText, FiFile, FiPackage, FiDollarSign, FiRefreshCw } from "react-icons/fi";
 
 // Internal import
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -86,9 +86,30 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
 
           {/* Actions */}
           <TableCell className="text-center">
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center gap-0.5">
+              {/* הדפסת הזמנה */}
               <PrintReceipt orderId={order._id} isCashierOrder={false} />
 
+              {/* צפייה בחשבונית מס */}
+              {order?.accountingDocs?.invoice?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.invoice.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewInvoiceDoc")}
+                  >
+                    <Tooltip
+                      id={`invoice-${order._id}`}
+                      Icon={FiFile}
+                      title={t("ViewInvoiceDoc")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              {/* צפייה בחשבונית מס קבלה */}
               {order?.accountingDocs?.invoiceReceipt?.url && (
                 <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
                   <a
@@ -107,6 +128,26 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                 </span>
               )}
 
+              {/* צפייה בקבלה */}
+              {order?.accountingDocs?.receipt?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.receipt.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewReceipt")}
+                  >
+                    <Tooltip
+                      id={`receipt-${order._id}`}
+                      Icon={FiDollarSign}
+                      title={t("ViewReceipt")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              {/* צפייה בתעודת משלוח */}
               {order?.accountingDocs?.deliveryNote?.url && (
                 <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
                   <a
@@ -125,6 +166,26 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                 </span>
               )}
 
+              {/* צפייה בחשבונית זיכוי */}
+              {order?.accountingDocs?.creditInvoice?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.creditInvoice.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewCreditInvoice")}
+                  >
+                    <Tooltip
+                      id={`credit-invoice-${order._id}`}
+                      Icon={FiRefreshCw}
+                      title={t("ViewCreditInvoice")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              {/* צפייה בהזמנה */}
               <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
                 <Link to={`/order/${order._id}`}>
                   <Tooltip

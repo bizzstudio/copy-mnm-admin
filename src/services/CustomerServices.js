@@ -1,3 +1,4 @@
+// src/services/CustomerServices.js
 import requests from "./httpService";
 
 const CustomerServices = {
@@ -54,10 +55,11 @@ const CustomerServices = {
   },
 
   // משיכת מסמכים מריווחית
-  getRivhitDocuments: async (customerId, from, to) => {
+  getRivhitDocuments: async (customerId, from, to, scope = 'sub') => {
     const params = new URLSearchParams();
     if (from) params.append('from', from);
     if (to) params.append('to', to);
+    if (scope) params.append('scope', scope); // 'sub' או 'main'
     const queryString = params.toString();
     return requests.get(`/rivhit/customers/${customerId}/documents${queryString ? `?${queryString}` : ''}`);
   },
@@ -67,9 +69,19 @@ const CustomerServices = {
     return requests.get('/rivhit/payment-types');
   },
 
-  // הנפקת חשבונית מס קבלה ידנית
+  // הנפקת חשבונית מס קבלה ידנית (על הזמנות בהקפה)
   issueInvoiceReceipt: async (body) => {
     return requests.post('/rivhit/manual/invoice-receipt', body);
+  },
+
+  // הנפקת חשבונית מס רגילה (ללא תשלום)
+  issueInvoice: async (body) => {
+    return requests.post('/rivhit/manual/invoice', body);
+  },
+
+  // הנפקת קבלה על חשבונית מס קיימת
+  issueReceipt: async (body) => {
+    return requests.post('/rivhit/manual/receipt', body);
   },
 
   // הנפקת תעודת משלוח ידנית
@@ -77,7 +89,7 @@ const CustomerServices = {
     return requests.post('/rivhit/manual/delivery-note', body);
   },
 
-  // הנפקת חשבונית מס זיכוי ידנית
+  // הנפקת חשבונית מס זיכוי על חשבונית/חשבונית מס קבלה קיימת מריווחית
   issueCreditInvoice: async (body) => {
     return requests.post('/rivhit/manual/credit-invoice', body);
   },

@@ -236,9 +236,9 @@ const useCustomerSubmit = (customerId, customer) => {
               payload.password = sc.newPassword;
             }
 
-            if (sc.rivhitCustomerNumber != null && String(sc.rivhitCustomerNumber).trim()) {
-              payload.externalCustomerId = Number(String(sc.rivhitCustomerNumber).trim());
-            }
+            // תמיד שולחים externalCustomerId: מספר כשיש ערך, null כשהריק – כדי שהשרת יוכל לנקות ערך קיים
+            const rivhitTrimmed = sc.rivhitCustomerNumber != null ? String(sc.rivhitCustomerNumber).trim() : "";
+            payload.externalCustomerId = rivhitTrimmed ? Number(rivhitTrimmed) : null;
 
             return payload;
           })

@@ -12,6 +12,8 @@ import Loading from "@/components/preloader/Loading";
 import DropdownMenu from "@/components/menu/DropdownMenu";
 import DocumentIssueModal from "@/components/modal/DocumentIssueModal";
 import InvoiceReceiptForm from "@/components/customer/InvoiceReceiptForm";
+import InvoiceForm from "@/components/customer/InvoiceForm";
+import ReceiptForm from "@/components/customer/ReceiptForm";
 import DeliveryNoteForm from "@/components/customer/DeliveryNoteForm";
 import CreditInvoiceForm from "@/components/customer/CreditInvoiceForm";
 import { getDateRangeByPage } from "@/utils/dateUtils";
@@ -143,28 +145,34 @@ const CustomerDocuments = ({
                             </div>
 
                             {/* כפתור הפקת מסמך - רק אם יש externalCustomerId */}
-                            {externalCustomerId ? (
-                                <div className="relative">
-                                    <DropdownMenu
-                                        addMenu
-                                        title={t("IssueDocument")}
-                                        options={[
-                                            {
-                                                label: t("InvoiceReceipt"),
-                                                onClick: () => handleOpenModal('invoice-receipt'),
-                                            },
-                                            {
-                                                label: t("DeliveryNote"),
-                                                onClick: () => handleOpenModal('delivery-note'),
-                                            },
-                                            // {
-                                            //     label: t("CreditInvoice"),
-                                            //     onClick: () => handleOpenModal('credit-invoice'),
-                                            // },
-                                        ]}
-                                    />
-                                </div>
-                            ) : null}
+                            <div className="relative">
+                                <DropdownMenu
+                                    addMenu
+                                    title={t("IssueDocument")}
+                                    options={[
+                                        {
+                                            label: t("InvoiceReceipt") || "חשבונית מס קבלה",
+                                            onClick: () => handleOpenModal('invoice-receipt'),
+                                        },
+                                        {
+                                            label: t("Invoice") || "חשבונית מס",
+                                            onClick: () => handleOpenModal('invoice'),
+                                        },
+                                        {
+                                            label: t("Receipt") || "קבלה",
+                                            onClick: () => handleOpenModal('receipt'),
+                                        },
+                                        {
+                                            label: t("DeliveryNote") || "תעודת משלוח",
+                                            onClick: () => handleOpenModal('delivery-note'),
+                                        },
+                                        {
+                                            label: t("CreditInvoice") || "חשבונית זיכוי",
+                                            onClick: () => handleOpenModal('credit-invoice'),
+                                        },
+                                    ]}
+                                />
+                            </div>
                         </div>
 
                         {/* הודעת שגיאה */}
@@ -282,6 +290,20 @@ const CustomerDocuments = ({
                             onSuccess={handleModalClose}
                         />
                     )}
+                    {modalDocumentType === 'invoice' && (
+                        <InvoiceForm
+                            customer={customer}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
+                    {modalDocumentType === 'receipt' && (
+                        <ReceiptForm
+                            customer={customer}
+                            externalCustomerId={externalCustomerId}
+                            rivhitDocuments={rivhitDocuments}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
                     {modalDocumentType === 'delivery-note' && (
                         <DeliveryNoteForm
                             customer={customer}
@@ -291,6 +313,8 @@ const CustomerDocuments = ({
                     {modalDocumentType === 'credit-invoice' && (
                         <CreditInvoiceForm
                             customer={customer}
+                            externalCustomerId={externalCustomerId}
+                            rivhitDocuments={rivhitDocuments}
                             onSuccess={handleModalClose}
                         />
                     )}

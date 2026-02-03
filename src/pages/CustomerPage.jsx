@@ -37,14 +37,9 @@ const CustomerPage = () => {
         };
     };
 
-    // Rivhit externalCustomerId can be on main customer (root) or any sub-customer
+    // Rivhit externalCustomerId - נמצא על הלקוח הראשי (MainCustomer.externalCustomerId)
     const externalCustomerId = useMemo(() => {
-        if (customer?.externalCustomerId) {
-            return customer.externalCustomerId;
-        }
-        if (!customer?.subCustomers || !Array.isArray(customer.subCustomers)) return null;
-        const withRivhit = customer.subCustomers.find(sc => sc?.accounting?.externalCustomerId);
-        return withRivhit?.accounting?.externalCustomerId || null;
+        return customer?.externalCustomerId || null;
     }, [customer]);
 
     // סטייט לשמירת טווח התאריכים הנוכחי
@@ -58,7 +53,8 @@ const CustomerPage = () => {
         return () => CustomerServices.getRivhitDocuments(
             externalCustomerId,
             dateRange.from,
-            dateRange.to
+            dateRange.to,
+            'main' // תמיד מושכים מסמכים ברמת הלקוח הראשי
         );
     }, [externalCustomerId, dateRange.from, dateRange.to]);
 

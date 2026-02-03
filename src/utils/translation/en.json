@@ -1617,5 +1617,22 @@
   "Rivhit": "Rivhit",
   "Customer": "Customer",
   "DeleteMainCustomer": "Delete Main Customer",
-  "CustomerDeletedSuccessfully": "Customer deleted successfully"
+  "CustomerDeletedSuccessfully": "Customer deleted successfully",
+  "IssueInvoice": "Issue Invoice",
+  "IssueReceipt": "Issue Receipt",
+  "Invoice": "Invoice",
+  "Receipt": "Receipt",
+  "PleaseSelectInvoice": "Please select an invoice",
+  "CreditAmountExceedsInvoice": "Credit amount cannot exceed the original invoice total",
+  "SelectInvoiceForCredit": "Select invoice for credit",
+  "NoInvoicesAvailableForCredit": "No invoices available for credit",
+  "SelectedInvoice": "Selected invoice",
+  "MaxCreditAmount": "Maximum credit amount",
+  "OnInvoice": "On invoice",
+  "NoOrdersWithoutInvoice": "No orders without an invoice",
+  "SelectInvoiceForReceipt": "Select invoice for payment (receipt)",
+  "NoInvoicesAvailableForReceipt": "No invoices available for receipt",
+  "ViewInvoiceDoc": "View invoice",
+  "ViewReceipt": "View receipt",
+  "ViewCreditInvoice": "View credit invoice"
 }

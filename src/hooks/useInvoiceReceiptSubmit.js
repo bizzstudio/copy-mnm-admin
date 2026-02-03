@@ -44,18 +44,19 @@ const useInvoiceReceiptSubmit = (customer, onSuccess) => {
     // קריאת payments מ-useForm
     const payments = watch("payments") || [defaultPayment];
 
-    // סינון הזמנות בהקפה שלא שולמו מההזמנות של הלקוח
+    // סינון הזמנות בהקפה שלא שולמו ומבלי חשבונית מס או חשבונית מס קבלה
     const orders = useMemo(() => {
         if (!customer?.orders || !Array.isArray(customer.orders)) {
             return [];
         }
-        return customer.orders.filter(
-            (order) =>
-                order.paymentMethod === "credit" &&
-                !order.cardcom?.isPaid &&
-                !order.icredit?.isPaid &&
-                !order.accountingDocs?.invoiceReceipt?.url
-        );
+        return customer.orders.filter((order) => {
+            if (order.paymentMethod !== "credit") return false;
+            if (order.cardcom?.isPaid || order.icredit?.isPaid) return false;
+            // לא להציג הזמנה שיש לה כבר חשבונית מס או חשבונית מס קבלה
+            const hasInvoice = order.accountingDocs?.invoice?.url || order.accountingDocs?.invoice?.document_number;
+            const hasInvoiceReceipt = order.accountingDocs?.invoiceReceipt?.url || order.accountingDocs?.invoiceReceipt?.document_number;
+            return !hasInvoice && !hasInvoiceReceipt;
+        });
     }, [customer?.orders]);
 
     // טיפול בבחירת/ביטול בחירת הזמנה
