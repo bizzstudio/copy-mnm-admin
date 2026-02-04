@@ -40,7 +40,7 @@ const Login = () => {
                   defaultValue=""
                   label="Email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="username"
                   placeholder="נא להכניס כתובת דואר אלקטרוני תקינה"
                 />

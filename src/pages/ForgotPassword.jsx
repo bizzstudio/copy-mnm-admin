@@ -45,7 +45,7 @@ const ForgotPassword = () => {
                 register={register}
                 label="Email"
                 name="verifyEmail"
-                type="email"
+                type="text"
                 placeholder="example@gmail.com"
               />
               <Error errorName={errors.verifyEmail} />

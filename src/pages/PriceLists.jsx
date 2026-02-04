@@ -35,6 +35,7 @@ const PriceLists = () => {
     const { t } = useTranslation();
     const { toggleDrawer, lang } = useContext(SidebarContext);
     const { data, loading, error } = useAsync(PriceListServices.getAllPriceLists);
+    // console.log('price lists :>> ', data);
 
     const [isCheckAll, setIsCheckAll] = useState(false);
     const [isCheck, setIsCheck] = useState([]);

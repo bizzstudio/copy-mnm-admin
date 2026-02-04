@@ -68,39 +68,12 @@ const Customers = () => {
       <DeleteModal id={serviceId} title={title} />
       <PageTitle>{t("CustomersPage")}</PageTitle>
 
-      <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
-        <CardBody>
-          <form
-            onSubmit={handleSubmitUser}
-            className="flex flex-wrap justify-between items-center"
-          >
-            <UploadManyTwo
-              title="Customers"
-              exportData={data}
-              filename={filename}
-              isDisabled={isDisabled}
-              handleSelectFile={handleSelectFile}
-              handleUploadMultiple={handleUploadMultiple}
-              handleRemoveSelectFile={handleRemoveSelectFile}
-            />
-            <Button
-              onClick={handleAddCustomer}
-              className="h-12"
-            >
-              <span className="me-1.5">
-                <FiPlus />
-              </span>
-              {t("AddCustomer")}
-            </Button>
-          </form>
-        </CardBody>
-      </Card>
-
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody>
+          <div className="flex justify-between items-center gap-10">
           <form
             onSubmit={handleSubmitUser}
-            className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
+            className="py-3 grid gap-3 md:flex xl:flex w-full"
           >
             <div className="grow-0 md:grow lg:grow xl:grow">
               <Input
@@ -133,6 +106,16 @@ const Customers = () => {
               </div>
             </div>
           </form>
+          <Button
+              onClick={handleAddCustomer}
+              className="h-12"
+            >
+              <span className="me-1.5">
+                <FiPlus />
+              </span>
+              {t("AddCustomer")}
+            </Button>
+            </div>
         </CardBody>
       </Card>
 
