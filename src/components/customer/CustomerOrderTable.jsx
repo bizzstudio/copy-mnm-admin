@@ -4,6 +4,7 @@ import { TableCell, TableBody, TableRow, Badge } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { FiZoomIn, FiFileText, FiFile, FiPackage, FiDollarSign, FiRefreshCw } from "react-icons/fi";
+import { IoReceiptOutline } from "react-icons/io5";
 
 // Internal import
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -139,7 +140,7 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                   >
                     <Tooltip
                       id={`receipt-${order._id}`}
-                      Icon={FiDollarSign}
+                      Icon={IoReceiptOutline}
                       title={t("ViewReceipt")}
                       bgColor="#059669"
                     />

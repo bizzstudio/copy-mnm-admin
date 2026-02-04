@@ -141,7 +141,7 @@ const CustomerOrders = ({ customer }) => {
                                         <TableCell className="text-center">{t("Total")}</TableCell>
                                         <TableCell className="text-center">{t("PaymentStatus")}</TableCell>
                                         <TableCell className="text-center">{t("PaymentMethod")}</TableCell>
-                                        <TableCell className="text-center">{t("OrderStatus")}</TableCell>
+                                        <TableCell className="text-center">{t("InternalStatus")}</TableCell>
                                         <TableCell className="text-center">{t("Actions")}</TableCell>
                                     </tr>
                                 </TableHeader>

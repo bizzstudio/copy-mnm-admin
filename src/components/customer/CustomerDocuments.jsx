@@ -225,6 +225,9 @@ const CustomerDocuments = ({
                                                         {t("DocumentNumber")}
                                                     </TableCell>
                                                     <TableCell className="text-center">
+                                                        {t("Customer")}
+                                                    </TableCell>
+                                                    <TableCell className="text-center">
                                                         {t("Date")}
                                                     </TableCell>
                                                     <TableCell className="text-center">

@@ -358,7 +358,7 @@
   "AddExtraDescription": "הוסף את הערכים הנוספים שלך ואת המידע הדרוש מכאן",
   "OrdersPageTitle": "הזמנות",
   "OrdersSearchPhone": "חפש בטלפון",
-  "OrderStatus": "סטטוס",
+  "InternalStatus": "סטטוס פנימי",
   "PageOrderDelivered": "נמסר",
   "PageOrderPending": "ממתין",
   "PageOrderProcessing": "מעבד",

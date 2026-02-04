@@ -403,7 +403,7 @@
   "AddExtraDescription": "Add your Extra values and necessary information from here",
   "OrdersPageTitle": "Orders",
   "OrdersSearchPhone": "Search by phone",
-  "OrderStatus": "Status",
+  "InternalStatus": "Internal Status",
   "PageOrderDelivered": "Delivered",
   "PageOrderPending": "Pending",
   "PageOrderProcessing": "Processing",

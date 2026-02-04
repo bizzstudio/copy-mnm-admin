@@ -41,7 +41,7 @@ const CreditInvoiceForm = ({ customer, externalCustomerId, rivhitDocuments, onSu
             if (!doc.is_accounting || doc.is_cancelled === true) return false;
             const name = (doc.document_type_name || "").trim();
             if (Number(doc.document_type) === 3) return false; // 3 = חשבונית מס זיכוי
-            return name === "חשבונית מס" || doc.is_invoice_receipt === true;
+            return name === "חשבונית מס" || doc.is_invoice_receipt === true || doc.document_type === 2;
         });
     }, [rivhitDocuments]);
 
@@ -52,6 +52,13 @@ const CreditInvoiceForm = ({ customer, externalCustomerId, rivhitDocuments, onSu
     const handleInvoiceSelect = (docNumber) => {
         setSelectedInvoice(docNumber === selectedInvoice ? null : docNumber);
     };
+
+    // תקינות לכפתור (תצוגה בלבד – העצירה בפועל ב-onSubmit)
+    const isSubmitValid =
+        !!selectedInvoice &&
+        !!amount &&
+        parseFloat(amount) > 0 &&
+        (!selectedInvoiceData || parseFloat(amount) <= parseFloat(selectedInvoiceData.amount || 0));
 
     // טיפול בשליחת הטופס
     const onSubmit = async (data) => {
@@ -287,8 +294,8 @@ const CreditInvoiceForm = ({ customer, externalCustomerId, rivhitDocuments, onSu
                 </button>
                 <button
                     type="submit"
-                    disabled={loading || !selectedInvoice || !amount || parseFloat(amount) <= 0}
-                    className={`px-6 py-2 text-sm font-medium text-white bg-mainColor rounded-lg hover:bg-mainColor-dark transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${selectedInvoice && amount && parseFloat(amount) > 0 ? "cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
+                    disabled={loading}
+                    className={`px-6 py-2 text-sm font-medium text-white bg-mainColor rounded-lg hover:bg-mainColor-dark transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitValid ? "cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
                 >
                     {loading && (
                         <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>

@@ -27,21 +27,23 @@ const SelectStatus = ({ id, order }) => {
     }
   }, [order, data]);
 
-  const handleChangeStatus = async (id, status, password) => {
+  const handleConfirmChange = async () => {
+    if (!tempStatus) return;
     try {
-      await OrderServices.updateOrder(id, { status: status?.name, password });
+      await OrderServices.updateOrder(id, { status: tempStatus?.name });
       notifySuccess(t("Status updated successfully"));
       setCurrentStatus(tempStatus);
       setIsUpdate(true);
       setIsModalOpen(false);
     } catch (err) {
-      notifyError(t("Invalid password"));
+      notifyError(err?.response?.data?.message || t("Failed to update status"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleStatusChange = (selectedOption) => {
+    if (!selectedOption?.data) return;
     setTempStatus(selectedOption.data);
     setIsModalOpen(true);
   };
@@ -156,12 +158,13 @@ const SelectStatus = ({ id, order }) => {
     <>
       {isModalOpen && (
         <ChangStatusModal
-          yes={(password) => handleChangeStatus(id, tempStatus, password)}
+          yes={handleConfirmChange}
           cancel={() => setIsModalOpen(false)}
           status={tempStatus?.heName}
           isSubmitting={isSubmitting}
           setIsSubmitting={setIsSubmitting}
           userName={order?.user_info?.name + " " + order?.user_info?.lastName}
+          requirePassword={false}
         />
       )}
 
@@ -171,6 +174,7 @@ const SelectStatus = ({ id, order }) => {
         options={options}
         styles={customStyles}
         isSearchable={false}
+        isDisabled={isSubmitting}
         menuPlacement="auto"
         menuPortalTarget={document.body}
         menuPosition="fixed"

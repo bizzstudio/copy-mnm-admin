@@ -28,7 +28,7 @@ const DocumentTable = ({ documents }) => {
         return (
             <TableBody>
                 <TableRow>
-                    <TableCell colSpan="6" className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <TableCell colSpan="7" className="text-center py-8 text-gray-500 dark:text-gray-400">
                         {t("NoDocumentsFound")}
                     </TableCell>
                 </TableRow>
@@ -57,6 +57,13 @@ const DocumentTable = ({ documents }) => {
                             </span>
                         </TableCell>
 
+                        {/* לקוח */}
+                        <TableCell className="text-center">
+                            <span className="text-sm text-gray-700 dark:text-gray-300">
+                                {doc.customer_firstname || doc.customer_name || '-'}
+                            </span>
+                        </TableCell>
+
                         {/* תאריך המסמך */}
                         <TableCell className="text-center">
                             <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -73,7 +80,7 @@ const DocumentTable = ({ documents }) => {
 
                         {/* הערות - עם קיצוץ אוטומטי אם ארוך מדי */}
                         <TableCell className="text-center">
-                            <span 
+                            <span
                                 className="text-sm text-gray-600 dark:text-gray-400 inline-block max-w-[25vw] overflow-hidden text-ellipsis whitespace-nowrap"
                                 title={doc.comments || doc.comment || ''}
                             >

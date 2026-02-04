@@ -5,20 +5,19 @@ import { IoClose, IoSwapHorizontalOutline } from 'react-icons/io5';
 import { useTranslation } from "react-i18next";
 import { notifyError } from "@/utils/toast";
 
-const ChangStatusModal = ({ yes, cancel, status, isSubmitting, setIsSubmitting, userName = '' }) => {
+const ChangStatusModal = ({ yes, cancel, status, isSubmitting, setIsSubmitting, userName = '', requirePassword = true }) => {
   const [password, setPassword] = useState("");
   const { t } = useTranslation();
 
   const handleChangeStatus = async () => {
     try {
-      if (!password) {
+      if (requirePassword && !password) {
         notifyError(t("Enter password"));
         return;
-      };
+      }
 
       setIsSubmitting(true);
-      // העברת הסיסמה שהוזנה
-      await yes(password);
+      await yes(requirePassword ? password : undefined);
     } catch (err) {
       notifyError(err ? err?.response?.data?.message : err?.message);
     } finally {
@@ -32,9 +31,9 @@ const ChangStatusModal = ({ yes, cancel, status, isSubmitting, setIsSubmitting, 
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
-          <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
+          <DialogPanel className="w-full max-w-sm transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 align-middle shadow-xl transition-all">
             {/* Header */}
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between mb-3">
               <div className="flex items-start gap-3 flex-1 pr-2">
                 <div className="mt-1 p-2 rounded-lg bg-red-50 dark:bg-red-900/20">
                   <IoSwapHorizontalOutline className="h-6 w-6 text-red-500" />
@@ -53,22 +52,23 @@ const ChangStatusModal = ({ yes, cancel, status, isSubmitting, setIsSubmitting, 
               </button>
             </div>
 
-            {/* Content */}
-            <div className="mb-3">
-              {/* שדה להזנת הסיסמה */}
-              <input
-                type="password"
-                placeholder={t("Enter password")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-4 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !isSubmitting) {
-                    handleChangeStatus();
-                  }
-                }}
-              />
-            </div>
+            {/* Content - שדה סיסמה רק כשנדרש */}
+            {requirePassword && (
+              <div className="mb-3">
+                <input
+                  type="password"
+                  placeholder={t("Enter password")}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-4 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && !isSubmitting) {
+                      handleChangeStatus();
+                    }
+                  }}
+                />
+              </div>
+            )}
 
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-600">
