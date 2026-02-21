@@ -21,6 +21,37 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
     const isCompleted = stage === 'completed' && !isLoading;
     const isReady = !stage && !isLoading && totalCount > 0; // File processed and ready for upload
 
+    const escapeCsvCell = (value) => {
+        const text = value === undefined || value === null ? "" : String(value);
+        if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+        return text;
+    };
+
+    const handleDownloadErrorsCsv = () => {
+        if (!errors.length) return;
+        const header = ["row", "product", "itemNumber", "barcode", "error"];
+        const lines = [header.join(",")];
+        errors.forEach((error) => {
+            lines.push([
+                escapeCsvCell(error.row || ""),
+                escapeCsvCell(error.product || ""),
+                escapeCsvCell(error.itemNumber || ""),
+                escapeCsvCell(error.barcode || ""),
+                escapeCsvCell(error.message || "")
+            ].join(","));
+        });
+        const content = `\uFEFF${lines.join("\n")}`;
+        const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `import-errors-${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     const getIcon = () => {
         if (hasFailures) {
             return <MdErrorOutline className="h-7 w-7 text-red-500 dark:text-red-400" />;
@@ -145,6 +176,12 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
                                         <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">
                                             {t("ErrorsDetails")} ({errors.length})
                                         </h3>
+                                        <button
+                                            onClick={handleDownloadErrorsCsv}
+                                            className="mr-auto px-3 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                        >
+                                            {t("DownloadErrorsCsv")}
+                                        </button>
                                     </div>
                                     <div className="overflow-x-auto rounded-lg border border-red-200 dark:border-red-800 max-h-96">
                                         <Table>
@@ -152,6 +189,7 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
                                                 <TableRow>
                                                     <TableCell className="text-right font-semibold text-gray-700 dark:text-gray-300">{t("Row")}</TableCell>
                                                     <TableCell className="text-right font-semibold text-gray-700 dark:text-gray-300">{t("ProductName")}</TableCell>
+                                                    <TableCell className="text-right font-semibold text-gray-700 dark:text-gray-300">{t("ProductItemNumber")}</TableCell>
                                                     <TableCell className="text-right font-semibold text-gray-700 dark:text-gray-300">{t("Barcode")}</TableCell>
                                                     <TableCell className="text-right font-semibold text-gray-700 dark:text-gray-300">{t("Error")}</TableCell>
                                                 </TableRow>
@@ -167,6 +205,11 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
                                                         <TableCell className="text-right">
                                                             <span className="text-gray-700 dark:text-gray-300">
                                                                 {error.product || '-'}
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className="text-right">
+                                                            <span className="text-gray-600 dark:text-gray-400 font-mono text-sm">
+                                                                {error.itemNumber || '-'}
                                                             </span>
                                                         </TableCell>
                                                         <TableCell className="text-right">

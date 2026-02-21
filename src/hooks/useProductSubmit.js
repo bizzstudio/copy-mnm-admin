@@ -41,6 +41,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       description: "",
       slug: "",
       barcode: "",
+      itemNumber: "",
       supplier: "",
       stock: 0,
       expiryDate: null,
@@ -101,6 +102,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
       const productData = {
         barcode: data.barcode || "",
+        itemNumber: data.itemNumber || "",
         title: {
           [language]: data.title,
         },
@@ -220,6 +222,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
               description: res.description?.[currentLanguage] || "",
               slug: res.slug || "",
               barcode: res.barcode || "",
+              itemNumber: res.itemNumber || "",
               supplier: res.supplier || "",
               stock: res.stock || 0,
               expiryDate: res.expiryDate ? new Date(res.expiryDate).toISOString().split('T')[0] : null,

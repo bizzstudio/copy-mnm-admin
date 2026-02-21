@@ -127,6 +127,22 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                       </div>
                     </div>
 
+                    {/* מספר פריט (פנימי לאדמין בלבד) */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t("ProductItemNumber")} />
+                      <div className="col-span-6">
+                        <InputArea
+                          register={register}
+                          required="false"
+                          label={t("ProductItemNumber")}
+                          name="itemNumber"
+                          type="text"
+                          placeholder={t("ProductItemNumber")}
+                        />
+                        <Error errorName={errors.itemNumber} />
+                      </div>
+                    </div>
+
                     {/* תיאור המוצר */}
                     <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
                       <LabelArea label={t("ProductDescription")} />

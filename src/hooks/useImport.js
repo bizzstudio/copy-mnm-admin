@@ -134,6 +134,7 @@ const useImport = () => {
                 return {
                     row: error.index || 0,
                     product: error.product || '',
+                    itemNumber: error.itemNumber || '',
                     barcode: error.barcode || '',
                     message: errorMessage
                 };
@@ -170,6 +171,7 @@ const useImport = () => {
                 return {
                     row: error.index || 0,
                     product: error.product || '',
+                    itemNumber: error.itemNumber || '',
                     barcode: error.barcode || '',
                     message: errorMessage
                 };
@@ -179,6 +181,7 @@ const useImport = () => {
                 errors.push({
                     row: 0,
                     product: '',
+                    itemNumber: '',
                     barcode: '',
                     message: err.message || 'שגיאה לא ידועה'
                 });

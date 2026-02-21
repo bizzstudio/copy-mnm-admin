@@ -58,6 +58,7 @@ const useExport = () => {
                 // Basic fields
                 row['_id'] = product._id || '';
                 row['productId'] = product.productId || '';
+                row['itemNumber'] = product.itemNumber || '';
                 row['barcode'] = product.barcode || '';
                 row['slug'] = product.slug || '';
 
