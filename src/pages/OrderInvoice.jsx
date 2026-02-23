@@ -91,9 +91,9 @@ const OrderInvoice = () => {
                   className="mb-2"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {globalSetting?.address}<br />
-                  {globalSetting?.contact}<br />
-                  {globalSetting?.email}
+                  {storeCustomizationSetting?.footer?.block4_address}<br />
+                  {storeCustomizationSetting?.footer?.block4_contact}<br />
+                  {storeCustomizationSetting?.footer?.block4_email}
                 </p>
               </div>
             </div>

@@ -49,9 +49,9 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
             />
           )}
           <p className="text-xs text-gray-600 text-right">
-            {globalSetting?.address}<br />
-            {globalSetting?.contact}<br />
-            {globalSetting?.email}
+            {storeCustomizationSetting?.footer?.block4_address}<br />
+            {storeCustomizationSetting?.footer?.block4_contact}<br />
+            {storeCustomizationSetting?.footer?.block4_email}
           </p>
         </div>
       </div>
