@@ -52,7 +52,10 @@ const OrderInvoice = () => {
     showingTranslateValue,
   } = useUtilsFunction();
 
-  const footer = storeCustomizationSetting?.footer;
+  const footer =
+    storeCustomizationSetting?.footer ??
+    storeCustomizationSetting?.setting?.footer ??
+    storeCustomizationSetting?.data?.footer;
   const block4LogoRaw = footer?.block4_logo;
   const block4Logo =
     typeof block4LogoRaw === "string"
