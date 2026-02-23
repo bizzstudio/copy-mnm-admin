@@ -20,6 +20,7 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
   const { currency, getNumberTwo, showDateTimeFormat, showDateFormat } = useUtilsFunction();
 
   const footer = storeCustomizationSetting?.footer;
+  const block4Logo = footer?.block4_logo;
   const block4Address =
     typeof footer?.block4_address === "string"
       ? footer.block4_address
@@ -48,9 +49,9 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
           </p>
         </div>
         <div className="text-left flex flex-col items-end">
-          {storeCustomizationSetting?.footer?.block4_logo && (
+          {block4Logo && (
             <img
-              src={storeCustomizationSetting?.footer?.block4_logo}
+              src={block4Logo}
               alt="Logo"
               width="100"
               className="mb-2"

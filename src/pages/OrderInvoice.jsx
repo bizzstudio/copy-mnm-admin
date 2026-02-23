@@ -53,6 +53,7 @@ const OrderInvoice = () => {
   } = useUtilsFunction();
 
   const footer = storeCustomizationSetting?.footer;
+  const block4Logo = footer?.block4_logo;
   const block4Address =
     typeof footer?.block4_address === "string"
       ? footer.block4_address
@@ -92,12 +93,14 @@ const OrderInvoice = () => {
                 </p>
               </div>
               <div className="text-left lg:text-right">
-                <img
-                  src={storeCustomizationSetting?.footer?.block4_logo}
-                  alt="Logo"
-                  width="110"
-                  className="mb-2"
-                />
+                {block4Logo && (
+                  <img
+                    src={block4Logo}
+                    alt="Logo"
+                    width="110"
+                    className="mb-2"
+                  />
+                )}
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {block4Address && <>{block4Address}<br /></>}
                   {block4Contact && <>{block4Contact}<br /></>}
