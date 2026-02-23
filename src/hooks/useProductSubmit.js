@@ -74,7 +74,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       const defaultPrices = priceLists.map(priceList => ({
         priceList: priceList._id,
         priceListName: priceList.name,
-        price: 0,
+        price: null,
         salePrice: null,
         warehousePrice: null,
         purchaseLimit: null
@@ -193,7 +193,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         const defaultPrices = priceLists.map(priceList => ({
           priceList: priceList._id,
           priceListName: priceList.name,
-          price: 0,
+          price: null,
           salePrice: null,
           warehousePrice: null,
           purchaseLimit: null
@@ -261,7 +261,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
                 return {
                   priceList: priceListId,
                   priceListName: priceListName,
-                  price: p.price || 0,
+                  price: p.price ?? null,
                   salePrice: p.salePrice || null,
                   warehousePrice: p.warehousePrice || null,
                   purchaseLimit: p.purchaseLimit || null
@@ -274,7 +274,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
                 const defaultPrices = priceLists.map(priceList => ({
                   priceList: priceList._id,
                   priceListName: priceList.name,
-                  price: 0,
+                  price: null,
                   salePrice: null,
                   warehousePrice: null,
                   purchaseLimit: null
@@ -319,12 +319,29 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
   // Handle price changes
   const handlePriceChange = (priceListId, field, value) => {
-    const newPrices = prices.map(p => {
-      if (p.priceList === priceListId) {
-        return { ...p, [field]: value };
+    const normalizedTargetId = String(priceListId);
+    let found = false;
+
+    const newPrices = prices.map((p) => {
+      if (String(p.priceList) === normalizedTargetId) {
+        found = true;
+        return { ...p, priceList: normalizedTargetId, [field]: value };
       }
       return p;
     });
+
+    // אם המחירון לא קיים ב-state (פער מזהים/נתונים), נוסיף אותו כדי שהקלט יהיה ניתן לעריכה
+    if (!found) {
+      newPrices.push({
+        priceList: normalizedTargetId,
+        priceListName: priceLists?.find((pl) => String(pl._id) === normalizedTargetId)?.name || "",
+        price: field === "price" ? value : null,
+        salePrice: field === "salePrice" ? value : null,
+        warehousePrice: field === "warehousePrice" ? value : null,
+        purchaseLimit: field === "purchaseLimit" ? value : null,
+      });
+    }
+
     setPrices(newPrices);
   };
 

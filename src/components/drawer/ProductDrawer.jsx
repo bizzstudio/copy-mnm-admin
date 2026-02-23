@@ -60,6 +60,14 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
   } = useProductSubmit(id, pendingBarcode, onBarcodeUsed);
 
   const slug = watch("slug");
+  const toInputValue = (value) => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") {
+      const trimmed = value.trim().toLowerCase();
+      if (trimmed === "undefined" || trimmed === "null" || trimmed === "nan") return "";
+    }
+    return value;
+  };
 
   return (
     <>
@@ -438,8 +446,8 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                 >
                   <div className="grid grid-cols-1 gap-4 mt-2">
                     {priceLists && priceLists.map((priceList, index) => {
-                      const currentPrice = prices.find(p => p.priceList === priceList._id) || {
-                        price: 0,
+                      const currentPrice = prices.find(p => String(p.priceList) === String(priceList._id)) || {
+                        price: null,
                         salePrice: null,
                         warehousePrice: null,
                         purchaseLimit: null
@@ -454,7 +462,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                               <Input
                                 type="number"
                                 step="0.01"
-                                value={currentPrice.price || ''}
+                                value={toInputValue(currentPrice.price)}
                                 onChange={(e) => handlePriceChange(priceList._id, 'price', e.target.value)}
                                 placeholder={t("Price")}
                               />
@@ -464,7 +472,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                               <Input
                                 type="number"
                                 step="0.01"
-                                value={currentPrice.salePrice || ''}
+                                value={toInputValue(currentPrice.salePrice)}
                                 onChange={(e) => handlePriceChange(priceList._id, 'salePrice', e.target.value)}
                                 placeholder={t("SalePrice")}
                               />
@@ -474,7 +482,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                               <Input
                                 type="number"
                                 step="0.01"
-                                value={currentPrice.warehousePrice || ''}
+                                value={toInputValue(currentPrice.warehousePrice)}
                                 onChange={(e) => handlePriceChange(priceList._id, 'warehousePrice', e.target.value)}
                                 placeholder={t("WarehousePrice")}
                               />
@@ -483,7 +491,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                               <LabelArea label={t("PurchaseLimit")} />
                               <Input
                                 type="number"
-                                value={currentPrice.purchaseLimit || ''}
+                                value={toInputValue(currentPrice.purchaseLimit)}
                                 onChange={(e) => handlePriceChange(priceList._id, 'purchaseLimit', e.target.value)}
                                 placeholder={t("PurchaseLimit")}
                               />
