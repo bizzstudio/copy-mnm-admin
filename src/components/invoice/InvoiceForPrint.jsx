@@ -58,7 +58,7 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
         <div className="text-left flex flex-col items-end">
           {block4Logo && (
             <img
-              src={block4Logo}
+              src="https://bizzstudio.s3.eu-north-1.amazonaws.com/HomePage/0a8515e5-4d05-429f-8616-cf065fbf8c1a_logo.webp"
               alt="Logo"
               width="100"
               className="mb-2"
