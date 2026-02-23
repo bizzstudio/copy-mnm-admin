@@ -20,7 +20,11 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
   const { currency, getNumberTwo, showDateTimeFormat, showDateFormat } = useUtilsFunction();
 
   const footer = storeCustomizationSetting?.footer;
-  const block4Logo = footer?.block4_logo;
+  const block4LogoRaw = footer?.block4_logo;
+  const block4Logo =
+    typeof block4LogoRaw === "string"
+      ? block4LogoRaw
+      : block4LogoRaw?.url || block4LogoRaw?.secure_url || "";
   const block4Address =
     typeof footer?.block4_address === "string"
       ? footer.block4_address
