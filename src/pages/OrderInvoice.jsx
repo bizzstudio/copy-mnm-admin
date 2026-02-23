@@ -100,14 +100,12 @@ const OrderInvoice = () => {
                 </p>
               </div>
               <div className="text-left lg:text-right">
-                {block4Logo && (
-                  <img
+                <img
                   src="https://bizzstudio.s3.eu-north-1.amazonaws.com/HomePage/0a8515e5-4d05-429f-8616-cf065fbf8c1a_logo.webp"
                   alt="Logo"
                     width="110"
                     className="mb-2"
                   />
-                )}
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   {block4Address && <>{block4Address}<br /></>}
                   {block4Contact && <>{block4Contact}<br /></>}
