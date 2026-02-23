@@ -16,8 +16,16 @@ import Status from "@/components/table/Status";
 import InfoField from "@/components/common/InfoField";
 
 const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSetting }, ref) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { currency, getNumberTwo, showDateTimeFormat, showDateFormat } = useUtilsFunction();
+
+  const footer = storeCustomizationSetting?.footer;
+  const block4Address =
+    typeof footer?.block4_address === "string"
+      ? footer.block4_address
+      : footer?.block4_address?.[i18n.language] || footer?.block4_address?.he || "";
+  const block4Contact = footer?.block4_contact ?? footer?.block4_phone ?? "";
+  const block4Email = footer?.block4_email ?? "";
 
   return (
     <div ref={ref} className="w-full p-6 bg-white" dir="rtl">
@@ -49,9 +57,9 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
             />
           )}
           <p className="text-xs text-gray-600 text-right">
-            {storeCustomizationSetting?.footer?.block4_address}<br />
-            {storeCustomizationSetting?.footer?.block4_contact}<br />
-            {storeCustomizationSetting?.footer?.block4_email}
+            {block4Address && <>{block4Address}<br /></>}
+            {block4Contact && <>{block4Contact}<br /></>}
+            {block4Email}
           </p>
         </div>
       </div>

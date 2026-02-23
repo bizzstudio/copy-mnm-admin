@@ -28,7 +28,7 @@ import CollapsibleSection from "@/components/common/CollapsibleSection";
 import InfoField from "@/components/common/InfoField";
 
 const OrderInvoice = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { mode } = useContext(WindmillContext);
   const { id } = useParams();
   const printRef = useRef();
@@ -51,6 +51,14 @@ const OrderInvoice = () => {
     getNumberTwo,
     showingTranslateValue,
   } = useUtilsFunction();
+
+  const footer = storeCustomizationSetting?.footer;
+  const block4Address =
+    typeof footer?.block4_address === "string"
+      ? footer.block4_address
+      : footer?.block4_address?.[i18n.language] || footer?.block4_address?.he || "";
+  const block4Contact = footer?.block4_contact ?? footer?.block4_phone ?? "";
+  const block4Email = footer?.block4_email ?? "";
 
   console.log('ORDER INVOICE :>> ', data);
 
@@ -91,9 +99,9 @@ const OrderInvoice = () => {
                   className="mb-2"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {storeCustomizationSetting?.footer?.block4_address}<br />
-                  {storeCustomizationSetting?.footer?.block4_contact}<br />
-                  {storeCustomizationSetting?.footer?.block4_email}
+                  {block4Address && <>{block4Address}<br /></>}
+                  {block4Contact && <>{block4Contact}<br /></>}
+                  {block4Email}
                 </p>
               </div>
             </div>
