@@ -7,7 +7,7 @@ import { SidebarContext } from "@/context/SidebarContext";
 import PriceListServices from "@/services/PriceListServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
-const usePriceListSubmit = (id) => {
+const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows = () => {}) => {
     const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
         useContext(SidebarContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,6 +24,12 @@ const usePriceListSubmit = (id) => {
 
             if (id) {
                 const res = await PriceListServices.updatePriceList(id, priceListData);
+
+                if (preparedImportRows.length > 0) {
+                    await PriceListServices.importPriceListPrices(id, { rows: preparedImportRows });
+                    clearPreparedImportRows();
+                }
+
                 setIsUpdate(true);
                 setIsSubmitting(false);
                 notifySuccess(res.message);

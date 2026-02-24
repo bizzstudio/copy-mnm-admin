@@ -1636,5 +1636,10 @@
   "NoInvoicesAvailableForReceipt": "No invoices available for receipt",
   "ViewInvoiceDoc": "View invoice",
   "ViewReceipt": "View receipt",
-  "ViewCreditInvoice": "View credit invoice"
+  "ViewCreditInvoice": "View credit invoice",
+  "ImportPricesByFile": "Import prices from file",
+  "UploadExcelFile": "Upload Excel file",
+  "UpdatePriceListFirst": "Save the price list first, then import prices.",
+  "PriceListImportColumnsHint": "Supported columns: barcod, price, מחיר מחסן",
+  "PriceListImportPendingSave": "{{count}} rows prepared. Changes will be applied only after clicking Save."
 }

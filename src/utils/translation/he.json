@@ -1671,5 +1671,10 @@
   "NoInvoicesAvailableForReceipt": "אין חשבוניות מס זמינות לתשלום",
   "ViewInvoiceDoc": "צפייה בחשבונית מס",
   "ViewReceipt": "צפייה בקבלה",
-  "ViewCreditInvoice": "צפייה בחשבונית זיכוי"
+  "ViewCreditInvoice": "צפייה בחשבונית זיכוי",
+  "ImportPricesByFile": "ייבוא מחירים מקובץ",
+  "UploadExcelFile": "העלאת קובץ אקסל",
+  "UpdatePriceListFirst": "יש לשמור קודם את המחירון ורק אחר כך לייבא מחירים.",
+  "PriceListImportColumnsHint": "עמודות נתמכות: ברקוד, מחיר ומחיר מחסן",
+  "PriceListImportPendingSave": "הוכנו {{count}} שורות. השינויים ייכנסו למסד הנתונים רק בלחיצה על שמירה."
 }

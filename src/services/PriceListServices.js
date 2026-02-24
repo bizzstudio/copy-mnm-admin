@@ -21,6 +21,12 @@ const PriceListServices = {
         return requests.put(`/price-list/${id}`, body);
     },
 
+    // Import prices by barcode for a specific price list
+    importPriceListPrices: async (id, body, options = {}) => {
+        const query = options?.dryRun ? "?dryRun=true" : "";
+        return requests.post(`/price-list/${id}/import${query}`, body);
+    },
+
     // Delete a price list by ID
     deletePriceList: async (id) => {
         return requests.delete(`/price-list/${id}`);

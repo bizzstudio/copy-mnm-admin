@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardBody } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { MdListAlt } from "react-icons/md";
+import { FiUpload } from "react-icons/fi";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -10,11 +11,25 @@ import Error from "@/components/form/others/Error";
 import InputArea from "@/components/form/input/InputArea";
 import DrawerButton from "@/components/form/button/DrawerButton";
 import usePriceListSubmit from "@/hooks/usePriceListSubmit";
+import usePriceListImport from "@/hooks/usePriceListImport";
 import LabelArea from "../form/selectOption/LabelArea";
 import CollapsibleSection from "@/components/common/CollapsibleSection";
+import ImportResultsModal from "@/components/modal/ImportResultsModal";
 
 const PriceListDrawer = ({ id }) => {
     const { t } = useTranslation();
+
+    const {
+        fileInputRef,
+        importResults,
+        isImportModalOpen,
+        importStage,
+        preparedRows,
+        handleSelectFile,
+        handleUpload,
+        handleCloseImportModal,
+        clearPreparedRows,
+    } = usePriceListImport(id);
 
     const {
         register,
@@ -22,7 +37,7 @@ const PriceListDrawer = ({ id }) => {
         errors,
         handleSubmit,
         isSubmitting,
-    } = usePriceListSubmit(id);
+    } = usePriceListSubmit(id, preparedRows, clearPreparedRows);
 
     return (
         <>
@@ -69,6 +84,40 @@ const PriceListDrawer = ({ id }) => {
                                                 <Error errorName={errors.name} />
                                             </div>
                                         </div>
+                                        <div className="flex flex-col gap-1 col-span-12">
+                                            <LabelArea label={t("ImportPricesByFile")} />
+                                            <div>
+                                                <input
+                                                    ref={fileInputRef}
+                                                    type="file"
+                                                    accept=".xlsx,.xls"
+                                                    onChange={handleSelectFile}
+                                                    className="hidden"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    disabled={!id}
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
+                                                >
+                                                    <FiUpload />
+                                                    {t("UploadExcelFile")}
+                                                </button>
+                                                {!id && (
+                                                    <p className="text-xs text-gray-500 mt-2">
+                                                        {t("UpdatePriceListFirst")}
+                                                    </p>
+                                                )}
+                                                <p className="text-xs text-gray-500 mt-2">
+                                                    {t("PriceListImportColumnsHint")}
+                                                </p>
+                                                {preparedRows.length > 0 && (
+                                                    <p className="text-xs text-green-600 mt-2">
+                                                        {t("PriceListImportPendingSave", { count: preparedRows.length })}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </CollapsibleSection>
                             </div>
@@ -78,6 +127,14 @@ const PriceListDrawer = ({ id }) => {
                     </form>
                 </div>
             </Card>
+            <ImportResultsModal
+                isOpen={isImportModalOpen}
+                onClose={handleCloseImportModal}
+                results={importResults}
+                isLoading={importStage === "uploading" || importStage === "processing"}
+                stage={importStage}
+                onUpload={handleUpload}
+            />
         </>
     );
 };
