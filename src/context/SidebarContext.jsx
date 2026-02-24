@@ -45,7 +45,6 @@ export const SidebarProvider = ({ children }) => {
   const [priceLists, setPriceLists] = useState([]);
   const [paymentTypes, setPaymentTypes] = useState([]);
 
-  // const { socket } = useNotification();
 
   const closeSidebar = () => setIsSidebarOpen(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
