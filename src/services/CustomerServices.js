@@ -46,6 +46,22 @@ const CustomerServices = {
     return requests.put(`/customer/admin/${id}`, body);
   },
 
+  importPermittedBarcodes: async (id, body, mode = "replace") => {
+    return requests.post(`/customer/admin/${id}/permitted-barcodes/import?mode=${encodeURIComponent(mode)}`, body);
+  },
+
+  getPermittedProducts: async (id) => {
+    return requests.get(`/customer/admin/${id}/permitted-products`);
+  },
+
+  addPermittedProduct: async (id, body) => {
+    return requests.post(`/customer/admin/${id}/permitted-products/add`, body);
+  },
+
+  removePermittedProduct: async (id, body) => {
+    return requests.post(`/customer/admin/${id}/permitted-products/remove`, body);
+  },
+
   createCustomerByAdmin: async (body) => {
     return requests.post(`/customer/admin/create`, body);
   },
