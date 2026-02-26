@@ -1678,12 +1678,14 @@
   "PriceListImportColumnsHint": "עמודות נתמכות: ברקוד, מחיר ומחיר מחסן",
   "PriceListImportPendingSave": "הוכנו {{count}} שורות. השינויים ייכנסו למסד הנתונים רק בלחיצה על שמירה.",
   "PermittedProducts": "מוצרים מורשים",
-  "PermittedProductsTitle": "מוצרים מורשים (0)",
   "PermittedProductsDescription": "מוצרים שתתי-הלקוחות רשאים לראות.",
   "UploadPermittedBarcodesXLSX": "העלאת קובץ ברקודים מורשים XLSX",
   "UploadOneColumnXLSXDescription": "העלה קובץ XLSX עם עמודה אחת של ערכי ברקוד. פעולה זו תחליף את הרשימה המורשית.",
   "ChooseXLSXFile": "בחר קובץ XLSX",
   "RequiredColumnBarcode": "עמודה נדרשת: ברקוד / barcode",
   "SearchAllProducts": "חיפוש בכל המוצרים...",
+  "ProductsTheSubCustomersAreAllowedToSee":  "מוצרים שתתי-הלקוחות רשאים לראות.",
+  "UploadOneColumnXLSXWithBarcodeValues": "העלה קובץ XLSX עם עמודה אחת של ערכי ברקוד. פעולה זו תחליף את רשימת המוצרים המורשים.",
+  "NoRestrictionsYetAddingAProductWillCreateThePermittedList": "אין הגבלות עדיין. הוספת מוצר תיצור את רשימת המוצרים המורשים.",
   "NoRestrictionsYet": "אין הגבלות עדיין. הוספת מוצר תיצור את רשימת המוצרים המורשים."
 }
