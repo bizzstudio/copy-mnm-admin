@@ -1695,7 +1695,7 @@
   "AddProductsToPermittedList": "הוסף מוצרים לרשימה המורשית",
   "XLSXImportMode": "מצב ייבוא XLSX",
   "ChooseHowToApplyNewFile": "בחר כיצד להחיל את הקובץ החדש על המוצרים המורשים.",
-  "ReplaceOldProducts": "החלף מוצרים קיימים",
+  "ReplaceOldProducts": "החלף את כל המוצרים קיימים",
   "AddToExistingProducts": "הוסף למוצרים הקיימים",
   "SearchProducts": "חיפוש מוצרים...",
   "LoadingProducts": "טוען מוצרים..."
