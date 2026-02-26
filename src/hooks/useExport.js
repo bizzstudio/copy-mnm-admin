@@ -186,8 +186,46 @@ const useExport = () => {
         }
     }, [lang, priceLists]);
 
+    /**
+     * Download a sample Excel template for product import (column order: itemNumber, title, salePrice, offer, weight, supplier, kashrut, barcode, categories)
+     */
+    const downloadProductImportTemplate = useCallback(() => {
+        const headers = ['itemNumber', 'title', 'salePrice', 'offer', 'weight', 'supplier', 'kashrut', 'barcode', 'categories'];
+        const exampleRows = [
+            {
+                itemNumber: '10001',
+                title: 'דוגמה מוצר 1',
+                salePrice: 25.5,
+                offer: 22,
+                weight: 500,
+                supplier: 'ספק לדוגמה',
+                kashrut: 'כשר',
+                barcode: '7290012345678',
+                categories: 'פירות'
+            },
+            {
+                itemNumber: '10002',
+                title: 'דוגמה מוצר 2',
+                salePrice: 30,
+                offer: '',
+                weight: 1000,
+                supplier: '',
+                kashrut: 'כשרות מהדרין',
+                barcode: '7290012345679',
+                categories: 'ירקות,מצרכים'
+            }
+        ];
+        const data = [headers, ...exampleRows.map(row => headers.map(h => row[h] ?? ''))];
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+        XLSX.writeFile(workbook, 'product-import-template.xlsx');
+        notifySuccess(t('SampleTemplateDownloaded'));
+    }, []);
+
     return {
-        exportProductsToExcel
+        exportProductsToExcel,
+        downloadProductImportTemplate
     };
 };
 

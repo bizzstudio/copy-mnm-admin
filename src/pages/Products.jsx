@@ -63,7 +63,7 @@ const Products = () => {
   const filters = useProductFilter();
 
   // Import/Export hooks
-  const { exportProductsToExcel } = useExport();
+  const { exportProductsToExcel, downloadProductImportTemplate } = useExport();
   const {
     handleSelectFile,
     handleUploadMultiple,
@@ -233,6 +233,7 @@ const Products = () => {
         isLoading={loading}
         stage={importStage}
         onUpload={handleImportProducts}
+        showProductColumnHint
       />
 
       {/* Hidden file input for import */}
@@ -290,6 +291,15 @@ const Products = () => {
                   onClick: () => {
                     fileInputRef.current?.click();
                   }
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiDownload size={17} />
+                      {t("DownloadImportTemplate")}
+                    </div>
+                  ),
+                  onClick: downloadProductImportTemplate
                 },
                 {
                   label: (

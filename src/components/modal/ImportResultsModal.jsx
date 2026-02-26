@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { MdInfoOutline, MdCheckCircle, MdErrorOutline } from "react-icons/md";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 
-const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUpload }) => {
+const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUpload, showProductColumnHint }) => {
     const { t } = useTranslation();
 
     const successCount = results?.success || 0;
@@ -127,6 +127,11 @@ const ImportResultsModal = ({ isOpen, onClose, results, isLoading, stage, onUplo
                                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                                                 {t("FileReadyDescription", { count: totalCount })}
                                             </p>
+                                            {showProductColumnHint && (
+                                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3 max-w-md mx-auto">
+                                                    {t("ImportProductExcelColumns")}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
