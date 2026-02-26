@@ -1513,7 +1513,7 @@
   "ExportError": "Export error",
   "Selected": "Selected",
   "ImportFromExcel": "Import from Excel",
-  "ImportProductExcelColumns": "Recommended Excel column order: itemNumber, title, salePrice, offer, weight, supplier, kashrut, barcode, categories",
+  "ImportProductExcelColumns": "Recommended Excel column order: itemNumber, title, salePrice, warehousePrice, offer, weight, supplier, kashrut, barcode, categories",
   "DownloadImportTemplate": "Download import template",
   "SampleTemplateDownloaded": "Import template downloaded successfully",
   "FileProcessedSuccessfully": "File processed successfully",

@@ -1548,7 +1548,7 @@
   "ExportError": "שגיאה בייצוא",
   "Selected": "נבחר",
   "ImportFromExcel": "ייבוא מאקסל",
-  "ImportProductExcelColumns": "סדר עמודות מומלץ באקסל: itemNumber, title, salePrice, offer, weight, supplier, kashrut, barcode, categories",
+  "ImportProductExcelColumns": "סדר עמודות מומלץ באקסל: itemNumber, title, salePrice, warehousePrice (מחיר מחסן), offer, weight, supplier, kashrut, barcode, categories",
   "DownloadImportTemplate": "הורדת תבנית ייבוא",
   "SampleTemplateDownloaded": "תבנית הייבוא הורדה בהצלחה",
   "FileProcessedSuccessfully": "הקובץ עובד בהצלחה",

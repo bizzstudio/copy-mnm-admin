@@ -187,15 +187,16 @@ const useExport = () => {
     }, [lang, priceLists]);
 
     /**
-     * Download a sample Excel template for product import (column order: itemNumber, title, salePrice, offer, weight, supplier, kashrut, barcode, categories)
+     * Download a sample Excel template for product import (column order: itemNumber, title, salePrice, warehousePrice, offer, weight, supplier, kashrut, barcode, categories)
      */
     const downloadProductImportTemplate = useCallback(() => {
-        const headers = ['itemNumber', 'title', 'salePrice', 'offer', 'weight', 'supplier', 'kashrut', 'barcode', 'categories'];
+        const headers = ['itemNumber', 'title', 'salePrice', 'warehousePrice', 'offer', 'weight', 'supplier', 'kashrut', 'barcode', 'categories'];
         const exampleRows = [
             {
                 itemNumber: '10001',
                 title: 'דוגמה מוצר 1',
                 salePrice: 25.5,
+                warehousePrice: 18,
                 offer: 22,
                 weight: 500,
                 supplier: 'ספק לדוגמה',
@@ -207,6 +208,7 @@ const useExport = () => {
                 itemNumber: '10002',
                 title: 'דוגמה מוצר 2',
                 salePrice: 30,
+                warehousePrice: 21.5,
                 offer: '',
                 weight: 1000,
                 supplier: '',
