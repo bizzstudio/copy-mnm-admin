@@ -357,7 +357,7 @@ const CustomerPage = () => {
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                Permitted products {t("PermittedProducts")} ({permittedCount})
+                                {t("PermittedProducts")} ({permittedCount})
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-300">
                                 {t("ProductsTheSubCustomersAreAllowedToSee")}
@@ -459,7 +459,7 @@ const CustomerPage = () => {
                                     );
                                 })}
                                 {allProductsLoading && (
-                                    <p className="text-sm text-gray-500 p-3">Loading products...</p>
+                                    <p className="text-sm text-gray-500 p-3">{t("LoadingProducts")}</p>
                                 )}
                             </div>
                         </>
@@ -539,10 +539,10 @@ const CustomerPage = () => {
                         <DialogPanel className="w-full max-w-lg rounded-xl bg-white dark:bg-gray-800 shadow-xl">
                             <div className="p-5 border-b border-gray-200 dark:border-gray-700">
                                 <DialogTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                                    XLSX import mode
+                                    {t("XLSXImportMode")}
                                 </DialogTitle>
                                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                    Choose how to apply the new file to permitted products.
+                                    {t("ChooseHowToApplyNewFile")}
                                 </p>
                             </div>
                             <div className="p-5 space-y-3">
@@ -551,21 +551,21 @@ const CustomerPage = () => {
                                     onClick={() => handlePermittedUpload("replace")}
                                     className="w-full text-right px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                                 >
-                                    Replace old products
+                                    {t("ReplaceOldProducts")}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => handlePermittedUpload("merge")}
                                     className="w-full text-right px-4 py-3 rounded-md border border-blue-300 dark:border-blue-500 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                                 >
-                                    Add to existing products
+                                    {t("AddToExistingProducts")}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={closeImportModal}
                                     className="w-full text-center px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                                 >
-                                    Cancel
+                                    {t("Cancel")}
                                 </button>
                             </div>
                         </DialogPanel>
@@ -586,7 +586,7 @@ const CustomerPage = () => {
                                     onClick={() => setIsAddProductsModalOpen(false)}
                                     className="px-3 py-1 rounded border border-gray-300 dark:border-gray-600 text-sm"
                                 >
-                                    Close
+                                    {t("Close")}
                                 </button>
                             </div>
                             <div className="p-4">
@@ -600,7 +600,7 @@ const CustomerPage = () => {
                                             setModalSearchText(value);
                                             loadAllProducts(value);
                                         }}
-                                        placeholder="Search products..."
+                                        placeholder={t("SearchProducts")}
                                         className="w-full h-10 pl-10 pr-3 rounded-md border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-300"
                                     />
                                 </div>
@@ -623,7 +623,7 @@ const CustomerPage = () => {
                                             </button>
                                         </div>
                                     ))}
-                                    {allProductsLoading && <p className="text-sm text-gray-500 p-3">Loading products...</p>}
+                                    {allProductsLoading && <p className="text-sm text-gray-500 p-3">{t("LoadingProducts")}</p>}
                                 </div>
                             </div>
                         </DialogPanel>

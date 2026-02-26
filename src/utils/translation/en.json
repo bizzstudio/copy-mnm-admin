@@ -1652,5 +1652,16 @@
   "NoRestrictionsYet": "No restrictions yet. Adding a product will create the permitted list.",
   "NoRestrictionsYetAddingAProductWillCreateThePermittedList": "No restrictions yet. Adding a product will create the permitted list.",
   "UploadOneColumnXLSXWithBarcodeValues": "Upload one-column XLSX with barcode values. This will replace the permitted list.",
-  "PriceListImportPendingSave": "{{count}} rows prepared. Changes will be applied only after clicking Save."
+  "PriceListImportPendingSave": "{{count}} rows prepared. Changes will be applied only after clicking Save.",
+  "AddProducts": "Add Products",
+  "LoadingPermittedProducts": "Loading permitted products...",
+  "SearchPermittedProducts": "Search permitted products...",
+  "UnnamedProduct": "Unnamed product",
+  "AddProductsToPermittedList": "Add products to permitted list",
+  "XLSXImportMode": "XLSX import mode",
+  "ChooseHowToApplyNewFile": "Choose how to apply the new file to permitted products.",
+  "ReplaceOldProducts": "Replace old products",
+  "AddToExistingProducts": "Add to existing products",
+  "SearchProducts": "Search products...",
+  "LoadingProducts": "Loading products..."
 }
