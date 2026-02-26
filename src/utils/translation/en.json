@@ -1641,5 +1641,14 @@
   "UploadExcelFile": "Upload Excel file",
   "UpdatePriceListFirst": "Save the price list first, then import prices.",
   "PriceListImportColumnsHint": "Supported columns: barcod, price, מחיר מחסן",
+  "PermittedProducts": "Permitted Products",
+  "PermittedProductsTitle": "Permitted Products (0)",
+  "PermittedProductsDescription": "Products the sub-customers are allowed to see.",
+  "UploadPermittedBarcodesXLSX": "Upload permitted barcodes XLSX",
+  "UploadOneColumnXLSXDescription": "Upload one-column XLSX with barcode values. This will replace the permitted list.",
+  "ChooseXLSXFile": "Choose XLSX File",
+  "RequiredColumnBarcode": "Required column: barcode / barcode",
+  "SearchAllProducts": "Search all products...",
+  "NoRestrictionsYet": "No restrictions yet. Adding a product will create the permitted list.",
   "PriceListImportPendingSave": "{{count}} rows prepared. Changes will be applied only after clicking Save."
 }
