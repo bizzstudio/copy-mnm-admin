@@ -187,34 +187,34 @@ const useExport = () => {
     }, [lang, priceLists]);
 
     /**
-     * Download a sample Excel template for product import (column order: itemNumber, title, salePrice, warehousePrice, offer, weight, supplier, kashrut, barcode, categories)
+     * Download a sample Excel template for product import (Hebrew headers: מס' פריט, שם פריט, ברקוד, מחיר קנייה לפני מע"מ, מחיר מכירה לפני מע"מ, מחיר מבצע, משקל, שם ספק, כשרות, שם קבוצה)
      */
     const downloadProductImportTemplate = useCallback(() => {
-        const headers = ['itemNumber', 'title', 'salePrice', 'warehousePrice', 'offer', 'weight', 'supplier', 'kashrut', 'barcode', 'categories'];
+        const headers = ['מס\' פריט', 'שם פריט', 'ברקוד', 'מחיר קנייה לפני מע"מ', 'מחיר מכירה לפני מע"מ', 'מחיר מבצע', 'משקל', 'שם ספק', 'כשרות', 'שם קבוצה'];
         const exampleRows = [
             {
-                itemNumber: '10001',
-                title: 'דוגמה מוצר 1',
-                salePrice: 25.5,
-                warehousePrice: 18,
-                offer: 22,
-                weight: 500,
-                supplier: 'ספק לדוגמה',
-                kashrut: 'כשר',
-                barcode: '7290012345678',
-                categories: 'פירות'
+                'מס\' פריט': '10001',
+                'שם פריט': 'דוגמה מוצר 1',
+                'ברקוד': '7290012345678',
+                'מחיר קנייה לפני מע"מ': 18,
+                'מחיר מכירה לפני מע"מ': 25.5,
+                'מחיר מבצע': 22,
+                'משקל': 500,
+                'שם ספק': 'ספק לדוגמה',
+                'כשרות': 'כשר',
+                'שם קבוצה': 'פירות'
             },
             {
-                itemNumber: '10002',
-                title: 'דוגמה מוצר 2',
-                salePrice: 30,
-                warehousePrice: 21.5,
-                offer: '',
-                weight: 1000,
-                supplier: '',
-                kashrut: 'כשרות מהדרין',
-                barcode: '7290012345679',
-                categories: 'ירקות,מצרכים'
+                'מס\' פריט': '10002',
+                'שם פריט': 'דוגמה מוצר 2',
+                'ברקוד': '7290012345679',
+                'מחיר קנייה לפני מע"מ': 21.5,
+                'מחיר מכירה לפני מע"מ': 30,
+                'מחיר מבצע': '',
+                'משקל': 1000,
+                'שם ספק': '',
+                'כשרות': 'כשרות מהדרין',
+                'שם קבוצה': 'ירקות,מצרכים'
             }
         ];
         const data = [headers, ...exampleRows.map(row => headers.map(h => row[h] ?? ''))];
