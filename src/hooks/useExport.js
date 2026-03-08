@@ -39,130 +39,45 @@ const useExport = () => {
                 return;
             }
 
-            // Get all supported languages from first product or default to ['he', 'en']
-            const supportedLanguages = new Set();
-            products.forEach(product => {
-                if (product.title && typeof product.title === 'object') {
-                    Object.keys(product.title).forEach(lang => supportedLanguages.add(lang));
-                }
-                if (product.description && typeof product.description === 'object') {
-                    Object.keys(product.description).forEach(lang => supportedLanguages.add(lang));
-                }
-            });
-            const languages = supportedLanguages.size > 0 ? Array.from(supportedLanguages) : ['he', 'en'];
+            // פורמט זהה לייבוא: כותרות עברית ואותו סדר עמודות כמו בתבנית הייבוא
+            const headers = ['מס\' פריט', 'שם פריט', 'ברקוד', 'מחיר קנייה לפני מע"מ', 'מחיר מכירה לפני מע"מ', 'מחיר מבצע', 'משקל', 'שם ספק', 'כשרות', 'שם קבוצה'];
+            const defaultPriceListId = priceLists?.[0]?._id;
 
-            // Convert products to Excel format
             const excelData = products.map(product => {
+                const firstPrice = product.prices && Array.isArray(product.prices) && product.prices.length > 0
+                    ? (defaultPriceListId
+                        ? product.prices.find(p => (p.priceList?._id || p.priceList) === defaultPriceListId) || product.prices[0]
+                        : product.prices[0])
+                    : null;
+
                 const row = {};
-
-                // Basic fields
-                row['_id'] = product._id || '';
-                row['productId'] = product.productId || '';
-                row['itemNumber'] = product.itemNumber || '';
-                row['barcode'] = product.barcode || '';
-                row['slug'] = product.slug || '';
-
-                // Multilingual fields - each language gets its own column
-                languages.forEach(lang => {
-                    row[`title_${lang}`] = product.title?.[lang] || '';
-                    row[`description_${lang}`] = product.description?.[lang] || '';
-                });
-
-                // Categories - export as comma-separated slugs
+                row['מס\' פריט'] = product.itemNumber || '';
+                row['שם פריט'] = (product.title && typeof product.title === 'object' ? product.title.he : product.title) || '';
+                row['ברקוד'] = product.barcode || '';
+                row['מחיר קנייה לפני מע"מ'] = firstPrice?.warehousePrice ?? '';
+                row['מחיר מכירה לפני מע"מ'] = firstPrice?.price ?? '';
+                row['מחיר מבצע'] = firstPrice?.salePrice ?? '';
+                row['משקל'] = product.weight ?? '';
+                row['שם ספק'] = product.supplier || '';
+                row['כשרות'] = Array.isArray(product.kashrut) ? product.kashrut.join(',') : (product.kashrut || '');
                 if (product.categories && Array.isArray(product.categories)) {
-                    row['categories'] = product.categories
-                        .map(cat => {
-                            // If cat is an object with slug, return the slug
-                            if (typeof cat === 'object' && cat !== null && cat.slug) {
-                                return cat.slug;
-                            }
-                            // If cat is a string, return it
-                            if (typeof cat === 'string') {
-                                return cat;
-                            }
-                            // Otherwise return empty string
-                            return '';
-                        })
-                        .filter(slug => slug !== '') // Filter out empty strings
+                    row['שם קבוצה'] = product.categories
+                        .map(cat => (typeof cat === 'object' && cat !== null && cat.slug) ? cat.slug : (typeof cat === 'string' ? cat : ''))
+                        .filter(Boolean)
                         .join(',');
                 } else {
-                    row['categories'] = '';
+                    row['שם קבוצה'] = '';
                 }
-
-                // Images - comma-separated URLs
-                row['image'] = Array.isArray(product.image) ? product.image.join(',') : '';
-
-                // Stock fields
-                row['stock'] = product.stock || 0;
-                row['expiryDate'] = product.expiryDate ? dayjs(product.expiryDate).format('YYYY-MM-DD') : '';
-                row['lastStockUpdate'] = product.lastStockUpdate ? dayjs(product.lastStockUpdate).format('YYYY-MM-DD HH:mm') : '';
-                row['manageStock'] = product.manageStock ? 'true' : 'false';
-                row['minStockThreshold'] = product.minStockThreshold || '';
-                row['hasSentStockAlert'] = product.hasSentStockAlert ? 'true' : 'false';
-
-                // Sales
-                row['sales'] = product.sales || 0;
-
-                // Tags - comma-separated
-                row['tag'] = Array.isArray(product.tag) ? product.tag.join(',') : '';
-
-                // Prices - JSON.stringify for complex structure
-                // פורמט: [{priceList: "name", price: 100, salePrice: 90, warehousePrice: 80, purchaseLimit: 10}]
-                if (product.prices && Array.isArray(product.prices)) {
-                    const pricesForExport = product.prices.map(p => {
-                        const priceListName = p.priceList?.name ||
-                            priceLists?.find(pl => pl._id === p.priceList)?.name ||
-                            p.priceList;
-                        return {
-                            priceList: priceListName,
-                            price: p.price || 0,
-                            salePrice: p.salePrice || null,
-                            warehousePrice: p.warehousePrice || null,
-                            purchaseLimit: p.purchaseLimit || null
-                        };
-                    });
-                    row['prices'] = JSON.stringify(pricesForExport);
-                } else {
-                    row['prices'] = '[]';
-                }
-
-                // Kashrut - comma-separated
-                row['kashrut'] = Array.isArray(product.kashrut) ? product.kashrut.join(',') : '';
-
-                // Supplier
-                row['supplier'] = product.supplier || '';
-
-                // Warehouse and VAT
-                row['isWarehouseProduct'] = product.isWarehouseProduct ? 'true' : 'false';
-                row['isVatFree'] = product.isVatFree ? 'true' : 'false';
-
-                // Additional fields
-                row['sortCode'] = product.sortCode || '';
-                row['weight'] = product.weight || '';
-                row['weightUnit'] = product.weightUnit || '';
-                row['managementNotes'] = product.managementNotes || '';
-
-                // Status
-                row['status'] = product.status || 'show';
-
-                // Timestamps
-                row['createdAt'] = product.createdAt ? dayjs(product.createdAt).format('YYYY-MM-DD HH:mm') : '';
-                row['updatedAt'] = product.updatedAt ? dayjs(product.updatedAt).format('YYYY-MM-DD HH:mm') : '';
-
                 return row;
             });
 
-            // Create workbook and worksheet
+            const data = [headers, ...excelData.map(row => headers.map(h => row[h] ?? ''))];
             const workbook = XLSX.utils.book_new();
             workbook.Workbook = workbook.Workbook || {};
             workbook.Workbook.Views = [{ RTL: lang === 'he' }];
-            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
 
-            // Set column widths
-            const columnKeys = Object.keys(excelData[0] || {});
-            const columnWidths = columnKeys.map(key => ({
-                wch: Math.max(key.length + 5, 15)
-            }));
+            const columnWidths = headers.map((_, i) => ({ wch: Math.max(String(headers[i]).length + 2, 12) }));
             worksheet['!cols'] = columnWidths;
 
             // Add worksheet to workbook
