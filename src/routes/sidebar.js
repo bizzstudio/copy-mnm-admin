@@ -122,7 +122,7 @@ const sidebar = [
     routes: [
       {
         name: "ViewStore",
-        path: "http://localhost:3000",
+        path: "https://www.nmplus.co.il",
         outside: "store",
       },
       {
