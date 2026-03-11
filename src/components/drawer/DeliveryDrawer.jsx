@@ -81,7 +81,7 @@ const DeliveryDrawer = ({ id }) => {
                     <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
                       <LabelArea label={t("City")} />
                       <div className="col-span-6">
-                        <City setValue={setCity} placeholder={JSON.stringify(city)} />
+                        <City value={city} setValue={setCity} />
                       </div>
                     </div>
 
