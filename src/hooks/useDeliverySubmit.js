@@ -36,6 +36,13 @@ const useDeliverySubmit = (id) => {
       setIsSubmitting(false);
       return;
     }
+
+    // הוספת משלוח חדש – ללא ימים מסומנים, המשתמש בוחר
+    if (!id) {
+      setValue("days", []);
+      setDays([]);
+      return;
+    }
     
     if (id) {
       DeliveryServices.getDeliveryById(id)
