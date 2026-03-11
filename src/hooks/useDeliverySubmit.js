@@ -21,33 +21,15 @@ const useDeliverySubmit = (id) => {
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [city, setCity] = useState('');
-  // תמיד נקבע את כל הימים כברירת מחדל
-  const [days, setDays] = useState([
-    { name: "Sunday", value: 1 },
-    { name: "Monday", value: 2 },
-    { name: "Tuesday", value: 3 },
-    { name: "Wednesday", value: 4 },
-    { name: "Thursday", value: 5 },
-    { name: "Friday", value: 6 },
-    { name: "Saturday", value: 7 },
-  ]);
+  const [days, setDays] = useState([]);
 
   useEffect(() => {
     if (!isDrawerOpen) {
-      // איפוס הטופס כשה-drawer נסגר
       setValue("city", "");
       setValue("price", "");
       setValue("days", []);
       setCity('');
-      setDays([
-        { name: "Sunday", value: 1 },
-        { name: "Monday", value: 2 },
-        { name: "Tuesday", value: 3 },
-        { name: "Wednesday", value: 4 },
-        { name: "Thursday", value: 5 },
-        { name: "Friday", value: 6 },
-        { name: "Saturday", value: 7 },
-      ]);
+      setDays([]);
       clearErrors("city");
       clearErrors("price");
       clearErrors("days");
@@ -59,30 +41,12 @@ const useDeliverySubmit = (id) => {
       DeliveryServices.getDeliveryById(id)
         .then((res) => {
           const delivery = res;
-          console.log('delivery', delivery)
-          // setValue("name_of_region", delivery?.name_of_region);
           setValue("city", delivery?.city);
-          setCity(delivery?.city)
+          setCity(delivery?.city);
           setValue("price", delivery?.price);
-          // תמיד נקבע את כל הימים גם בעדכון
-          setValue("days", [
-            { name: "Sunday", value: 1 },
-            { name: "Monday", value: 2 },
-            { name: "Tuesday", value: 3 },
-            { name: "Wednesday", value: 4 },
-            { name: "Thursday", value: 5 },
-            { name: "Friday", value: 6 },
-            { name: "Saturday", value: 7 },
-          ]);
-          setDays([
-            { name: "Sunday", value: 1 },
-            { name: "Monday", value: 2 },
-            { name: "Tuesday", value: 3 },
-            { name: "Wednesday", value: 4 },
-            { name: "Thursday", value: 5 },
-            { name: "Friday", value: 6 },
-            { name: "Saturday", value: 7 },
-          ]);
+          const deliveryDays = Array.isArray(delivery?.days) ? delivery.days : [];
+          setValue("days", deliveryDays);
+          setDays(deliveryDays);
         })
         .catch((err) => {
           notifyError(err?.response?.data?.message || err?.message);
@@ -92,7 +56,6 @@ const useDeliverySubmit = (id) => {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    console.log('data', data)
 
     try {
       const verifyCity = () => {
@@ -103,25 +66,19 @@ const useDeliverySubmit = (id) => {
         }
       };
 
-      // תמיד נשלח את כל הימים
-      const allDays = [
-        { name: "Sunday", value: 1 },
-        { name: "Monday", value: 2 },
-        { name: "Tuesday", value: 3 },
-        { name: "Wednesday", value: 4 },
-        { name: "Thursday", value: 5 },
-        { name: "Friday", value: 6 },
-        { name: "Saturday", value: 7 },
-      ];
+      if (!days?.length) {
+        notifyError("יש לבחור לפחות יום משלוח אחד");
+        setIsSubmitting(false);
+        return;
+      }
 
       const deliveryData = {
         city: verifyCity(),
         price: data.price,
-        days: allDays, // תמיד כל הימים
+        days,
       };
 
       if (id) {
-        console.log("deliveryData update: ", deliveryData);
         await DeliveryServices.updateDelivery(id, deliveryData);
         notifySuccess("Delivery updated successfully!");
       } else {
