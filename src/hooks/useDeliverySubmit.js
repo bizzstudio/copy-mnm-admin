@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { SidebarContext } from "@/context/SidebarContext";
 
-const useDeliverySubmit = (id) => {
-  const { closeDrawer, setIsUpdate, isDrawerOpen } = useContext(SidebarContext);
+const useDeliverySubmit = (id, regionId) => {
+  const { closeDrawer, setIsUpdate, isDrawerOpen, deliveryRegionId } = useContext(SidebarContext);
+  const effectiveRegionId = regionId || deliveryRegionId;
 
   const {
     register,
@@ -26,45 +27,44 @@ const useDeliverySubmit = (id) => {
   useEffect(() => {
     if (!isDrawerOpen) {
       setValue("city", "");
-      setValue("price", "");
       setValue("days", []);
       setCity('');
       setDays([]);
       clearErrors("city");
-      clearErrors("price");
       clearErrors("days");
       setIsSubmitting(false);
       return;
     }
 
-    // הוספת משלוח חדש – ללא ימים מסומנים, המשתמש בוחר
+    // הוספת משלוח חדש – ללא ימים מסומנים, המשתמש בוחר. חובה לבחור אזור (regionId).
     if (!id) {
       setValue("days", []);
       setDays([]);
       return;
     }
-    
-    if (id) {
-      DeliveryServices.getDeliveryById(id)
-        .then((res) => {
-          const delivery = res;
-          setValue("city", delivery?.city);
-          setCity(delivery?.city);
-          setValue("price", delivery?.price);
-          const deliveryDays = Array.isArray(delivery?.days) ? delivery.days : [];
-          setValue("days", deliveryDays);
-          setDays(deliveryDays);
-        })
-        .catch((err) => {
-          notifyError(err?.response?.data?.message || err?.message);
-        });
-    }
+    DeliveryServices.getDeliveryById(id)
+      .then((res) => {
+        const delivery = res;
+        setValue("city", delivery?.city);
+        setCity(delivery?.city);
+        const deliveryDays = Array.isArray(delivery?.days) ? delivery.days : [];
+        setValue("days", deliveryDays);
+        setDays(deliveryDays);
+      })
+      .catch((err) => {
+        notifyError(err?.response?.data?.message || err?.message);
+      });
   }, [id, setValue, isDrawerOpen, clearErrors]);
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
 
     try {
+      if (!id && !effectiveRegionId) {
+        notifyError("יש לבחור אזור לפני הוספת יעד");
+        setIsSubmitting(false);
+        return;
+      }
       const verifyCity = () => {
         if (city) {
           return city;
@@ -81,8 +81,8 @@ const useDeliverySubmit = (id) => {
 
       const deliveryData = {
         city: verifyCity(),
-        price: data.price,
         days,
+        ...(effectiveRegionId && !id && { region: effectiveRegionId }),
       };
 
       if (id) {
