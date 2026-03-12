@@ -17,6 +17,7 @@ import useToggleDrawer from "@/hooks/useToggleDrawer";
 import AttributeServices from "@/services/AttributeServices";
 import CurrencyServices from "@/services/CurrencyServices";
 import DeliveryServices from "@/services/DeliveryServices";
+import RegionServices from "@/services/RegionServices";
 import OfferServices from "@/services/OfferServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import StatusServices from "@/services/StatusService";
@@ -25,7 +26,7 @@ import BlogServices from "@/services/BlogServices";
 import PriceListServices from "@/services/PriceListServices";
 
 const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
-  const { isModalOpen, closeModal, setIsUpdate } = useContext(SidebarContext);
+  const { isModalOpen, closeModal, setIsUpdate, deleteTargetType, setDeleteTargetType } = useContext(SidebarContext);
   const { setServiceId } = useToggleDrawer();
   const location = useLocation();
 
@@ -232,7 +233,15 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
       }
 
       if (location.pathname === "/deliveries") {
-        if (ids) {
+        if (deleteTargetType === "region") {
+          const res = await RegionServices.deleteRegion(id);
+          setIsUpdate(true);
+          notifySuccess(res?.message || "Region deleted");
+          setServiceId();
+          setDeleteTargetType("delivery");
+          closeModal();
+          setIsSubmitting(false);
+        } else if (ids) {
           const res = await DeliveryServices.deleteManyDelivery({
             ids: ids,
           });

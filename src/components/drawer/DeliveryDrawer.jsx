@@ -18,7 +18,7 @@ import DaysSelect from "../form/selectOption/DaysSelect";
 import City from '@/components/select/City';
 import CollapsibleSection from "@/components/common/CollapsibleSection";
 
-const DeliveryDrawer = ({ id }) => {
+const DeliveryDrawer = ({ id, regionId }) => {
   const { t } = useTranslation();
 
   // הבאת הערים בישראל
@@ -45,7 +45,7 @@ const DeliveryDrawer = ({ id }) => {
     setCity,
     days,
     setDays
-  } = useDeliverySubmit(id);
+  } = useDeliverySubmit(id, regionId);
 
   return (
     <>
@@ -85,23 +85,7 @@ const DeliveryDrawer = ({ id }) => {
                       </div>
                     </div>
 
-                    {/* מחיר */}
-                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
-                      <LabelArea label={t("Price")} />
-                      <div className="col-span-6">
-                        <Input
-                          {...register(`price`, {
-                            required: "Price is required!",
-                          })}
-                          name="price"
-                          type="number"
-                          placeholder={t("Price")}
-                        />
-                        <Error errorName={errors.price} />
-                      </div>
-                    </div>
-
-                    {/* ימים */}
+                    {/* ימים – מחיר המשלוח נקבע לפי כללי התמחור של האזור */}
                     <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
                       <LabelArea label={t("Days")} />
                       <div className="col-span-6">

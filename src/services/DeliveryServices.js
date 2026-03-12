@@ -1,8 +1,14 @@
 import requests from "./httpService";
 
+/** יעדי משלוח (עיר + ימים). חובה לשייך לאזור (regionId) – ראה RegionServices. */
 const DeliveryServices = {
   getAllDeliveries: async () => {
     return requests.get("/deliveries");
+  },
+
+  /** יעדים לפי אזור */
+  getDeliveriesByRegion: async (regionId) => {
+    return requests.get(`/delivery-regions/${regionId}/deliveries`);
   },
 
   getDeliveryById: async (id) => {

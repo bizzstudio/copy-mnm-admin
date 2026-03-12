@@ -42,6 +42,11 @@ export const SidebarProvider = ({ children }) => {
   const { i18n } = useTranslation();
   const [tabIndex, setTabIndex] = useState(0);
   const [serviceId, setServiceId] = useState("");
+  const [deliveryRegionId, setDeliveryRegionId] = useState(null);
+  /** 'region' | 'delivery' – איזה דרוור להציג בעמוד משלוחים */
+  const [deliveryDrawerContent, setDeliveryDrawerContent] = useState("delivery");
+  /** 'region' | 'delivery' – במסך משלוחים: מודאל המחיקה מוחק אזור או יעד */
+  const [deleteTargetType, setDeleteTargetType] = useState("delivery");
   const [priceLists, setPriceLists] = useState([]);
   const [paymentTypes, setPaymentTypes] = useState([]);
 
@@ -49,7 +54,10 @@ export const SidebarProvider = ({ children }) => {
   const closeSidebar = () => setIsSidebarOpen(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const closeDrawer = () => setIsDrawerOpen(false);
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setDeliveryRegionId(null);
+  };
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   const closeBulkDrawer = () => setIsBulkDrawerOpen(false);
@@ -232,6 +240,12 @@ export const SidebarProvider = ({ children }) => {
         setTabIndex,
         serviceId,
         setServiceId,
+        deliveryRegionId,
+        setDeliveryRegionId,
+        deliveryDrawerContent,
+        setDeliveryDrawerContent,
+        deleteTargetType,
+        setDeleteTargetType,
         statuses,
         setStatuses,
         statusesData,
