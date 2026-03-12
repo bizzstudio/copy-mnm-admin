@@ -226,6 +226,10 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                 <div className="space-y-4">
                                     {subCustomerFields.map((field, idx) => {
                                         const addressCity = watch(`subCustomers.${idx}.address.city`);
+                                        const subName = watch(`subCustomers.${idx}.name`);
+                                        const subLastName = watch(`subCustomers.${idx}.lastName`);
+                                        const displayName = [subName, subLastName].filter(Boolean).join(" ").trim()
+                                            || `${t("SubCustomer") || "Sub-customer"} #${idx + 1}`;
 
                                         return (
                                             <div
@@ -234,7 +238,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                             >
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                                        {t("SubCustomer") || "Sub-customer"} #{idx + 1}
+                                                        {displayName}
                                                     </div>
 
                                                     {isBusinessOrInstitutional && subCustomerFields.length > 1 && (
