@@ -100,17 +100,15 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.phone} />
                                 </div>
 
-                                {/* סוג לקוח */}
+                                {/* סוג לקוח – ברירת מחדל: לקוח מוסדי בלבד */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("CustomerType")} />
                                     <Select
                                         {...register("customerType", {
                                             required: `${t("CustomerType")} ${t("isRequired")}!`,
                                         })}
+                                        disabled
                                     >
-                                        <option value="casual">{t("CasualCustomer")}</option>
-                                        <option value="regular">{t("RegularCustomer")}</option>
-                                        <option value="business">{t("BusinessCustomer")}</option>
                                         <option value="institutional">{t("InstitutionalCustomer")}</option>
                                     </Select>
                                     <Error errorName={errors.customerType} />
