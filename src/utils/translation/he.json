@@ -1344,6 +1344,8 @@
   "UpdateStatusDescription": "עדכון מלקט (שם, טלפון, סטטוס)",
   "AddStatus": "הוספת סטטוס",
   "AddStatusDescription": "הוסף סטטוס חדש",
+  "SystemStatus": "סטטוס מערכת",
+  "SystemStatusDescription": "סטטוס מערכת (לא ניתן לעריכה לאחר השמירה)",
   "search": "חיפוש",
   "isVatFree": "פטור ממע״מ",
   "Status updated successfully": "סטטוס הזמנה השתנה בהצלחה",

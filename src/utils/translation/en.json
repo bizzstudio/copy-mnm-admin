@@ -1307,6 +1307,8 @@
   "UpdateStatusDescription": "Status update (name, phone, status)",
   "AddStatus": "Add Status",
   "AddStatusDescription": "Add a new status",
+  "SystemStatus": "System status",
+  "SystemStatusDescription": "System status (cannot be edited after save)",
   "search": "Search",
   "isVatFree": "Is Vat Free",
   "Status updated successfully": "Status updated successfully",

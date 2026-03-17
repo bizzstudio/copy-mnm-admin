@@ -31,6 +31,8 @@ const StatusDrawer = ({ id }) => {
     isSubmitting,
     tag,
     setTag,
+    isSystem,
+    setIsSystem,
   } = useStatusSubmit(id);
 
   return (
@@ -112,15 +114,35 @@ const StatusDrawer = ({ id }) => {
                       <div className="col-span-6">
                         <Input
                           {...register(`phone`, {
-                            required: t("Phone is required!"),
+                            required: isSystem ? false : t("Phone is required!"),
                           })}
                           name="phone"
                           type="tel"
                           placeholder={t("phone")}
+                          disabled={isSystem}
                         />
                         <Error errorName={errors.phone} />
                       </div>
                     </div>
+
+                    {/* סטטוס מערכת – רק בהוספת סטטוס חדש */}
+                    {!id && (
+                      <div className="flex flex-col gap-1 md:col-span-6 col-span-12 flex justify-end">
+                        <LabelArea label={t("SystemStatus")} />
+                        <div className="col-span-6 flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="status-isSystem"
+                            checked={isSystem}
+                            onChange={(e) => setIsSystem(e.target.checked)}
+                            className="rounded border-gray-300"
+                          />
+                          <label htmlFor="status-isSystem" className="text-sm text-gray-600 dark:text-gray-400">
+                            {t("SystemStatusDescription")}
+                          </label>
+                        </div>
+                      </div>
+                    )}
 
                     {/* סיסמה */}
                     <div className="flex flex-col gap-1 md:col-span-6 col-span-12">

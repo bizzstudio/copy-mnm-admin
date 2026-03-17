@@ -95,13 +95,13 @@ const StatusTable = ({ statuses, isCheck, setIsCheck, setServiceId }) => {
               {status.phone &&
                 <ActiveInActiveButtonStatus
                   id={status._id}
-                  status={status.isActive ? "Active" : "Inactive"} // מעביר את המצב הנוכחי של הסטטוס
-                  staff={false} // אם מדובר בסטטוס של staff, תוכל לעדכן זאת בהתאם
+                  status={status.isActive ? "Active" : "Inactive"}
+                  staff={false}
                 />}
             </TableCell>
 
             <TableCell className='flex justify-center'>
-              {status.phone &&
+              {status.phone && !status.isSystem &&
                 <button
                   onClick={() => { handleUpdate(status._id), setServiceId(status._id) }}
                   className="p-2 cursor-pointer text-gray-400 hover:text-customGreen-dark focus:outline-none"

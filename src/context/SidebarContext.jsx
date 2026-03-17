@@ -9,6 +9,16 @@ import { useTranslation } from "react-i18next";
 
 export const SidebarContext = createContext();
 
+/** אותו סדר כמו בעמוד הסטטוסים: קודם בלי טלפון, אחר כך עם טלפון */
+const sortStatusesLikeStatusesPage = (list) => {
+  if (!Array.isArray(list)) return list;
+  return [...list].sort((a, b) => {
+    if (a.phone && !b.phone) return 1;
+    if (!a.phone && b.phone) return -1;
+    return 0;
+  });
+};
+
 export const SidebarProvider = ({ children }) => {
   const resultsPerPage = 20;
   const searchRef = useRef("");
@@ -111,11 +121,11 @@ export const SidebarProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // הגדרת הסטטוסים בעת עליית המערכת
+    // הגדרת הסטטוסים בעת עליית המערכת (אותו סדר כמו בעמוד הסטטוסים)
     const facthStatusesData = async () => {
       try {
         const data = await StatusServices.getAllStatuses({ query: '' });
-        setStatusesData(data || []);
+        setStatusesData(sortStatusesLikeStatusesPage(data || []));
       } catch (error) {
         console.error("Error fetching statuses:", error);
       }
@@ -146,6 +156,21 @@ export const SidebarProvider = ({ children }) => {
     fetchPriceLists();
     fetchPaymentTypes();
   }, []);
+
+  // רענון רשימת הסטטוסים אחרי הוספה/עדכון סטטוס (כדי ש"העברה לליקוט" וכו' יופיעו בדרופדאון)
+  useEffect(() => {
+    if (!isUpdate) return;
+    const refetchStatuses = async () => {
+      try {
+        const data = await StatusServices.getAllStatuses({ query: '' });
+        setStatusesData(sortStatusesLikeStatusesPage(data || []));
+      } catch (e) {
+        console.error("Error refetching statuses:", e);
+      }
+      setIsUpdate(false);
+    };
+    refetchStatuses();
+  }, [isUpdate]);
 
   // ווידוא שהטוקן עדיין תקין
   useEffect(() => {
