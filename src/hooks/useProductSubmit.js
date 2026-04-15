@@ -50,6 +50,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       language: lang,
       isVatFree: true,
       isWarehouseProduct: false,
+      isComplementaryProduct: false,
       manageStock: false,
       sortCode: "",
       weight: null,
@@ -65,6 +66,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const expiryDate = watch("expiryDate");
   const isVatFree = watch("isVatFree");
   const isWarehouseProduct = watch("isWarehouseProduct");
+  const isComplementaryProduct = watch("isComplementaryProduct");
   const manageStock = watch("manageStock");
   const slug = watch("slug");
 
@@ -135,6 +137,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         kashrut: kashrut || [],
         supplier: data.supplier || "",
         isWarehouseProduct: isWarehouseProduct,
+        isComplementaryProduct: !!isComplementaryProduct,
         isVatFree: isVatFree,
         status: data.status || "show",
         sortCode: data.sortCode || "",
@@ -231,6 +234,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
               language: currentLanguage,
               isVatFree: res.isVatFree !== undefined ? res.isVatFree : true,
               isWarehouseProduct: res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false,
+              isComplementaryProduct: res.isComplementaryProduct !== undefined ? res.isComplementaryProduct : false,
               manageStock: res.manageStock !== undefined ? res.manageStock : false,
               sortCode: res.sortCode || "",
               weight: res.weight || null,
@@ -367,6 +371,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
     handleSelectLanguage,
     isVatFree,
     isWarehouseProduct,
+    isComplementaryProduct,
     manageStock,
     supplier,
     stock,

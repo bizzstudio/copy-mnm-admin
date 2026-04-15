@@ -49,6 +49,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
     handleSelectLanguage,
     isVatFree,
     isWarehouseProduct,
+    isComplementaryProduct,
     manageStock,
     supplier,
     stock,
@@ -392,7 +393,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                     </div>
 
                     {/* מתגים */}
-                    <div className="flex items-center justify-evenly col-span-12 gap-6">
+                    <div className="flex flex-wrap items-center justify-evenly col-span-12 gap-6">
                       <div className="flex flex-col gap-1">
                         <LabelArea label={t("isVatFree")} />
                         <div className="col-span-6">
@@ -411,6 +412,17 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                             id="isWarehouseProduct"
                             handleProcess={(checked) => setValue("isWarehouseProduct", checked)}
                             processOption={isWarehouseProduct}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1" title={t("isComplementaryProductDesc")}>
+                        <LabelArea label={t("isComplementaryProduct")} />
+                        <div className="col-span-6">
+                          <SwitchToggle
+                            id="isComplementaryProduct"
+                            handleProcess={(checked) => setValue("isComplementaryProduct", checked)}
+                            processOption={isComplementaryProduct}
                           />
                         </div>
                       </div>

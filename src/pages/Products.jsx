@@ -360,7 +360,7 @@ const Products = () => {
 
       {/* Products Table */}
       {loading ? (
-        <TableLoading row={12} col={10} width={163} height={20} />
+        <TableLoading row={12} col={11} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : data?.products?.length !== 0 ? (
@@ -389,6 +389,9 @@ const Products = () => {
                 <TableCell className='text-center'>{t("offer")}</TableCell>
                 <TableCell className='text-center'>{t("CategoryTbl")}</TableCell>
                 <TableCell className='text-center'>{t("StockTbl")}</TableCell>
+                <TableCell className="text-center" title={t("isComplementaryProductDesc")}>
+                  {t("ComplementaryProductTbl")}
+                </TableCell>
                 <TableCell className='text-center'>{t("Barcode")}</TableCell>
                 <TableCell className="text-center">{t("DetailsTbl")}</TableCell>
                 <TableCell className="text-center">{t("ActionsTbl")}</TableCell>
