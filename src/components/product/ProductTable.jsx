@@ -1,10 +1,5 @@
 // src/components/product/ProductTable.jsx
-import {
-  Avatar,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@windmill/react-ui";
+import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import { t } from "i18next";
 import { FiZoomIn } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -22,6 +17,10 @@ import OfferServices from "@/services/OfferServices";
 import ProductServices from "@/services/ProductServices";
 import ProductPriceInput from "@/components/product/ProductPriceInput";
 import { notifyError } from "@/utils/toast";
+import {
+  DEFAULT_PRODUCT_IMAGE,
+  getPrimaryProductImageUrl,
+} from "@/utils/productImage";
 
 const ProductTable = ({
   products: initialProducts,
@@ -99,19 +98,18 @@ const ProductTable = ({
             {/* image & title */}
             <TableCell className='text-center'>
               <div className="flex items-center w-fit">
-                {product?.image && product.image[0] ? (
-                  <Avatar
-                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                    src={product.image[0]}
-                    alt="product"
-                  />
-                ) : (
-                  <Avatar
-                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                    src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
-                    alt="product"
-                  />
-                )}
+                <img
+                  src={
+                    getPrimaryProductImageUrl(product) ||
+                    DEFAULT_PRODUCT_IMAGE
+                  }
+                  alt=""
+                  className="hidden md:block ml-2 h-10 w-10 shrink-0 rounded-full object-cover bg-gray-50 p-0.5 shadow-none ring-1 ring-gray-100 dark:ring-gray-600"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                  }}
+                />
                 <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
                   {showingTranslateValue(product?.title)}
                 </div>

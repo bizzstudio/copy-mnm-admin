@@ -36,6 +36,7 @@ const Popups = lazy(() => import("@/pages/Popups"));
 const Messages = lazy(() => import("@/pages/Messages"));
 const Blogs = lazy(() => import("@/pages/Blogs"));
 const PriceLists = lazy(() => import("@/pages/PriceLists"));
+const FormSubmissions = lazy(() => import("@/pages/FormSubmissions"));
 
 /*
 //  * ⚠ These are internal routes!
@@ -186,6 +187,11 @@ const routes = [
   {
     path: "/price-lists",
     component: PriceLists,
+  },
+  {
+    path: "/forms/submissions",
+    component: FormSubmissions,
+    title: "FormsSubmissionsPageTitle",
   },
 ];
 

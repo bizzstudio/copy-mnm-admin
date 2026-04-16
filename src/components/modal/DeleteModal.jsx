@@ -23,6 +23,7 @@ import { notifyError, notifySuccess } from "@/utils/toast";
 import StatusServices from "@/services/StatusService";
 import PopupServices from "@/services/PopupServices";
 import BlogServices from "@/services/BlogServices";
+import FormServices from "@/services/FormServices";
 import PriceListServices from "@/services/PriceListServices";
 
 const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
@@ -335,6 +336,25 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
           setIsSubmitting(false);
         } else {
           const res = await BlogServices.deleteBlog(id);
+          setIsUpdate(true);
+          notifySuccess(res.message);
+          setServiceId();
+          closeModal();
+          setIsSubmitting(false);
+        }
+      }
+
+      if (location.pathname === "/forms/submissions") {
+        if (ids) {
+          const res = await FormServices.deleteManySubmissions({ ids });
+          setIsUpdate(true);
+          notifySuccess(res.message);
+          setIsCheck([]);
+          setServiceId();
+          closeModal();
+          setIsSubmitting(false);
+        } else {
+          const res = await FormServices.deleteSubmission(id);
           setIsUpdate(true);
           notifySuccess(res.message);
           setServiceId();

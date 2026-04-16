@@ -7,6 +7,7 @@ import {
   FiSlack,
   FiGlobe,
   FiTarget,
+  FiFileText,
 } from "react-icons/fi";
 import { FaRegWindowRestore } from "react-icons/fa6";
 import { GoDependabot } from "react-icons/go";
@@ -176,6 +177,12 @@ const sidebar = [
     icon: IoNewspaperOutline,
     name: "Blogs",
     path: "/blogs",
+  },
+
+  {
+    icon: FiFileText,
+    name: "Forms",
+    path: "/forms/submissions",
   },
 ];
 
