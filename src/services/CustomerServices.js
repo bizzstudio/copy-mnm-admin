@@ -105,6 +105,11 @@ const CustomerServices = {
     return requests.post('/rivhit/manual/delivery-note', body);
   },
 
+  // הנפקת תעודת-משלוח (סוג מסמך נפרד בריווחית, שם עם מקף)
+  issueDeliveryNoteHyphen: async (body) => {
+    return requests.post('/rivhit/manual/delivery-note-hyphen', body);
+  },
+
   // הנפקת חשבונית מס זיכוי על חשבונית/חשבונית מס קבלה קיימת מריווחית
   issueCreditInvoice: async (body) => {
     return requests.post('/rivhit/manual/credit-invoice', body);

@@ -163,8 +163,8 @@ const CustomerDocuments = ({
                                             onClick: () => handleOpenModal('receipt'),
                                         },
                                         {
-                                            label: t("DeliveryNote") || "תעודת משלוח",
-                                            onClick: () => handleOpenModal('delivery-note'),
+                                            label: t("DeliveryNoteHyphen") || "תעודת-משלוח",
+                                            onClick: () => handleOpenModal('delivery-note-hyphen'),
                                         },
                                         {
                                             label: t("CreditInvoice") || "חשבונית זיכוי",
@@ -311,6 +311,14 @@ const CustomerDocuments = ({
                         <DeliveryNoteForm
                             customer={customer}
                             onSuccess={handleModalClose}
+                            variant="default"
+                        />
+                    )}
+                    {modalDocumentType === 'delivery-note-hyphen' && (
+                        <DeliveryNoteForm
+                            customer={customer}
+                            onSuccess={handleModalClose}
+                            variant="hyphen"
                         />
                     )}
                     {modalDocumentType === 'credit-invoice' && (
