@@ -16,6 +16,24 @@ export function getOrderCartLineTotalIncl(item) {
   return p * q;
 }
 
+/** פטור ממע״מ במוצר (מתג «פטור ממע״מ» = כן → isVatFree: true) */
+export function isOrderCartLineVatExempt(item) {
+  const candidates = [
+    item?.isVatFree,
+    item?.is_vat_free,
+    item?.product?.isVatFree,
+    item?.product?.is_vat_free,
+    typeof item?.productId === "object" && item?.productId !== null
+      ? item.productId?.isVatFree ?? item.productId?.is_vat_free
+      : undefined,
+  ];
+  for (const v of candidates) {
+    if (v === true) return true;
+    if (v === false) return false;
+  }
+  return false;
+}
+
 export function lineAmountsFromInclusive(lineTotalIncl, vatRateInput) {
   const rate = normalizeVatRateFraction(vatRateInput);
   const incl = Number(lineTotalIncl) || 0;
@@ -26,9 +44,14 @@ export function lineAmountsFromInclusive(lineTotalIncl, vatRateInput) {
 }
 
 /**
- * פירוט מע״מ לשורת עגלה: עדיפות לשדות מהשרת אם קיימים, אחרת חלוקה מסכום כולל מע״מ.
+ * פירוט מע״מ לשורת עגלה: פטור ממע״מ במוצר → מע״מ 0; אחרת שדות מהשרת או חלוקה מסכום כולל מע״מ.
  */
 export function getOrderLineVatBreakdown(item, vatRateInput) {
+  if (isOrderCartLineVatExempt(item)) {
+    const incl = getOrderCartLineTotalIncl(item);
+    return { beforeVat: incl, vat: 0, incl };
+  }
+
   const fp = item?.finalPriceAtPurchase;
   if (
     fp &&
