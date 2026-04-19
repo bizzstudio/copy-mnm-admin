@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import logoDark from "@/assets/img/logo/logo-color.png";
 import AddressFormat from "../AddressFormat";
+import { getOrderLineVatBreakdown } from "@/utils/orderLineVat";
 
 Font.register({
   family: "Assistant",
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   tableCol: {
-    width: "25%",
+    width: "20%",
     textAlign: "left",
 
     // borderStyle: 'solid',
@@ -513,7 +514,24 @@ const InvoiceForDownload = ({
                       textAlign: "left",
                     }}
                   >
-                    {t("ItemPrice")}
+                    {t("LinePriceBeforeVat")}
+                  </Text>
+                </Text>
+              </View>
+
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>
+                  <Text
+                    style={{
+                      color: "#6b7280",
+                      fontSize: 9,
+                      fontFamily: "Assistant",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      textAlign: "center",
+                    }}
+                  >
+                    {t("LineVatAmount")}
                   </Text>
                 </Text>
               </View>
@@ -530,67 +548,91 @@ const InvoiceForDownload = ({
                       textAlign: "right",
                     }}
                   >
-                    {t("Amount")}
+                    {t("LinePriceInclVat")}
                   </Text>
                 </Text>
               </View>
             </View>
-            {data?.cart?.map((item, i) => (
-              <View key={i} style={styles.tableRow}>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>
-                    {item.title.he}
-                  </Text>
-                </View>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCellQuantity}>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        alignItems: "center",
-                        fontFamily: "Assistant",
-                      }}
-                    >
-                      {item.quantity}
+            {data?.cart?.map((item, i) => {
+              const vatRate =
+                globalSetting?.vat_rate ?? globalSetting?.vatRate ?? undefined;
+              const { beforeVat, vat, incl } = getOrderLineVatBreakdown(
+                item,
+                vatRate
+              );
+              return (
+                <View key={i} style={styles.tableRow}>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      {item.title.he}
                     </Text>
-                  </Text>
-                </View>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontWeight: "bold",
-                        textAlign: "left",
-                        fontFamily: "Assistant",
-                      }}
-                    >
-                      {currency}
-                      {getNumberTwo(item.price)}
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCellQuantity}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: "bold",
+                          textAlign: "center",
+                          alignItems: "center",
+                          fontFamily: "Assistant",
+                        }}
+                      >
+                        {item.quantity}
+                      </Text>
                     </Text>
-                  </Text>
-                </View>
+                  </View>
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: "bold",
+                          textAlign: "left",
+                          fontFamily: "Assistant",
+                        }}
+                      >
+                        {currency}
+                        {getNumberTwo(beforeVat)}
+                      </Text>
+                    </Text>
+                  </View>
 
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: "#ef4444",
-                        fontWeight: "bold",
-                        textAlign: "right",
-                        fontFamily: "Assistant",
-                      }}
-                    >
-                      {currency}
-                      {getNumberTwo(item.price * item.quantity)}
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: "bold",
+                          textAlign: "center",
+                          fontFamily: "Assistant",
+                        }}
+                      >
+                        {currency}
+                        {getNumberTwo(vat)}
+                      </Text>
                     </Text>
-                  </Text>
+                  </View>
+
+                  <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          color: "#ef4444",
+                          fontWeight: "bold",
+                          textAlign: "right",
+                          fontFamily: "Assistant",
+                        }}
+                      >
+                        {currency}
+                        {getNumberTwo(incl)}
+                      </Text>
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
+              );
+            })}
           </View>
 
           <View style={styles.invoiceThird}>

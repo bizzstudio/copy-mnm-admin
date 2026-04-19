@@ -49,8 +49,6 @@ const CashierOrderInvoice = () => {
         storeCustomizationSetting,
     } = useUtilsFunction();
 
-    console.log('CASHIER ORDER INVOICE :>> ', data);
-
     return (
         <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
 
@@ -134,15 +132,25 @@ const CashierOrderInvoice = () => {
                                             {t("Quantity")}
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            {t("ItemPrice")}
+                                            {t("LinePriceBeforeVat")}
                                         </TableCell>
-                                        <TableCell className="text-right">{t("Amount")}</TableCell>
+                                        <TableCell className="text-center">
+                                            {t("LineVatAmount")}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {t("LinePriceInclVat")}
+                                        </TableCell>
                                     </tr>
                                 </TableHeader>
                                 <Invoice
                                     data={data}
                                     currency={currency}
                                     getNumberTwo={getNumberTwo}
+                                    vatRatePercent={
+                                        globalSetting?.vat_rate ??
+                                        globalSetting?.vatRate ??
+                                        undefined
+                                    }
                                 />
                             </Table>
                         </TableContainer>

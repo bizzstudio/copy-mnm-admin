@@ -14,6 +14,7 @@ import {
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import Status from "@/components/table/Status";
 import InfoField from "@/components/common/InfoField";
+import { getOrderLineVatBreakdown } from "@/utils/orderLineVat";
 
 const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSetting }, ref) => {
   const { t, i18n } = useTranslation();
@@ -212,26 +213,45 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
               <TableCell className="font-bold text-sm py-2">{t("Sr")}</TableCell>
               <TableCell className="font-bold text-sm py-2">{t("ProductTitle")}</TableCell>
               <TableCell className="text-center font-bold text-sm py-2">{t("Quantity")}</TableCell>
-              <TableCell className="text-center font-bold text-sm py-2">{t("ItemPrice")}</TableCell>
-              <TableCell className="text-right font-bold text-sm py-2">{t("Amount")}</TableCell>
+              <TableCell className="text-center font-bold text-sm py-2">
+                {t("LinePriceBeforeVat")}
+              </TableCell>
+              <TableCell className="text-center font-bold text-sm py-2">
+                {t("LineVatAmount")}
+              </TableCell>
+              <TableCell className="text-right font-bold text-sm py-2">
+                {t("LinePriceInclVat")}
+              </TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {data?.cart?.map((item, i) => (
-              <TableRow key={i}>
-                <TableCell className="py-2 text-sm">{i + 1}</TableCell>
-                <TableCell className="py-2 text-sm font-semibold">{item.title.he}</TableCell>
-                <TableCell className="text-center py-2 text-sm font-bold">{item.quantity}</TableCell>
-                <TableCell className="text-center py-2 text-sm font-bold">
-                  {currency}
-                  {getNumberTwo(item.finalPriceAtPurchase?.perUnit)}
-                </TableCell>
-                <TableCell className="text-right py-2 text-sm font-bold text-red-500">
-                  {currency}
-                  {getNumberTwo(item.finalPriceAtPurchase?.total)}
-                </TableCell>
-              </TableRow>
-            ))}
+            {data?.cart?.map((item, i) => {
+              const vatRate =
+                globalSetting?.vat_rate ?? globalSetting?.vatRate ?? undefined;
+              const { beforeVat, vat, incl } = getOrderLineVatBreakdown(
+                item,
+                vatRate
+              );
+              return (
+                <TableRow key={i}>
+                  <TableCell className="py-2 text-sm">{i + 1}</TableCell>
+                  <TableCell className="py-2 text-sm font-semibold">{item.title.he}</TableCell>
+                  <TableCell className="text-center py-2 text-sm font-bold">{item.quantity}</TableCell>
+                  <TableCell className="text-center py-2 text-sm font-bold">
+                    {currency}
+                    {getNumberTwo(beforeVat)}
+                  </TableCell>
+                  <TableCell className="text-center py-2 text-sm font-bold">
+                    {currency}
+                    {getNumberTwo(vat)}
+                  </TableCell>
+                  <TableCell className="text-right py-2 text-sm font-bold text-red-500">
+                    {currency}
+                    {getNumberTwo(incl)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

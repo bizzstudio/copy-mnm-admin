@@ -52,6 +52,9 @@ const OrderInvoice = () => {
     showingTranslateValue,
   } = useUtilsFunction();
 
+  const vatRatePercent =
+    globalSetting?.vat_rate ?? globalSetting?.vatRate ?? undefined;
+
   const footer =
     storeCustomizationSetting?.footer ??
     storeCustomizationSetting?.setting?.footer ??
@@ -67,8 +70,6 @@ const OrderInvoice = () => {
       : footer?.block4_address?.[i18n.language] || footer?.block4_address?.he || "";
   const block4Contact = footer?.block4_contact ?? footer?.block4_phone ?? "";
   const block4Email = footer?.block4_email ?? "";
-
-  console.log('ORDER INVOICE :>> ', data);
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
@@ -294,14 +295,22 @@ const OrderInvoice = () => {
                       <TableCell>{t("Sr")}</TableCell>
                       <TableCell>{t("ProductTitle")}</TableCell>
                       <TableCell className="text-center">{t("Quantity")}</TableCell>
-                      <TableCell className="text-center">{t("ItemPrice")}</TableCell>
-                      <TableCell className="text-right">{t("Amount")}</TableCell>
+                      <TableCell className="text-center">
+                        {t("LinePriceBeforeVat")}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {t("LineVatAmount")}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {t("LinePriceInclVat")}
+                      </TableCell>
                     </tr>
                   </TableHeader>
                   <Invoice
                     data={data}
                     currency={currency}
                     getNumberTwo={getNumberTwo}
+                    vatRatePercent={vatRatePercent}
                   />
                 </Table>
               </TableContainer>
