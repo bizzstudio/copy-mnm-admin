@@ -20,7 +20,7 @@ const useExport = () => {
      * Export products to Excel - format matches server import expectations
      * @param {Array} selectedProductIds - Array of product IDs to export (empty = export all)
      */
-    const exportProductsToExcel = useCallback(async (selectedProductIds = []) => {
+    const exportProductsToExcel = useCallback(async (selectedProductIds = [], priceListIdForExport = null) => {
         try {
             let products = [];
 
@@ -54,12 +54,24 @@ const useExport = () => {
                 'כשרות',
                 'שם קבוצה',
             ];
-            const defaultPriceListId = priceLists?.[0]?._id;
+            // כמו עמוד מוצרים: המחירון שנבחר בטבלה, או isDefault ואז [0] (אותו סדר כמו ב-API)
+            const resolveExportPriceListId = () => {
+                if (priceListIdForExport != null && String(priceListIdForExport).trim() !== '') {
+                    return String(priceListIdForExport);
+                }
+                if (!priceLists?.length) return null;
+                const def = priceLists.find((pl) => pl.isDefault === true) || priceLists[0];
+                return def?._id != null ? String(def._id) : null;
+            };
+            const defaultPriceListId = resolveExportPriceListId();
 
             const excelData = products.map(product => {
                 const firstPrice = product.prices && Array.isArray(product.prices) && product.prices.length > 0
                     ? (defaultPriceListId
-                        ? product.prices.find(p => (p.priceList?._id || p.priceList) === defaultPriceListId) || product.prices[0]
+                        ? product.prices.find((p) => {
+                            const plId = p.priceList?._id ?? p.priceList;
+                            return plId != null && String(plId) === defaultPriceListId;
+                        }) || product.prices[0]
                         : product.prices[0])
                     : null;
 

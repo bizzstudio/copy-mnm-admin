@@ -156,7 +156,7 @@ const Products = () => {
 
   // Export function
   const handleExportToExcel = async () => {
-    await exportProductsToExcel(isCheck);
+    await exportProductsToExcel(isCheck, selectedPriceListId);
   };
 
   // Import function - called from modal when user clicks "Upload to System"
