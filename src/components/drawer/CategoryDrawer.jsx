@@ -163,6 +163,20 @@ const CategoryDrawer = ({ id, data }) => {
                       </div>
                     </div>
 
+                    {/* סידור תצוגה באתר */}
+                    <div className="flex flex-col gap-1 col-span-12 sm:col-span-6">
+                      <LabelArea label={t('catSortOrder')} />
+                      <div className="col-span-12">
+                        <Input
+                          {...register('sortOrder')}
+                          type="number"
+                          step="1"
+                          placeholder={t('catSortOrderPlaceholder')}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
                     {/* תיאור */}
                     <div className="flex flex-col gap-1 col-span-12">
                       <LabelArea label={t('Description')} />

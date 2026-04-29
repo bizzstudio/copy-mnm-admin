@@ -36,7 +36,7 @@ const useCategorySubmit = (id, data) => {
 
   // console.log("resData", resData);
 
-  const onSubmit = async ({ name, description, slug }) => {
+  const onSubmit = async ({ name, description, slug, sortOrder }) => {
     try {
       setIsSubmitting(true);
 
@@ -45,6 +45,10 @@ const useCategorySubmit = (id, data) => {
       //   description,
       //   language
       // );
+
+      const orderNum = sortOrder === "" || sortOrder === undefined || sortOrder === null
+        ? 0
+        : Number(sortOrder);
 
       const categoryData = {
         name: {
@@ -66,6 +70,7 @@ const useCategorySubmit = (id, data) => {
         coloredIcon: coloredImageUrl,
         status: published ? "show" : "hide",
         lang: language,
+        sortOrder: Number.isFinite(orderNum) ? orderNum : 0,
       };
 
       // console.log("category submit", categoryData);
@@ -110,6 +115,7 @@ const useCategorySubmit = (id, data) => {
       setValue("parentId");
       setValue("parentName");
       setValue("description");
+      setValue("sortOrder", 0);
       setValue("icon");
       setImageUrl("");
       setColoredImageUrl("");
@@ -127,6 +133,9 @@ const useCategorySubmit = (id, data) => {
         setChecked(data[0]._id);
       }
       return;
+    }
+    if (!id && isDrawerOpen) {
+      setValue("sortOrder", 0);
     }
     if (id) {
       (async () => {
@@ -150,6 +159,7 @@ const useCategorySubmit = (id, data) => {
             setImageUrl(res.icon);
             setColoredImageUrl(res.coloredIcon);
             setPublished(res.status === "show" ? true : false);
+            setValue("sortOrder", res.sortOrder ?? 0);
           }
         } catch (err) {
           notifyError(err ? err.response.data.message : err.message);

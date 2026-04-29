@@ -206,6 +206,7 @@ const ChildCategory = () => {
                   />
                 </TableCell>
                 <TableCell className="text-center">{t("catIdTbl")}</TableCell>
+                <TableCell className="text-center">{t("catSortOrderTbl")}</TableCell>
                 <TableCell className="text-center">{t("Slug")}</TableCell>
                 <TableCell>{t("catIconTbl")}</TableCell>
                 <TableCell>{t("Name")}</TableCell>

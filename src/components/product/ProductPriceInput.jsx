@@ -26,9 +26,14 @@ const ProductPriceInput = ({
     if (!selectedPriceListId || !product?.prices || product.prices.length === 0) {
       return 0;
     }
-    const priceItem = product.prices.find(
-      (p) => (p.priceList?._id || p.priceList) === selectedPriceListId
-    );
+    const priceItem = product.prices.find((p) => {
+      const plId = p.priceList?._id ?? p.priceList;
+      return (
+        selectedPriceListId != null &&
+        plId != null &&
+        String(plId) === String(selectedPriceListId)
+      );
+    });
     return priceItem ? priceItem.price : 0;
   };
 
@@ -66,9 +71,14 @@ const ProductPriceInput = ({
 
       // עדכון המוצר עם המחיר החדש
       const updatedPrices = [...(product.prices || [])];
-      const priceIndex = updatedPrices.findIndex(
-        (priceItem) => (priceItem.priceList?._id || priceItem.priceList) === selectedPriceListId
-      );
+      const priceIndex = updatedPrices.findIndex((priceItem) => {
+        const plId = priceItem.priceList?._id ?? priceItem.priceList;
+        return (
+          selectedPriceListId != null &&
+          plId != null &&
+          String(plId) === String(selectedPriceListId)
+        );
+      });
 
       if (priceIndex !== -1) {
         updatedPrices[priceIndex] = { ...updatedPrices[priceIndex], price: Number(newPrice) };

@@ -19,6 +19,10 @@ import ProductDrawer from "@/components/drawer/ProductDrawer";
 import Loading from "@/components/preloader/Loading";
 import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
+import {
+  DEFAULT_PRODUCT_IMAGE,
+  getPrimaryProductImageUrl,
+} from "@/utils/productImage";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -64,19 +68,18 @@ const ProductDetails = () => {
                   {/* Product Image */}
                   <div className="lg:col-span-1 flex justify-center lg:justify-start">
                     <div className="relative w-full max-w-sm aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 shadow-md">
-                      {data?.image && data.image[0] ? (
-                        <img
-                          src={data.image[0]}
-                          alt="product"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <img
-                          src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
-                          alt="product"
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+                      <img
+                        src={
+                          getPrimaryProductImageUrl(data) ||
+                          DEFAULT_PRODUCT_IMAGE
+                        }
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                        }}
+                      />
                     </div>
                   </div>
 

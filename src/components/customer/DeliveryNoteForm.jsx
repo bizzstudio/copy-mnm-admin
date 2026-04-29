@@ -8,13 +8,14 @@ import notifyApiResponse from "@/utils/notifyApiResponse";
 import { notifyError } from "@/utils/toast";
 
 /**
- * טופס הנפקת תעודת משלוח (ת"מ)
- * מאפשר בחירת הזמנה אחת שעדיין לא הונפקה לה תעודת משלוח + הערות
+ * טופס הנפקת תעודת משלוח (ת"מ) או תעודת-משלוח (מקף — סוג מסמך נפרד בריווחית)
+ * @param {'default'|'hyphen'} [variant='default']
  */
-const DeliveryNoteForm = ({ customer, onSuccess }) => {
+const DeliveryNoteForm = ({ customer, onSuccess, variant = "default" }) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const isHyphen = variant === "hyphen";
 
     const {
         register,
@@ -23,15 +24,18 @@ const DeliveryNoteForm = ({ customer, onSuccess }) => {
         formState: { errors },
     } = useForm();
 
-    // סינון הזמנות שעדיין לא הונפקה להן תעודת משלוח מההזמנות של הלקוח
+    // סינון הזמנות שעדיין לא הונפקה להן תעודת משלוח / תעודת-משלוח (לפי variant)
     const orders = useMemo(() => {
         if (!customer?.orders || !Array.isArray(customer.orders)) {
             return [];
         }
-        return customer.orders.filter(
-            (order) => !order.accountingDocs?.deliveryNote?.url
-        );
-    }, [customer?.orders]);
+        return customer.orders.filter((order) => {
+            if (isHyphen) {
+                return !order.accountingDocs?.deliveryNoteHyphen?.url;
+            }
+            return !order.accountingDocs?.deliveryNote?.url;
+        });
+    }, [customer?.orders, isHyphen]);
 
     // טיפול בבחירת הזמנה
     const handleOrderSelect = (orderId) => {
@@ -47,12 +51,15 @@ const DeliveryNoteForm = ({ customer, onSuccess }) => {
 
         try {
             setLoading(true);
-            const response = await CustomerServices.issueDeliveryNote({
+            const payload = {
                 orderId: selectedOrder,
                 notes: data.notes || "",
                 issue_date: data.issue_date || undefined,
                 issue_time: data.issue_time || undefined,
-            });
+            };
+            const response = isHyphen
+                ? await CustomerServices.issueDeliveryNoteHyphen(payload)
+                : await CustomerServices.issueDeliveryNote(payload);
 
             notifyApiResponse(response, true);
             if (onSuccess) {
@@ -79,7 +86,9 @@ const DeliveryNoteForm = ({ customer, onSuccess }) => {
                 {orders.length === 0 ? (
                     <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-center">
                         <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                            {t("NoOrdersWithoutDeliveryNote")}
+                            {isHyphen
+                                ? t("NoOrdersWithoutDeliveryNoteHyphen")
+                                : t("NoOrdersWithoutDeliveryNote")}
                         </p>
                     </div>
                 ) : (

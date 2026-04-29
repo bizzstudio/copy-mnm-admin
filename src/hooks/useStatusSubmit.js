@@ -19,12 +19,13 @@ const useStatusSubmit = (id) => {
   const { register, handleSubmit, setValue, clearErrors, formState: { errors } } = useForm();
 
   // react state
-  const [tag, setTag] = useState(true); // assuming status is active by default
+  const [tag, setTag] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [language, setLanguage] = useState(lang);
   const [slug, setSlug] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [hue, setHue] = useState(0); // הערך המתחלף של Hue
+  const [hue, setHue] = useState(0);
+  const [isSystem, setIsSystem] = useState(false);
 
   // handle click
   const onCloseModal = () => setOpenModal(false);
@@ -35,10 +36,11 @@ const useStatusSubmit = (id) => {
       const statusData = {
         name: data.name,
         heName: data.heName,
-        phone: data.phone,
+        phone: isSystem ? '' : (data.phone || ''),
         isActive: tag,
         color: data.statusColor,
         password: data.password || '',
+        ...(id ? {} : { isSystem: !!isSystem }),
       };
 
       if (id) {
@@ -69,7 +71,8 @@ const useStatusSubmit = (id) => {
       setSlug("");
       setLanguage(lang);
       setValue("language", language);
-      setTag(true); // reset to default active status
+      setTag(true);
+      setIsSystem(false);
       clearErrors("name");
       setValue("name", "");
       setValue("heName", "");
@@ -111,6 +114,8 @@ const useStatusSubmit = (id) => {
   return {
     tag,
     setTag,
+    isSystem,
+    setIsSystem,
     register,
     onSubmit,
     errors,

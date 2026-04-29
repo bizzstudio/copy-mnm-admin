@@ -42,6 +42,9 @@ const requests = {
   get: (url, body, headers) =>
     instance.get(url, body, headers).then(responseBody),
 
+  /** Full axios response (e.g. blob PDF) — Authorization header still applied */
+  getBlob: (url) => instance.get(url, { responseType: "blob" }),
+
   post: (url, body) => instance.post(url, body).then(responseBody),
 
   put: (url, body, headers) =>

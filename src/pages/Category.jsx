@@ -290,7 +290,7 @@ const Category = () => {
         name={showChild}
       />
       {loading ? (
-        <TableLoading row={12} col={8} width={163} height={20} />
+        <TableLoading row={12} col={9} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : serviceData?.length !== 0 ? (
@@ -309,6 +309,7 @@ const Category = () => {
                 </TableCell>
 
                 <TableCell className="text-center">{t("catIdTbl")}</TableCell>
+                <TableCell className="text-center">{t("catSortOrderTbl")}</TableCell>
                 <TableCell className="text-center">{t("Slug")}</TableCell>
                 <TableCell className="text-start">{t("catIconTbl")}</TableCell>
                 <TableCell className="text-start">{t("CatTbName")}</TableCell>

@@ -1,10 +1,5 @@
 // src/components/product/ProductTable.jsx
-import {
-  Avatar,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@windmill/react-ui";
+import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import { t } from "i18next";
 import { FiZoomIn } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -19,7 +14,13 @@ import Tooltip from "@/components/tooltip/Tooltip";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import useAsync from "@/hooks/useAsync";
 import OfferServices from "@/services/OfferServices";
+import ProductServices from "@/services/ProductServices";
 import ProductPriceInput from "@/components/product/ProductPriceInput";
+import { notifyError } from "@/utils/toast";
+import {
+  DEFAULT_PRODUCT_IMAGE,
+  getPrimaryProductImageUrl,
+} from "@/utils/productImage";
 
 const ProductTable = ({
   products: initialProducts,
@@ -31,6 +32,7 @@ const ProductTable = ({
   const { showingTranslateValue } = useUtilsFunction();
   const { data: offers, loading, error } = useAsync(() => OfferServices.getAllOffers());
   const [products, setProducts] = useState(initialProducts);
+  const [complementaryUpdatingId, setComplementaryUpdatingId] = useState(null);
 
   // רענון הרשימה כל פעם שמגיעים מוצרים חדשים בפרופס
   useEffect(() => {
@@ -52,6 +54,23 @@ const ProductTable = ({
     setIsCheck([...isCheck, id]);
     if (!checked) {
       setIsCheck(isCheck.filter((item) => item !== id));
+    }
+  };
+
+  const handleComplementaryToggle = async (e, product) => {
+    const checked = e.target.checked;
+    const id = product._id;
+    setComplementaryUpdatingId(id);
+    try {
+      await ProductServices.updateProduct(id, { isComplementaryProduct: checked });
+      setProducts((prev) =>
+        prev.map((p) => (p._id === id ? { ...p, isComplementaryProduct: checked } : p))
+      );
+    } catch (err) {
+      e.target.checked = !checked;
+      notifyError(err?.response?.data?.message || err?.message || t("Error"));
+    } finally {
+      setComplementaryUpdatingId(null);
     }
   };
 
@@ -79,19 +98,18 @@ const ProductTable = ({
             {/* image & title */}
             <TableCell className='text-center'>
               <div className="flex items-center w-fit">
-                {product?.image && product.image[0] ? (
-                  <Avatar
-                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                    src={product.image[0]}
-                    alt="product"
-                  />
-                ) : (
-                  <Avatar
-                    className="hidden p-1 ml-2 md:block bg-gray-50 shadow-none"
-                    src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
-                    alt="product"
-                  />
-                )}
+                <img
+                  src={
+                    getPrimaryProductImageUrl(product) ||
+                    DEFAULT_PRODUCT_IMAGE
+                  }
+                  alt=""
+                  className="hidden md:block ml-2 h-10 w-10 shrink-0 rounded-full object-cover bg-gray-50 p-0.5 shadow-none ring-1 ring-gray-100 dark:ring-gray-600"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                  }}
+                />
                 <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
                   {showingTranslateValue(product?.title)}
                 </div>
@@ -121,11 +139,26 @@ const ProductTable = ({
               </span>
             </TableCell>
 
-            {/* stock */}
+            {/* stock — כמות רק כשמופעל ניהול מלאי */}
             <TableCell className='text-center'>
               <span className="text-sm">
-                {product.manageStock ? (product.stock || 0) : t("UnlimitedStock")}
+                {product.manageStock ? (product.stock ?? 0) : t("UnlimitedStock")}
               </span>
+            </TableCell>
+
+            {/* מוצר משלים — עדכון מיידי */}
+            <TableCell className="text-center">
+              <CheckBox
+                type="checkbox"
+                name={`complementary-${product._id}`}
+                id={`complementary-${product._id}`}
+                disabled={complementaryUpdatingId === product._id}
+                isChecked={!!product.isComplementaryProduct}
+                handleClick={(e) => {
+                  e.stopPropagation();
+                  handleComplementaryToggle(e, product);
+                }}
+              />
             </TableCell>
 
             {/* barcode */}

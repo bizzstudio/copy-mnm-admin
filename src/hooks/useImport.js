@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { SidebarContext } from "@/context/SidebarContext";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { applyDefaultIsVatFreeForProductImportRow } from "@/utils/productFruitsVegetablesVat";
 
 /**
  * Hook for importing products from Excel files
@@ -119,7 +120,8 @@ const useImport = () => {
         setImportStage('uploading');
 
         try {
-            const res = await ProductServices.addAllProducts({ products: selectedFile });
+            const products = selectedFile.map(applyDefaultIsVatFreeForProductImportRow);
+            const res = await ProductServices.addAllProducts({ products });
 
             const summary = res.summary || {};
             const successCount = summary.succeeded || 0;

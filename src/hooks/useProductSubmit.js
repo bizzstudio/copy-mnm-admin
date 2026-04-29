@@ -8,6 +8,7 @@ import { SidebarContext } from "@/context/SidebarContext";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import useUtilsFunction from "./useUtilsFunction";
+import { categorySuggestsFruitsVegetablesVatFree } from "@/utils/productFruitsVegetablesVat";
 
 const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const location = useLocation();
@@ -48,8 +49,9 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       minStockThreshold: null,
       status: "show",
       language: lang,
-      isVatFree: true,
+      isVatFree: false,
       isWarehouseProduct: false,
+      isComplementaryProduct: false,
       manageStock: false,
       sortCode: "",
       weight: null,
@@ -65,8 +67,16 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const expiryDate = watch("expiryDate");
   const isVatFree = watch("isVatFree");
   const isWarehouseProduct = watch("isWarehouseProduct");
+  const isComplementaryProduct = watch("isComplementaryProduct");
   const manageStock = watch("manageStock");
   const slug = watch("slug");
+
+  // מוצר חדש: פטור ממע״מ רק כשקטגוריה מזוהה כפירות/ירקות; אחרת ברירת מחדל חייב במע״מ
+  useEffect(() => {
+    if (id) return;
+    const shouldVatFree = selectedCategory.some((c) => categorySuggestsFruitsVegetablesVatFree(c));
+    setValue("isVatFree", shouldVatFree);
+  }, [id, selectedCategory, setValue]);
 
   // יצירת מחירים ברירת מחדל לכל המחירונים
   useEffect(() => {
@@ -135,6 +145,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         kashrut: kashrut || [],
         supplier: data.supplier || "",
         isWarehouseProduct: isWarehouseProduct,
+        isComplementaryProduct: !!isComplementaryProduct,
         isVatFree: isVatFree,
         status: data.status || "show",
         sortCode: data.sortCode || "",
@@ -229,8 +240,9 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
               minStockThreshold: res.minStockThreshold || null,
               status: res.status || "show",
               language: currentLanguage,
-              isVatFree: res.isVatFree !== undefined ? res.isVatFree : true,
+              isVatFree: res.isVatFree !== undefined ? res.isVatFree : false,
               isWarehouseProduct: res.isWarehouseProduct !== undefined ? res.isWarehouseProduct : false,
+              isComplementaryProduct: res.isComplementaryProduct !== undefined ? res.isComplementaryProduct : false,
               manageStock: res.manageStock !== undefined ? res.manageStock : false,
               sortCode: res.sortCode || "",
               weight: res.weight || null,
@@ -367,6 +379,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
     handleSelectLanguage,
     isVatFree,
     isWarehouseProduct,
+    isComplementaryProduct,
     manageStock,
     supplier,
     stock,

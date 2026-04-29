@@ -19,6 +19,7 @@ import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
 import SettingServices from "@/services/SettingServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { applyDefaultIsVatFreeForProductImportRow } from "@/utils/productFruitsVegetablesVat";
 import useAsync from "@/hooks/useAsync";
 import useUtilsFunction from "./useUtilsFunction";
 import DeliveryServices from "@/services/DeliveryServices";
@@ -471,7 +472,7 @@ const useFilter = (data) => {
       notifyError("Please upload/select csv file first!");
     } else {
       // return notifyError("This option disabled for this option!");
-      ProductServices.addAllProducts(newProducts)
+      ProductServices.addAllProducts(newProducts.map(applyDefaultIsVatFreeForProductImportRow))
         .then((res) => {
           notifySuccess(res.message);
         })

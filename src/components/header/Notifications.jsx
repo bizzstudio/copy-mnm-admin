@@ -304,21 +304,21 @@ const Notifications = () => {
         setIsLoadingNotifications(true);
 
         try {
-            // קריאה לשירות השליפה של ההתראות עם דפדוף
             const response = await NotificationServices.getUnreadNotifications(page);
-            // console.log('Notifications :>> ', response);
-            const newNotifications = response.data;
-            const pagination = response.pagination;
+            const newNotifications = response.notifications || [];
+            const totalDoc = response.totalDoc ?? 0;
+            const totalUnreadDoc = response.totalUnreadDoc ?? 0;
+            const limit = 5;
+            const pages = Math.ceil(totalDoc / limit) || 1;
 
-            // הוספת ההתראות החדשות לרשימה הקיימת ועדכון מידע הפגינציה
             setNotifications((prevNotifications) => {
                 const existingIds = new Set(prevNotifications.map((notif) => notif._id));
                 const uniqueNewNotifications = newNotifications.filter((notif) => !existingIds.has(notif._id));
                 return [...prevNotifications, ...uniqueNewNotifications];
             });
-            setCurrentPage(pagination.currentPage);
-            setHasMoreNotifications(pagination.currentPage < pagination.pages);
-            setUnreadCount(pagination.total);
+            setCurrentPage(page);
+            setHasMoreNotifications(page < pages);
+            setUnreadCount(totalUnreadDoc);
         } catch (err) {
             console.error("Failed to fetch notifications:", err);
         } finally {
@@ -344,7 +344,7 @@ const Notifications = () => {
         setUnreadCount((prevCount) => prevCount - 1);
 
         // עדכון סטטוס ההתראה ל"נקראה" בשרת, ללא צורך בהמתנה לתשובה
-        NotificationServices.updateNotification(id, { isRead: true }).catch((err) =>
+        NotificationServices.updateNotification(id, { status: "read" }).catch((err) =>
             console.error("Failed to update notification:", err)
         );
     };
@@ -352,14 +352,12 @@ const Notifications = () => {
     // פונקציה לטיפול בלחיצה על התראה לפתיחת הלינק
     const handleNotificationClick = async (notification) => {
         if (notification.link) {
-            // עדכון מיידי של רשימת ההתראות וספירת ההתראות הלא נקראות
             setNotifications((prevNotifications) =>
                 prevNotifications.filter((notif) => notif._id !== notification._id)
             );
             setUnreadCount((prevCount) => prevCount - 1);
 
-            // עדכון סטטוס ההתראה בשרת
-            NotificationServices.updateNotification(notification._id, { isRead: true }).catch((err) =>
+            NotificationServices.updateNotification(notification._id, { status: "read" }).catch((err) =>
                 console.error("Failed to handle notification click:", err)
             );
 
@@ -370,7 +368,7 @@ const Notifications = () => {
 
     // פונקציה להצגת אייקון בהתאם לסוג ההתראה
     const renderNotificationIcon = (type) => {
-        switch (type.toLowerCase()) {
+        switch ((type || "info").toLowerCase()) {
             case "info":
                 return <IoInformationCircle className="w-9 h-9 min-w-[36px] text-mainColor opacity-70" aria-hidden="true" />;
             case "warning":
@@ -413,7 +411,7 @@ const Notifications = () => {
 
                             <div className="flex flex-col gap-1 ml-auto max-w-full overflow-hidden">
                                 <h6 className="font-medium text-base text-gray-800 dark:text-gray-300 wrap-break-word whitespace-pre-wrap">
-                                    {notification.content[currentLanguageCode]}
+                                    {notification.content?.[currentLanguageCode] ?? notification.message ?? ""}
                                 </h6>
 
                                 <p className="flex items-center text-xs text-gray-400">

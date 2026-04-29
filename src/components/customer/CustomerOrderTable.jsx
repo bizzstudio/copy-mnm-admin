@@ -3,7 +3,7 @@ import React from "react";
 import { TableCell, TableBody, TableRow, Badge } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { FiZoomIn, FiFileText, FiFile, FiPackage, FiDollarSign, FiRefreshCw } from "react-icons/fi";
+import { FiZoomIn, FiFileText, FiFile, FiPackage, FiTruck, FiRefreshCw } from "react-icons/fi";
 import { IoReceiptOutline } from "react-icons/io5";
 
 // Internal import
@@ -161,6 +161,25 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                       id={`delivery-note-${order._id}`}
                       Icon={FiPackage}
                       title={t("ViewDeliveryNote")}
+                      bgColor="#059669"
+                    />
+                  </a>
+                </span>
+              )}
+
+              {/* צפייה בתעודת-משלוח (מקף, סוג מסמך נפרד בריווחית) */}
+              {order?.accountingDocs?.deliveryNoteHyphen?.url && (
+                <span className="p-1.5 cursor-pointer text-gray-400 hover:text-customGreen-dark">
+                  <a
+                    href={order.accountingDocs.deliveryNoteHyphen.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t("ViewDeliveryNoteHyphen")}
+                  >
+                    <Tooltip
+                      id={`delivery-note-hyphen-${order._id}`}
+                      Icon={FiTruck}
+                      title={t("ViewDeliveryNoteHyphen")}
                       bgColor="#059669"
                     />
                   </a>

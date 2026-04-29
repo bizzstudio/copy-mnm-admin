@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 const DocumentIssueModal = ({
     isOpen,
     onClose,
-    documentType, // 'invoice-receipt' | 'invoice' | 'receipt' | 'delivery-note' | 'credit-invoice'
+    documentType, // 'invoice-receipt' | 'invoice' | 'receipt' | 'delivery-note' | 'delivery-note-hyphen' | 'credit-invoice'
     children,
 }) => {
     const { t } = useTranslation();
@@ -26,6 +26,8 @@ const DocumentIssueModal = ({
                 return t('IssueReceipt');
             case 'delivery-note':
                 return t('IssueDeliveryNote');
+            case 'delivery-note-hyphen':
+                return t('IssueDeliveryNoteHyphen');
             case 'credit-invoice':
                 return t('IssueCreditInvoice');
             default:

@@ -43,7 +43,9 @@ const CustomerOrders = ({ customer }) => {
         if (!paymentTerms) return null;
         const termsMap = {
             current: t("Current"),
+            "+15": t("Plus15Days"),
             "+30": t("Plus30Days"),
+            "+45": t("Plus45Days"),
             "+60": t("Plus60Days"),
             "+90": t("Plus90Days"),
             noDueDate: t("NoDueDate"),

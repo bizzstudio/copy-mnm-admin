@@ -100,17 +100,15 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     <Error errorName={errors.phone} />
                                 </div>
 
-                                {/* סוג לקוח */}
+                                {/* סוג לקוח – ברירת מחדל: לקוח מוסדי בלבד */}
                                 <div className="flex flex-col">
                                     <LabelArea label={t("CustomerType")} />
                                     <Select
                                         {...register("customerType", {
                                             required: `${t("CustomerType")} ${t("isRequired")}!`,
                                         })}
+                                        disabled
                                     >
-                                        <option value="casual">{t("CasualCustomer")}</option>
-                                        <option value="regular">{t("RegularCustomer")}</option>
-                                        <option value="business">{t("BusinessCustomer")}</option>
                                         <option value="institutional">{t("InstitutionalCustomer")}</option>
                                     </Select>
                                     <Error errorName={errors.customerType} />
@@ -174,7 +172,9 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                         })}
                                     >
                                         <option value="current">{t("Current")}</option>
+                                        <option value="+15">{t("Plus15Days")}</option>
                                         <option value="+30">{t("Plus30Days")}</option>
+                                        <option value="+45">{t("Plus45Days")}</option>
                                         <option value="+60">{t("Plus60Days")}</option>
                                         <option value="+90">{t("Plus90Days")}</option>
                                         <option value="noDueDate">{t("NoDueDate")}</option>

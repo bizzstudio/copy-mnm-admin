@@ -49,6 +49,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
     handleSelectLanguage,
     isVatFree,
     isWarehouseProduct,
+    isComplementaryProduct,
     manageStock,
     supplier,
     stock,
@@ -69,9 +70,77 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
     return value;
   };
 
+  const defaultPriceList =
+    priceLists?.find((pl) => pl.isDefault === true) ?? priceLists?.[0];
+  const otherPriceLists =
+    priceLists?.filter(
+      (pl) =>
+        defaultPriceList && String(pl._id) !== String(defaultPriceList._id)
+    ) ?? [];
+
+  const renderPriceListCard = (priceList) => {
+    if (!priceList?._id) return null;
+    const currentPrice =
+      prices.find((p) => String(p.priceList) === String(priceList._id)) || {
+        price: null,
+        salePrice: null,
+        warehousePrice: null,
+        purchaseLimit: null,
+      };
+    return (
+      <div
+        key={priceList._id}
+        className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+      >
+        <h4 className="font-medium mb-3 text-gray-800 dark:text-gray-200">{priceList.name}</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <LabelArea label={t("Price")} />
+            <Input
+              type="number"
+              step="0.01"
+              value={toInputValue(currentPrice.price)}
+              onChange={(e) => handlePriceChange(priceList._id, "price", e.target.value)}
+              placeholder={t("Price")}
+            />
+          </div>
+          <div>
+            <LabelArea label={t("SalePrice")} />
+            <Input
+              type="number"
+              step="0.01"
+              value={toInputValue(currentPrice.salePrice)}
+              onChange={(e) => handlePriceChange(priceList._id, "salePrice", e.target.value)}
+              placeholder={t("SalePrice")}
+            />
+          </div>
+          <div>
+            <LabelArea label={t("WarehousePrice")} />
+            <Input
+              type="number"
+              step="0.01"
+              value={toInputValue(currentPrice.warehousePrice)}
+              onChange={(e) => handlePriceChange(priceList._id, "warehousePrice", e.target.value)}
+              placeholder={t("WarehousePrice")}
+            />
+          </div>
+          <div>
+            <LabelArea label={t("PurchaseLimit")} />
+            <Input
+              type="number"
+              value={toInputValue(currentPrice.purchaseLimit)}
+              onChange={(e) => handlePriceChange(priceList._id, "purchaseLimit", e.target.value)}
+              placeholder={t("PurchaseLimit")}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <div className="w-full relative p-6 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
+      <div className="w-full relative shrink-0 p-6 border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
         {id ? (
           <Title
             register={register}
@@ -89,10 +158,10 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
         )}
       </div>
 
-      <Card className="flex flex-col grow w-full max-h-full border-0 overflow-hidden dark:bg-gray-800">
-        <div className="flex flex-col h-full overflow-hidden">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
-            <div className="px-6 pt-2 grow scrollbar-hide w-full overflow-y-auto grid grid-cols-12 gap-5">
+      <Card className="flex min-h-0 flex-1 flex-col w-full border-0 overflow-hidden dark:bg-gray-800">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-2 pb-28 sm:pb-32 w-full grid grid-cols-12 gap-5 items-start content-start">
 
               {/* פרטים בסיסיים */}
               <div className="col-span-12">
@@ -283,6 +352,14 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                         />
                       </div>
                     </div>
+
+                    {/* מחירון ברירת מחדל — ישר מתחת לקטגוריות */}
+                    {defaultPriceList ? (
+                      <div className="flex flex-col gap-2 md:col-span-12 col-span-12">
+                        <LabelArea label={t("DefaultPriceListSection")} />
+                        {renderPriceListCard(defaultPriceList)}
+                      </div>
+                    ) : null}
                   </div>
                 </CollapsibleSection>
               </div>
@@ -392,7 +469,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                     </div>
 
                     {/* מתגים */}
-                    <div className="flex items-center justify-evenly col-span-12 gap-6">
+                    <div className="flex flex-wrap items-center justify-evenly col-span-12 gap-6">
                       <div className="flex flex-col gap-1">
                         <LabelArea label={t("isVatFree")} />
                         <div className="col-span-6">
@@ -411,6 +488,17 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                             id="isWarehouseProduct"
                             handleProcess={(checked) => setValue("isWarehouseProduct", checked)}
                             processOption={isWarehouseProduct}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1" title={t("isComplementaryProductDesc")}>
+                        <LabelArea label={t("isComplementaryProduct")} />
+                        <div className="col-span-6">
+                          <SwitchToggle
+                            id="isComplementaryProduct"
+                            handleProcess={(checked) => setValue("isComplementaryProduct", checked)}
+                            processOption={isComplementaryProduct}
                           />
                         </div>
                       </div>
@@ -437,72 +525,20 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
                 </CollapsibleSection>
               </div>
 
-              {/* מחירים לפי מחירונים */}
-              <div className="col-span-12">
-                <CollapsibleSection
-                  title={t("ProductPrices")}
-                  icon={<MdCurrencyExchange size={20} className="mt-1" />}
-                  defaultOpen={false}
-                >
-                  <div className="grid grid-cols-1 gap-4 mt-2">
-                    {priceLists && priceLists.map((priceList, index) => {
-                      const currentPrice = prices.find(p => String(p.priceList) === String(priceList._id)) || {
-                        price: null,
-                        salePrice: null,
-                        warehousePrice: null,
-                        purchaseLimit: null
-                      };
-
-                      return (
-                        <div key={priceList._id} className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                          <h4 className="font-medium mb-3 text-gray-800 dark:text-gray-200">{priceList.name}</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <LabelArea label={t("Price")} />
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={toInputValue(currentPrice.price)}
-                                onChange={(e) => handlePriceChange(priceList._id, 'price', e.target.value)}
-                                placeholder={t("Price")}
-                              />
-                            </div>
-                            <div>
-                              <LabelArea label={t("SalePrice")} />
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={toInputValue(currentPrice.salePrice)}
-                                onChange={(e) => handlePriceChange(priceList._id, 'salePrice', e.target.value)}
-                                placeholder={t("SalePrice")}
-                              />
-                            </div>
-                            <div>
-                              <LabelArea label={t("WarehousePrice")} />
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={toInputValue(currentPrice.warehousePrice)}
-                                onChange={(e) => handlePriceChange(priceList._id, 'warehousePrice', e.target.value)}
-                                placeholder={t("WarehousePrice")}
-                              />
-                            </div>
-                            <div>
-                              <LabelArea label={t("PurchaseLimit")} />
-                              <Input
-                                type="number"
-                                value={toInputValue(currentPrice.purchaseLimit)}
-                                onChange={(e) => handlePriceChange(priceList._id, 'purchaseLimit', e.target.value)}
-                                placeholder={t("PurchaseLimit")}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CollapsibleSection>
-              </div>
+              {/* מחירונים נוספים (כל מה שלא ברירת המחדל) */}
+              {otherPriceLists.length > 0 ? (
+                <div className="col-span-12">
+                  <CollapsibleSection
+                    title={t("AdditionalPriceLists")}
+                    icon={<MdCurrencyExchange size={20} className="mt-1" />}
+                    defaultOpen={false}
+                  >
+                    <div className="grid grid-cols-1 gap-4 mt-2">
+                      {otherPriceLists.map((priceList) => renderPriceListCard(priceList))}
+                    </div>
+                  </CollapsibleSection>
+                </div>
+              ) : null}
 
             </div>
             <DrawerButton id={id} title={t("Product")} isSubmitting={isSubmitting} />

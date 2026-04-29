@@ -49,6 +49,10 @@ const CategoryTable = ({
               {category?._id?.substring(20, 24)}
             </TableCell>
 
+            <TableCell className="text-center text-sm font-semibold">
+              {category?.sortOrder ?? 0}
+            </TableCell>
+
             <TableCell title={category?.slug} className="text-center text-sm max-w-[15vw] overflow-hidden truncate">
               {category?.slug}
             </TableCell>

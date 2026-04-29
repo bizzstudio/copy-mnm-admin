@@ -94,7 +94,7 @@ const useCustomerSubmit = (customerId, customer) => {
         name: customer.name || "",
         email: customer.email || "",
         phone: customer.phone || "",
-        customerType: customer.customerType || "casual",
+        customerType: "institutional",
         companyNumber: customer.companyNumber || "",
         institutionType: customer.institutionType || "",
         priceList: getDefaultPriceList(customer.priceList),
@@ -112,7 +112,7 @@ const useCustomerSubmit = (customerId, customer) => {
       name: "",
       email: "",
       phone: "",
-      customerType: "casual",
+      customerType: "institutional",
       companyNumber: "",
       institutionType: "",
       priceList: getDefaultPriceListId(),
@@ -147,19 +147,15 @@ const useCustomerSubmit = (customerId, customer) => {
     [customerType]
   );
 
-  // בחירת מחירון אוטומטית כשסוג הלקוח משתנה ל-non-casual
+  // סוג לקוח קבוע: מוסדי – בחירת מחירון ברירת מחדל
   useEffect(() => {
-    if (customerType !== "casual" && priceLists && priceLists.length > 0) {
-      if (!currentPriceList || currentPriceList === null) {
-        const defaultPriceListId = getDefaultPriceListId();
-        if (defaultPriceListId) {
-          setValue("priceList", defaultPriceListId, { shouldDirty: false });
-        }
+    if (priceLists && priceLists.length > 0 && (!currentPriceList || currentPriceList === null)) {
+      const defaultPriceListId = getDefaultPriceListId();
+      if (defaultPriceListId) {
+        setValue("priceList", defaultPriceListId, { shouldDirty: false });
       }
-    } else if (customerType === "casual") {
-      setValue("priceList", null, { shouldDirty: false });
     }
-  }, [customerType, priceLists, currentPriceList, setValue]);
+  }, [priceLists, currentPriceList, setValue]);
 
   // אם סוג הלקוח הוא לא עסקי/מוסדי - מוודאים שיש רק תת-לקוח אחד
   useEffect(() => {
@@ -188,6 +184,8 @@ const useCustomerSubmit = (customerId, customer) => {
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
+      // סוג לקוח קבוע: לקוח מוסדי (שדה מושבת ב-UI)
+      data.customerType = data.customerType || "institutional";
 
       // מחירון
       let finalPriceList = data.priceList;

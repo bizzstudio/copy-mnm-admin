@@ -50,10 +50,10 @@ const SelectStatus = ({ id, order }) => {
 
   if (!currentStatus || !data) return null;
 
-  // Convert data to react-select format
+  // Convert data to react-select format; שם המלקט מוצג רק ליד סטטוס ליקוט
   const options = data.map((status) => ({
     value: status._id,
-    label: status.heName + (order?.actualMelaket?.heName && order?.status?.name === 'Likut' ? ` (${order.actualMelaket.heName})` : ''),
+    label: status.heName + (order?.actualMelaket?.heName && status?.name === 'Likut' ? ` (${order.actualMelaket.heName})` : ''),
     color: status.color,
     data: status,
   }));

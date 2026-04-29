@@ -20,7 +20,7 @@ const useExport = () => {
      * Export products to Excel - format matches server import expectations
      * @param {Array} selectedProductIds - Array of product IDs to export (empty = export all)
      */
-    const exportProductsToExcel = useCallback(async (selectedProductIds = []) => {
+    const exportProductsToExcel = useCallback(async (selectedProductIds = [], priceListIdForExport = null) => {
         try {
             let products = [];
 
@@ -39,14 +39,39 @@ const useExport = () => {
                 return;
             }
 
-            // פורמט זהה לייבוא: כותרות עברית ואותו סדר עמודות כמו בתבנית הייבוא
-            const headers = ['מס\' פריט', 'שם פריט', 'ברקוד', 'מחיר קנייה לפני מע"מ', 'מחיר מכירה לפני מע"מ', 'מחיר מבצע', 'משקל', 'שם ספק', 'כשרות', 'שם קבוצה'];
-            const defaultPriceListId = priceLists?.[0]?._id;
+            // פורמט זהה לייבוא: כותרות עברית + מלאי (תואם importProducts בבאקנד)
+            const headers = [
+                'מס\' פריט',
+                'שם פריט',
+                'ברקוד',
+                'מחיר קנייה לפני מע"מ',
+                'מחיר מכירה לפני מע"מ',
+                'מחיר מבצע',
+                'מלאי',
+                'ניהול מלאי',
+                'משקל',
+                'שם ספק',
+                'כשרות',
+                'שם קבוצה',
+            ];
+            // כמו עמוד מוצרים: המחירון שנבחר בטבלה, או isDefault ואז [0] (אותו סדר כמו ב-API)
+            const resolveExportPriceListId = () => {
+                if (priceListIdForExport != null && String(priceListIdForExport).trim() !== '') {
+                    return String(priceListIdForExport);
+                }
+                if (!priceLists?.length) return null;
+                const def = priceLists.find((pl) => pl.isDefault === true) || priceLists[0];
+                return def?._id != null ? String(def._id) : null;
+            };
+            const defaultPriceListId = resolveExportPriceListId();
 
             const excelData = products.map(product => {
                 const firstPrice = product.prices && Array.isArray(product.prices) && product.prices.length > 0
                     ? (defaultPriceListId
-                        ? product.prices.find(p => (p.priceList?._id || p.priceList) === defaultPriceListId) || product.prices[0]
+                        ? product.prices.find((p) => {
+                            const plId = p.priceList?._id ?? p.priceList;
+                            return plId != null && String(plId) === defaultPriceListId;
+                        }) || product.prices[0]
                         : product.prices[0])
                     : null;
 
@@ -57,6 +82,8 @@ const useExport = () => {
                 row['מחיר קנייה לפני מע"מ'] = firstPrice?.warehousePrice ?? '';
                 row['מחיר מכירה לפני מע"מ'] = firstPrice?.price ?? '';
                 row['מחיר מבצע'] = firstPrice?.salePrice ?? '';
+                row['מלאי'] = product.stock != null ? product.stock : 0;
+                row['ניהול מלאי'] = product.manageStock ? 'כן' : 'לא';
                 row['משקל'] = product.weight ?? '';
                 row['שם ספק'] = product.supplier || '';
                 row['כשרות'] = Array.isArray(product.kashrut) ? product.kashrut.join(',') : (product.kashrut || '');
@@ -102,10 +129,23 @@ const useExport = () => {
     }, [lang, priceLists]);
 
     /**
-     * Download a sample Excel template for product import (Hebrew headers: מס' פריט, שם פריט, ברקוד, מחיר קנייה לפני מע"מ, מחיר מכירה לפני מע"מ, מחיר מבצע, משקל, שם ספק, כשרות, שם קבוצה)
+     * Download a sample Excel template for product import (Hebrew headers including מלאי, ניהול מלאי)
      */
     const downloadProductImportTemplate = useCallback(() => {
-        const headers = ['מס\' פריט', 'שם פריט', 'ברקוד', 'מחיר קנייה לפני מע"מ', 'מחיר מכירה לפני מע"מ', 'מחיר מבצע', 'משקל', 'שם ספק', 'כשרות', 'שם קבוצה'];
+        const headers = [
+            'מס\' פריט',
+            'שם פריט',
+            'ברקוד',
+            'מחיר קנייה לפני מע"מ',
+            'מחיר מכירה לפני מע"מ',
+            'מחיר מבצע',
+            'מלאי',
+            'ניהול מלאי',
+            'משקל',
+            'שם ספק',
+            'כשרות',
+            'שם קבוצה',
+        ];
         const exampleRows = [
             {
                 'מס\' פריט': '10001',
@@ -114,6 +154,8 @@ const useExport = () => {
                 'מחיר קנייה לפני מע"מ': 18,
                 'מחיר מכירה לפני מע"מ': 25.5,
                 'מחיר מבצע': 22,
+                'מלאי': 120,
+                'ניהול מלאי': 'כן',
                 'משקל': 500,
                 'שם ספק': 'ספק לדוגמה',
                 'כשרות': 'כשר',
@@ -126,6 +168,8 @@ const useExport = () => {
                 'מחיר קנייה לפני מע"מ': 21.5,
                 'מחיר מכירה לפני מע"מ': 30,
                 'מחיר מבצע': '',
+                'מלאי': 0,
+                'ניהול מלאי': 'לא',
                 'משקל': 1000,
                 'שם ספק': '',
                 'כשרות': 'כשרות מהדרין',
