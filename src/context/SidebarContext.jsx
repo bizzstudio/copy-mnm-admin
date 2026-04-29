@@ -66,13 +66,13 @@ export const SidebarProvider = ({ children }) => {
   const closeModal = () => setIsModalOpen(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  const handleLanguageChange = (lang) => {
-    Cookies.set("i18next", lang, {
+  const handleLanguageChange = () => {
+    Cookies.set("i18next", "he", {
       sameSite: "None",
       secure: true,
     });
-    i18n.changeLanguage(lang);
-    setLang(lang);
+    i18n.changeLanguage("he");
+    setLang("he");
   };
 
   const handleChangePage = (p) => {
@@ -87,19 +87,13 @@ export const SidebarProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const lang = Cookies.get("i18next");
-    const removeRegion = (langCode) => {
-      const updatedLang = langCode?.split("-")[0];
-      return updatedLang;
-    };
-
-    const updatedLang = removeRegion(lang);
-    setLang(updatedLang);
-    Cookies.set("i18next", updatedLang, {
+    Cookies.set("i18next", "he", {
       sameSite: "None",
       secure: true,
     });
-  }, [lang]);
+    i18n.changeLanguage("he");
+    setLang("he");
+  }, [i18n]);
 
   useEffect(() => {
     function handleResize() {
