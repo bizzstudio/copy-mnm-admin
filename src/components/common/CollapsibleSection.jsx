@@ -46,12 +46,11 @@ export default function CollapsibleSection({
             </div>
             <hr className="mb-2.5 border-t-2 border-gray-600 dark:border-gray-500" />
 
-            {/* תוכן קורס/נפתח */}
+            {/* תוכן קורס/נפתח — במצב פתוח ללא overflow-hidden כדי שלא ייחתך תוכן בתוך מגירה/גלילה */}
             <div
-                className={`overflow-hidden transition-all ease-in-out ${isOpen
-                    ? "max-h-[100rem] duration-700" // max-h גדול כדי להכיל תוכן ארוך + מעבר
-                    // ? "max-h-[100rem] overflow-y-auto scrollbar-none duration-700" // max-h גדול כדי להכיל תוכן ארוך + מעבר
-                    : "max-h-0 duration-300"
+                className={`transition-all ease-in-out ${isOpen
+                    ? "max-h-[100rem] overflow-visible duration-700"
+                    : "max-h-0 overflow-hidden duration-300"
                     }`}
             >
                 <div className="p-1">

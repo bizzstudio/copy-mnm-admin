@@ -1443,6 +1443,8 @@
   "UnitsPerOrder": "יחידות להזמנה",
   "Basic Details": "פרטים בסיסיים",
   "ProductPrices": "מחירי מוצר",
+  "DefaultPriceListSection": "מחירון ברירת מחדל",
+  "AdditionalPriceLists": "מחירונים נוספים",
   "ManageStock": "ניהול מלאי",
   "StockManagement": "ניהול מלאי",
   "AddStock": "הוסף מלאי",

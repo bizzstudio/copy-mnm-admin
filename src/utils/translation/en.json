@@ -1407,6 +1407,8 @@
   "UnitsPerOrder": "Units Per Order",
   "Basic Details": "Basic Details",
   "ProductPrices": "Product Prices",
+  "DefaultPriceListSection": "Default price list",
+  "AdditionalPriceLists": "Additional price lists",
   "ManageStock": "Manage Stock",
   "StockManagement": "Stock Management",
   "AddStock": "Add Stock",
