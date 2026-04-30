@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const notifyApiResponse = (response, success = Boolean) => {
     // קבלת השפה מ-Cookies במקרה ואין context
-    let lang = Cookies.get("i18next") || "en";
+    let lang = Cookies.get("i18next") || "he";
     if (lang === "he-IL") lang = "he";
 
     const message = response?.data?.message || response?.response?.data?.message || response?.message;
