@@ -111,6 +111,11 @@ const PriceListDrawer = ({ id }) => {
                                                 <p className="text-xs text-gray-500 mt-2">
                                                     {t("PriceListImportColumnsHint")}
                                                 </p>
+                                                {id && (
+                                                    <p className="text-xs text-gray-500 mt-1">
+                                                        {t("PriceListImportFullReplaceHint")}
+                                                    </p>
+                                                )}
                                                 {preparedRows.length > 0 && (
                                                     <p className="text-xs text-green-600 mt-2">
                                                         {t("PriceListImportPendingSave", { count: preparedRows.length })}

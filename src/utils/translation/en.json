@@ -1700,6 +1700,7 @@
   "UploadExcelFile": "Upload Excel file",
   "UpdatePriceListFirst": "Save the price list first, then import prices.",
   "PriceListImportColumnsHint": "Supported columns: barcod, price, מחיר מחסן",
+  "PriceListImportFullReplaceHint": "Saving applies this file as the full price list for every product: prices come from the file, or 0 if the barcode is not listed.",
   "PermittedProducts": "Permitted Products",
   "PermittedProductsDescription": "Products the sub-customers are allowed to see.",
   "ProductsTheSubCustomersAreAllowedToSee": "Products the sub-customers are allowed to see.",
