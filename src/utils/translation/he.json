@@ -1737,7 +1737,7 @@
   "UploadExcelFile": "העלאת קובץ אקסל",
   "UpdatePriceListFirst": "יש לשמור קודם את המחירון ורק אחר כך לייבא מחירים.",
   "PriceListImportColumnsHint": "עמודות נתמכות: ברקוד, מחיר ומחיר מחסן",
-  "PriceListImportFullReplaceHint": "שמירה מחילה את הקובץ כמחירון מלא לכל המוצרים: מחיר מהקובץ, או 0 אם הברקוד לא מופיע בקובץ.",
+  "PriceListImportStaleRemovedHint": "אחרי שמירה, מוצרים שהיו במחירון הזה ואינם מופיעים בקובץ יחזרו אוטומטית למחיר ברירת המחדל של האתר.",
   "PriceListImportPendingSave": "הוכנו {{count}} שורות. השינויים ייכנסו למסד הנתונים רק בלחיצה על שמירה.",
   "PermittedProducts": "מוצרים מורשים",
   "PermittedProductsDescription": "מוצרים שתתי-הלקוחות רשאים לראות.",
