@@ -1,9 +1,9 @@
 // src/components/drawer/PriceListDrawer.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardBody } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { MdListAlt } from "react-icons/md";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiDownload } from "react-icons/fi";
 
 // Internal import
 import Title from "@/components/form/others/Title";
@@ -15,9 +15,12 @@ import usePriceListImport from "@/hooks/usePriceListImport";
 import LabelArea from "../form/selectOption/LabelArea";
 import CollapsibleSection from "@/components/common/CollapsibleSection";
 import ImportResultsModal from "@/components/modal/ImportResultsModal";
+import PriceListServices from "@/services/PriceListServices";
+import { notifyError, notifySuccess } from "@/utils/toast";
 
 const PriceListDrawer = ({ id }) => {
     const { t } = useTranslation();
+    const [exportingList, setExportingList] = useState(false);
 
     const {
         fileInputRef,
@@ -37,7 +40,22 @@ const PriceListDrawer = ({ id }) => {
         errors,
         handleSubmit,
         isSubmitting,
+        getValues,
     } = usePriceListSubmit(id, preparedRows, clearPreparedRows);
+
+    const handleDownloadPriceListExcel = async () => {
+        if (!id) return;
+        try {
+            setExportingList(true);
+            const name = (getValues("name") || "").trim() || `price-list-${id}`;
+            await PriceListServices.downloadPriceListExcel(id, name);
+            notifySuccess(t("PriceListExportSuccess"));
+        } catch (err) {
+            notifyError(err?.message || err?.response?.data?.message || t("PriceListExportFailed"));
+        } finally {
+            setExportingList(false);
+        }
+    };
 
     return (
         <>
@@ -115,6 +133,17 @@ const PriceListDrawer = ({ id }) => {
                                                     <p className="text-xs text-gray-500 mt-1">
                                                         {t("PriceListImportStaleRemovedHint")}
                                                     </p>
+                                                )}
+                                                {id && (
+                                                    <button
+                                                        type="button"
+                                                        disabled={exportingList}
+                                                        onClick={handleDownloadPriceListExcel}
+                                                        className="inline-flex items-center gap-2 px-4 py-2 mt-3 rounded-md border border-gray-300 dark:border-gray-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800"
+                                                    >
+                                                        <FiDownload />
+                                                        {exportingList ? t("PriceListExporting") : t("DownloadPriceListExcel")}
+                                                    </button>
                                                 )}
                                                 {preparedRows.length > 0 && (
                                                     <p className="text-xs text-green-600 mt-2">

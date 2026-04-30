@@ -12,7 +12,7 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
         useContext(SidebarContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { register, handleSubmit, setValue, clearErrors, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, clearErrors, getValues, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
         try {
@@ -73,6 +73,7 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
         onSubmit,
         errors,
         isSubmitting,
+        getValues,
     };
 };
 
