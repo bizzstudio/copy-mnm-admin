@@ -50,6 +50,7 @@ const useExport = () => {
                 'מלאי',
                 'ניהול מלאי',
                 'משקל',
+                'יחידת משקל',
                 'שם ספק',
                 'כשרות',
                 'שם קבוצה',
@@ -85,6 +86,7 @@ const useExport = () => {
                 row['מלאי'] = product.stock != null ? product.stock : 0;
                 row['ניהול מלאי'] = product.manageStock ? 'כן' : 'לא';
                 row['משקל'] = product.weight ?? '';
+                row['יחידת משקל'] = product.weightUnit ?? '';
                 row['שם ספק'] = product.supplier || '';
                 row['כשרות'] = Array.isArray(product.kashrut) ? product.kashrut.join(',') : (product.kashrut || '');
                 if (product.categories && Array.isArray(product.categories)) {
@@ -142,6 +144,7 @@ const useExport = () => {
             'מלאי',
             'ניהול מלאי',
             'משקל',
+            'יחידת משקל',
             'שם ספק',
             'כשרות',
             'שם קבוצה',
@@ -157,6 +160,7 @@ const useExport = () => {
                 'מלאי': 120,
                 'ניהול מלאי': 'כן',
                 'משקל': 500,
+                'יחידת משקל': 'גרם',
                 'שם ספק': 'ספק לדוגמה',
                 'כשרות': 'כשר',
                 'שם קבוצה': 'פירות'
@@ -171,6 +175,7 @@ const useExport = () => {
                 'מלאי': 0,
                 'ניהול מלאי': 'לא',
                 'משקל': 1000,
+                'יחידת משקל': 'קילו',
                 'שם ספק': '',
                 'כשרות': 'כשרות מהדרין',
                 'שם קבוצה': 'ירקות,מצרכים'
