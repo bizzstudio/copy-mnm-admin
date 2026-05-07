@@ -114,6 +114,11 @@ const CustomerServices = {
   issueCreditInvoice: async (body) => {
     return requests.post('/rivhit/manual/credit-invoice', body);
   },
+
+  // הנפקת תעודת החזרה ידנית
+  issueReturnNote: async (body) => {
+    return requests.post('/rivhit/manual/return-note', body);
+  },
 };
 
 export default CustomerServices;

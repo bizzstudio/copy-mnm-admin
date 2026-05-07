@@ -30,6 +30,8 @@ const DocumentIssueModal = ({
                 return t('IssueDeliveryNoteHyphen');
             case 'credit-invoice':
                 return t('IssueCreditInvoice');
+            case 'return-note':
+                return t('IssueReturnNote');
             default:
                 return t('IssueDocument');
         }

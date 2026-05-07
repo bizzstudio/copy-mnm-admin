@@ -16,6 +16,7 @@ import InvoiceForm from "@/components/customer/InvoiceForm";
 import ReceiptForm from "@/components/customer/ReceiptForm";
 import DeliveryNoteForm from "@/components/customer/DeliveryNoteForm";
 import CreditInvoiceForm from "@/components/customer/CreditInvoiceForm";
+import ReturnNoteForm from "@/components/customer/ReturnNoteForm";
 import { getDateRangeByPage } from "@/utils/dateUtils";
 import { SidebarContext } from "@/context/SidebarContext";
 
@@ -170,6 +171,10 @@ const CustomerDocuments = ({
                                             label: t("CreditInvoice") || "חשבונית זיכוי",
                                             onClick: () => handleOpenModal('credit-invoice'),
                                         },
+                                        {
+                                            label: t("ReturnNote") || "תעודת החזרה",
+                                            onClick: () => handleOpenModal('return-note'),
+                                        },
                                     ]}
                                 />
                             </div>
@@ -296,6 +301,8 @@ const CustomerDocuments = ({
                     {modalDocumentType === 'invoice' && (
                         <InvoiceForm
                             customer={customer}
+                            rivhitDocuments={rivhitDocuments}
+                            externalCustomerId={externalCustomerId}
                             onSuccess={handleModalClose}
                         />
                     )}
@@ -326,6 +333,12 @@ const CustomerDocuments = ({
                             customer={customer}
                             externalCustomerId={externalCustomerId}
                             rivhitDocuments={rivhitDocuments}
+                            onSuccess={handleModalClose}
+                        />
+                    )}
+                    {modalDocumentType === 'return-note' && (
+                        <ReturnNoteForm
+                            customer={customer}
                             onSuccess={handleModalClose}
                         />
                     )}
