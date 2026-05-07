@@ -109,7 +109,7 @@ const InvoiceForm = ({ customer, onSuccess }) => {
                                     />
                                     <div>
                                         <p className="font-semibold text-gray-900 dark:text-white">
-                                            {t("Order")} #{order.invoice}
+                                            {t("Order")} #{order.accountingDocs?.deliveryNoteHyphen?.document_number || order.accountingDocs?.deliveryNote?.document_number || order.invoice}
                                         </p>
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
                                             {new Date(order.createdAt).toLocaleDateString("he-IL")}

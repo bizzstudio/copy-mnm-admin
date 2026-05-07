@@ -159,6 +159,10 @@ const CustomerDocuments = ({
                                             onClick: () => handleOpenModal('receipt'),
                                         },
                                         {
+                                            label: t("InvoiceReceipt") || "חשבונית מס קבלה",
+                                            onClick: () => handleOpenModal('invoice-receipt'),
+                                        },
+                                        {
                                             label: t("DeliveryNoteHyphen") || "תעודת-משלוח",
                                             onClick: () => handleOpenModal('delivery-note-hyphen'),
                                         },
