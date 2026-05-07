@@ -151,11 +151,7 @@ const CustomerDocuments = ({
                                     title={t("IssueDocument")}
                                     options={[
                                         {
-                                            label: t("InvoiceReceipt") || "חשבונית מס קבלה",
-                                            onClick: () => handleOpenModal('invoice-receipt'),
-                                        },
-                                        {
-                                            label: t("Invoice") || "חשבונית מס",
+                                            label: t("Invoice") || "חשבונית-מס",
                                             onClick: () => handleOpenModal('invoice'),
                                         },
                                         {
