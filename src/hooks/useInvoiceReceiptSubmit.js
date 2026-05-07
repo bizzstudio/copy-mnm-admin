@@ -12,6 +12,8 @@ const useInvoiceReceiptSubmit = (customer, onSuccess) => {
     const { paymentTypes } = useContext(SidebarContext);
     const [loading, setLoading] = useState(false);
     const [selectedOrders, setSelectedOrders] = useState([]);
+    const [dateFrom, setDateFrom] = useState("");
+    const [dateTo, setDateTo] = useState("");
 
     // מערך תשלומים - כל תשלום כולל payment_type, amount_nis ופרטים נוספים
     const defaultPayment = {
@@ -58,6 +60,22 @@ const useInvoiceReceiptSubmit = (customer, onSuccess) => {
             return !hasInvoice && !hasInvoiceReceipt;
         });
     }, [customer?.orders]);
+
+    // הזמנות מסוננות לפי טווח תאריכים
+    const filteredOrders = useMemo(() => {
+        if (!dateFrom && !dateTo) return orders;
+        return orders.filter((order) => {
+            const d = new Date(order.createdAt);
+            if (isNaN(d)) return true;
+            if (dateFrom && d < new Date(dateFrom)) return false;
+            if (dateTo) {
+                const to = new Date(dateTo);
+                to.setHours(23, 59, 59, 999);
+                if (d > to) return false;
+            }
+            return true;
+        });
+    }, [orders, dateFrom, dateTo]);
 
     // טיפול בבחירת/ביטול בחירת הזמנה
     const handleOrderToggle = (orderId) => {
@@ -232,6 +250,11 @@ const useInvoiceReceiptSubmit = (customer, onSuccess) => {
         setSelectedOrders,
         payments,
         orders,
+        filteredOrders,
+        dateFrom,
+        dateTo,
+        setDateFrom,
+        setDateTo,
         // Handlers
         handleOrderToggle,
         handleAddPayment,

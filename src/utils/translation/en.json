@@ -1629,6 +1629,8 @@
   "ViewReturnNote": "View Return Note",
   "ReturnNoteAlreadyExists": "A return note already exists for this order",
   "NoResultsForFilter": "No records for this filter",
+  "DateFrom": "From Date",
+  "DateTo": "To Date",
   "ViewDeliveryNote": "View Delivery Note",
   "ViewInvoiceReceipt": "View Invoice Receipt",
   "CreditInvoice": "Credit Invoice",

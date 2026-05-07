@@ -21,6 +21,11 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
         selectedOrders,
         payments,
         orders,
+        filteredOrders,
+        dateFrom,
+        dateTo,
+        setDateFrom,
+        setDateTo,
         handleOrderToggle,
         handleAddPayment,
         handleRemovePayment,
@@ -47,37 +52,82 @@ const InvoiceReceiptForm = ({ customer, onSuccess }) => {
                         </p>
                     </div>
                 ) : (
-                    <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
-                        {orders.map((order) => (
-                            <label
-                                key={order._id}
-                                className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${selectedOrders.includes(order._id)
-                                    ? "bg-mainColor/10 border-2 border-mainColor"
-                                    : "bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
-                                    }`}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedOrders.includes(order._id)}
-                                        onChange={() => handleOrderToggle(order._id)}
-                                        className="w-5 h-5 text-mainColor rounded focus:ring-mainColor"
-                                    />
-                                    <div>
-                                        <p className="font-semibold text-gray-900 dark:text-white">
-                                            {t("Order")} #{order.invoice}
-                                        </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            {new Date(order.createdAt).toLocaleDateString("he-IL")}
-                                        </p>
+                    <>
+                        {/* פילטר תאריכים */}
+                        <div className="flex gap-3 mb-2 flex-wrap items-end">
+                            <div className="flex flex-col gap-0.5">
+                                <label className="text-xs text-gray-500 dark:text-gray-400">{t("DateFrom")}</label>
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) => setDateFrom(e.target.value)}
+                                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-mainColor"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                                <label className="text-xs text-gray-500 dark:text-gray-400">{t("DateTo")}</label>
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) => setDateTo(e.target.value)}
+                                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-mainColor"
+                                />
+                            </div>
+                            {(dateFrom || dateTo) && (
+                                <button
+                                    type="button"
+                                    onClick={() => { setDateFrom(""); setDateTo(""); }}
+                                    className="text-xs text-mainColor hover:underline self-end pb-1 cursor-pointer"
+                                >
+                                    {t("Clear")}
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                            {filteredOrders.map((order) => (
+                                <label
+                                    key={order._id}
+                                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${selectedOrders.includes(order._id)
+                                        ? "bg-mainColor/10 border-2 border-mainColor"
+                                        : "bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedOrders.includes(order._id)}
+                                            onChange={() => handleOrderToggle(order._id)}
+                                            className="w-5 h-5 text-mainColor rounded focus:ring-mainColor"
+                                        />
+                                        <div>
+                                            <p className="font-semibold text-gray-900 dark:text-white">
+                                                {t("Order")} #{order.invoice}
+                                            </p>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {new Date(order.createdAt).toLocaleDateString("he-IL")}
+                                                </p>
+                                                {(order.user_info?.name || order.user_info?.lastName) && (
+                                                    <p className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                                                        · {[order.user_info.name, order.user_info.lastName].filter(Boolean).join(" ")}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="text-left font-bold text-gray-900 dark:text-white">
-                                    ₪{order.total?.toFixed(2)}
-                                </div>
-                            </label>
-                        ))}
-                    </div>
+                                    <div className="text-left font-bold text-gray-900 dark:text-white">
+                                        ₪{order.total?.toFixed(2)}
+                                    </div>
+                                </label>
+                            ))}
+                            {filteredOrders.length === 0 && (
+                                <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">
+                                    {t("NoResultsForFilter")}
+                                </p>
+                            )}
+                        </div>
+                    </>
                 )}
 
                 {/* הצגת סכום כולל */}

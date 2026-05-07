@@ -1666,6 +1666,8 @@
   "ViewReturnNote": "צפייה בתעודת החזרה",
   "ReturnNoteAlreadyExists": "כבר קיימת תעודת החזרה עבור הזמנה זו",
   "NoResultsForFilter": "אין רשומות לסינון זה",
+  "DateFrom": "מתאריך",
+  "DateTo": "עד תאריך",
   "ViewDeliveryNote": "צפייה בתעודת משלוח",
   "ViewInvoiceReceipt": "צפייה בחשבונית מס קבלה",
   "CreditInvoice": "חשבונית מס זיכוי",

@@ -42,6 +42,8 @@ const InvoiceForm = ({ customer, rivhitDocuments, externalCustomerId, onSuccess 
     const [selectedOrders, setSelectedOrders] = useState([]);
     const [selectedRivhitReturnNotes, setSelectedRivhitReturnNotes] = useState([]);
     const [activeFilter, setActiveFilter] = useState("all");
+    const [dateFrom, setDateFrom] = useState("");
+    const [dateTo, setDateTo] = useState("");
 
     const {
         register,
@@ -93,17 +95,47 @@ const InvoiceForm = ({ customer, rivhitDocuments, externalCustomerId, onSuccess 
         return tabs;
     }, [typeCounts, totalItemsCount, t]);
 
+    // פילטור לפי טווח תאריכים
+    const isInDateRange = (dateStr) => {
+        if (!dateFrom && !dateTo) return true;
+        const d = new Date(dateStr);
+        if (isNaN(d)) return true;
+        if (dateFrom && d < new Date(dateFrom)) return false;
+        if (dateTo) {
+            const to = new Date(dateTo);
+            to.setHours(23, 59, 59, 999);
+            if (d > to) return false;
+        }
+        return true;
+    };
+
+    // פילטור תעודת החזרה (תאריך בפורמט DD/MM/YYYY)
+    const isDocInDateRange = (doc) => {
+        if (!dateFrom && !dateTo) return true;
+        const parts = (doc.document_date || "").split("/");
+        if (parts.length !== 3) return true;
+        const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        if (isNaN(d)) return true;
+        if (dateFrom && d < new Date(dateFrom)) return false;
+        if (dateTo) {
+            const to = new Date(dateTo);
+            to.setHours(23, 59, 59, 999);
+            if (d > to) return false;
+        }
+        return true;
+    };
+
     // הזמנות מסוננות
     const filteredOrders = useMemo(() => {
-        if (activeFilter === "all" || activeFilter === "rivhitReturn") return orders;
-        return orders.filter((o) => getOrderDocType(o) === activeFilter);
-    }, [orders, activeFilter]);
+        let result = activeFilter === "all" || activeFilter === "rivhitReturn" ? orders : orders.filter((o) => getOrderDocType(o) === activeFilter);
+        return result.filter((o) => isInDateRange(o.createdAt));
+    }, [orders, activeFilter, dateFrom, dateTo]);
 
     // תעודות החזרה ריווחית מסוננות
     const filteredRivhitReturns = useMemo(() => {
-        if (activeFilter === "all" || activeFilter === "rivhitReturn") return rivhitReturnNotes;
-        return [];
-    }, [rivhitReturnNotes, activeFilter]);
+        if (activeFilter !== "all" && activeFilter !== "rivhitReturn") return [];
+        return rivhitReturnNotes.filter((doc) => isDocInDateRange(doc));
+    }, [rivhitReturnNotes, activeFilter, dateFrom, dateTo]);
 
     // האם להציג בכלל הזמנות
     const showOrders = activeFilter !== "rivhitReturn";
@@ -186,6 +218,37 @@ const InvoiceForm = ({ customer, rivhitDocuments, externalCustomerId, onSuccess 
                     </div>
                 ) : (
                     <>
+                        {/* פילטר תאריכים */}
+                        <div className="flex gap-3 mb-2 flex-wrap items-end">
+                            <div className="flex flex-col gap-0.5">
+                                <label className="text-xs text-gray-500 dark:text-gray-400">{t("DateFrom")}</label>
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) => setDateFrom(e.target.value)}
+                                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-mainColor"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                                <label className="text-xs text-gray-500 dark:text-gray-400">{t("DateTo")}</label>
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) => setDateTo(e.target.value)}
+                                    className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-mainColor"
+                                />
+                            </div>
+                            {(dateFrom || dateTo) && (
+                                <button
+                                    type="button"
+                                    onClick={() => { setDateFrom(""); setDateTo(""); }}
+                                    className="text-xs text-mainColor hover:underline self-end pb-1 cursor-pointer"
+                                >
+                                    {t("Clear")}
+                                </button>
+                            )}
+                        </div>
+
                         {/* פילטר סוג מסמך */}
                         {filters.length > 2 && (
                             <div className="flex gap-1.5 flex-wrap mb-2">
