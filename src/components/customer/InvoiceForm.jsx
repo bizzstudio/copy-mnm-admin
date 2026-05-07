@@ -240,6 +240,11 @@ const InvoiceForm = ({ customer, rivhitDocuments, externalCustomerId, onSuccess 
                                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                                     {doc.document_date}
                                                 </p>
+                                                {(doc.customer_firstname || doc.customer_name) && (
+                                                    <p className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                                                        · {doc.customer_firstname || doc.customer_name}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -285,6 +290,11 @@ const InvoiceForm = ({ customer, rivhitDocuments, externalCustomerId, onSuccess 
                                                     <p className="text-xs text-gray-500 dark:text-gray-400">
                                                         {new Date(order.createdAt).toLocaleDateString("he-IL")}
                                                     </p>
+                                                    {(order.user_info?.name || order.user_info?.lastName) && (
+                                                        <p className="text-xs font-bold text-gray-700 dark:text-gray-200">
+                                                            · {[order.user_info.name, order.user_info.lastName].filter(Boolean).join(" ")}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
