@@ -1704,6 +1704,7 @@
   "ViewInvoiceDoc": "View invoice",
   "ViewReceipt": "View receipt",
   "ViewCreditInvoice": "View credit invoice",
+  "ConfirmationNumber": "Allocation No.",
   "ImportPricesByFile": "Import prices from file",
   "UploadExcelFile": "Upload Excel file",
   "UpdatePriceListFirst": "Save the price list first, then import prices.",

@@ -103,7 +103,11 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                     <Tooltip
                       id={`invoice-${order._id}`}
                       Icon={FiFile}
-                      title={t("ViewInvoiceDoc")}
+                      title={
+                        order.accountingDocs.invoice.confirmation_number
+                          ? `${t("ViewInvoiceDoc")} | ${t("ConfirmationNumber")}: ${order.accountingDocs.invoice.confirmation_number}`
+                          : t("ViewInvoiceDoc")
+                      }
                       bgColor="#059669"
                     />
                   </a>
@@ -122,7 +126,11 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                     <Tooltip
                       id={`invoice-receipt-${order._id}`}
                       Icon={FiFileText}
-                      title={t("ViewInvoiceReceipt")}
+                      title={
+                        order.accountingDocs.invoiceReceipt.confirmation_number
+                          ? `${t("ViewInvoiceReceipt")} | ${t("ConfirmationNumber")}: ${order.accountingDocs.invoiceReceipt.confirmation_number}`
+                          : t("ViewInvoiceReceipt")
+                      }
                       bgColor="#059669"
                     />
                   </a>
@@ -198,7 +206,11 @@ const CustomerOrderTable = ({ orders, showCustomerColumn = false }) => {
                     <Tooltip
                       id={`credit-invoice-${order._id}`}
                       Icon={FiRefreshCw}
-                      title={t("ViewCreditInvoice")}
+                      title={
+                        order.accountingDocs.creditInvoice.confirmation_number
+                          ? `${t("ViewCreditInvoice")} | ${t("ConfirmationNumber")}: ${order.accountingDocs.creditInvoice.confirmation_number}`
+                          : t("ViewCreditInvoice")
+                      }
                       bgColor="#059669"
                     />
                   </a>

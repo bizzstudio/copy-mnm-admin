@@ -1741,6 +1741,7 @@
   "ViewInvoiceDoc": "צפייה בחשבונית מס",
   "ViewReceipt": "צפייה בקבלה",
   "ViewCreditInvoice": "צפייה בחשבונית זיכוי",
+  "ConfirmationNumber": "מס' הקצאה",
   "ImportPricesByFile": "ייבוא מחירים מקובץ",
   "UploadExcelFile": "העלאת קובץ אקסל",
   "UpdatePriceListFirst": "יש לשמור קודם את המחירון ורק אחר כך לייבא מחירים.",
