@@ -29,6 +29,8 @@ const createEmptySubCustomer = () => ({
   weeklyDeliveryDay: "",
   rivhitCustomerNumber: "",
   newPassword: "",
+  alertAmount: "",
+  alertPeriod: "",
   address: { ...emptyAddress },
 });
 
@@ -73,6 +75,8 @@ const useCustomerSubmit = (customerId, customer) => {
           ? String(sc.accounting.externalCustomerId)
           : "",
         newPassword: "",
+        alertAmount: sc?.alertAmount != null ? String(sc.alertAmount) : "",
+        alertPeriod: sc?.alertPeriod || "",
         address:
           sc?.address && typeof sc.address === "object"
             ? {
@@ -228,6 +232,8 @@ const useCustomerSubmit = (customerId, customer) => {
                 sc.weeklyDeliveryDay !== "" && sc.weeklyDeliveryDay !== undefined && sc.weeklyDeliveryDay !== null
                   ? Number(sc.weeklyDeliveryDay)
                   : undefined,
+              alertAmount: sc.alertAmount !== "" && sc.alertAmount != null ? Number(sc.alertAmount) : null,
+              alertPeriod: ["weekly", "monthly"].includes(sc.alertPeriod) ? sc.alertPeriod : null,
             };
 
             if (sc.newPassword && String(sc.newPassword).trim()) {

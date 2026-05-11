@@ -364,6 +364,33 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                 </div>
                                                             )}
 
+                                                            {/* סכום להתראה */}
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("AlertAmount")} />
+                                                                <InputArea
+                                                                    register={register}
+                                                                    label={t("AlertAmount")}
+                                                                    name={`subCustomers.${idx}.alertAmount`}
+                                                                    type="number"
+                                                                    min={0}
+                                                                    placeholder="1000"
+                                                                    isRequired={false}
+                                                                    autocomplete={isNewCustomer ? "off" : undefined}
+                                                                />
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.alertAmount} />
+                                                            </div>
+
+                                                            {/* תקופת התראה */}
+                                                            <div className="flex flex-col">
+                                                                <LabelArea label={t("AlertPeriod")} />
+                                                                <Select {...register(`subCustomers.${idx}.alertPeriod`)}>
+                                                                    <option value="" disabled hidden>{t("AlertPeriodPlaceholder")}</option>
+                                                                    <option value="weekly">{t("Weekly")}</option>
+                                                                    <option value="monthly">{t("Monthly")}</option>
+                                                                </Select>
+                                                                <Error errorName={errors?.subCustomers?.[idx]?.alertPeriod} />
+                                                            </div>
+
                                                             {/* יום משלוח שבועי */}
                                                             <div className="flex flex-col">
                                                                 <LabelArea label={t("WeeklyDeliveryDay")} />
