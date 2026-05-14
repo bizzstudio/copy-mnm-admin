@@ -189,9 +189,39 @@ const useExport = () => {
         notifySuccess(t('SampleTemplateDownloaded'));
     }, []);
 
+    /**
+     * Download all product images as a ZIP file (via backend to avoid CORS)
+     */
+    const downloadProductImages = useCallback(async () => {
+        try {
+            notifySuccess(t('DownloadingImages'));
+
+            const response = await ProductServices.downloadImagesZip();
+            const blob = response.data;
+
+            if (!blob || blob.size === 0) {
+                notifyError(t('NoImagesToDownload'));
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            const timestamp = dayjs().format('YYYY-MM-DD_HH-mm-ss');
+            link.download = `product-images_${timestamp}.zip`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+
+            notifySuccess(t('ImagesDownloadedSuccessfully'));
+        } catch (error) {
+            console.error('Error downloading product images:', error);
+            notifyError(t('ExportError') + ': ' + error.message);
+        }
+    }, []);
+
     return {
         exportProductsToExcel,
-        downloadProductImportTemplate
+        downloadProductImportTemplate,
+        downloadProductImages,
     };
 };
 

@@ -47,6 +47,10 @@ const ProductServices = {
   deleteManyProducts: async (body) => {
     return requests.patch("/products/delete/many", body);
   },
+
+  downloadImagesZip: async () => {
+    return requests.getBlobLongTimeout("/products/export/images-zip");
+  },
 };
 
 export default ProductServices;

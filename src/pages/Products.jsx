@@ -63,7 +63,7 @@ const Products = () => {
   const filters = useProductFilter();
 
   // Import/Export hooks
-  const { exportProductsToExcel, downloadProductImportTemplate } = useExport();
+  const { exportProductsToExcel, downloadProductImportTemplate, downloadProductImages } = useExport();
   const {
     handleSelectFile,
     handleUploadMultiple,
@@ -300,6 +300,16 @@ const Products = () => {
                     </div>
                   ),
                   onClick: downloadProductImportTemplate
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5">
+                      <FiCamera size={17} />
+                      {t("DownloadProductImages")}
+                    </div>
+                  ),
+                  onClick: downloadProductImages,
+                  disabled: !data?.products || data.products.length === 0
                 },
                 {
                   label: (

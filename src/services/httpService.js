@@ -45,6 +45,10 @@ const requests = {
   /** Full axios response (e.g. blob PDF) — Authorization header still applied */
   getBlob: (url) => instance.get(url, { responseType: "blob" }),
 
+  /** Full axios response with extended timeout (e.g. large ZIP downloads) */
+  getBlobLongTimeout: (url, timeoutMs = 600000) =>
+    instance.get(url, { responseType: "blob", timeout: timeoutMs }),
+
   post: (url, body) => instance.post(url, body).then(responseBody),
 
   put: (url, body, headers) =>

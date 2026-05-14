@@ -1779,5 +1779,10 @@
   "ReplaceOldProducts": "החלף את כל המוצרים קיימים",
   "AddToExistingProducts": "הוסף למוצרים הקיימים",
   "SearchProducts": "חיפוש מוצרים...",
-  "LoadingProducts": "טוען מוצרים..."
+  "LoadingProducts": "טוען מוצרים...",
+  "DownloadProductImages": "הורדת תמונות מוצרים",
+  "DownloadingImages": "מתחיל הורדת תמונות, אנא המתן...",
+  "NoImagesToDownload": "לא נמצאו תמונות להורדה",
+  "ImagesDownloadedSuccessfully": "התמונות הורדו בהצלחה",
+  "ImagesDownloadedWithErrors": "הורדה הושלמה עם שגיאות חלקיות"
 }
