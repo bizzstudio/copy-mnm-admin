@@ -113,6 +113,14 @@ const ProductTable = ({
                 <div className="text-sm font-medium text-center max-w-[26vw] overflow-hidden truncate">
                   {showingTranslateValue(product?.title)}
                 </div>
+                {product?.requiresAdminReview && (
+                  <span
+                    title="מוצר זה נוצר אוטומטית מסנכרון ריווחית — נדרשת השלמת קטגוריה ותמונה"
+                    className="mr-2 inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700 border border-red-300 whitespace-nowrap"
+                  >
+                    ⚠️ דרושה השלמה
+                  </span>
+                )}
               </div>
             </TableCell>
 

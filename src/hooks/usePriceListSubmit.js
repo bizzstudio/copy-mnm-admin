@@ -18,8 +18,15 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
         try {
             setIsSubmitting(true);
 
+            const rivhitIdRaw = data.rivhitPriceListId;
+            const rivhitIdNum =
+                rivhitIdRaw === undefined || rivhitIdRaw === null || rivhitIdRaw === ""
+                    ? null
+                    : Number(rivhitIdRaw);
+
             const priceListData = {
                 name: data.name || '',
+                rivhitPriceListId: Number.isFinite(rivhitIdNum) ? rivhitIdNum : null,
             };
 
             if (id) {
@@ -50,7 +57,9 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
     useEffect(() => {
         if (!isDrawerOpen) {
             setValue("name", "");
+            setValue("rivhitPriceListId", "");
             clearErrors("name");
+            clearErrors("rivhitPriceListId");
             return;
         }
         if (id) {
@@ -59,6 +68,10 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
                     const res = await PriceListServices.getPriceListById(id);
                     if (res) {
                         setValue("name", res.name);
+                        setValue(
+                            "rivhitPriceListId",
+                            res.rivhitPriceListId ?? ""
+                        );
                     }
                 } catch (err) {
                     notifyError(err?.response?.data?.message || err?.message);

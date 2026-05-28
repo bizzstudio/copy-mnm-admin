@@ -11,7 +11,7 @@ import {
   CardBody,
 } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
-import { FiPlus, FiTrash2, FiDownload, FiUpload, FiCamera } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiDownload, FiUpload, FiCamera, FiRefreshCw } from "react-icons/fi";
 
 // Internal import
 import useAsync from "@/hooks/useAsync";
@@ -36,6 +36,8 @@ import CustomPagination from "@/components/table/CustomPagination";
 import SearchInput from "@/components/form/input/SearchInput";
 import DropdownMenu from "@/components/menu/DropdownMenu";
 import ImportResultsModal from "@/components/modal/ImportResultsModal";
+import RivhitSyncServices from "@/services/RivhitSyncServices";
+import { notifyError, notifySuccess } from "@/utils/toast";
 
 const Products = () => {
   const {
@@ -57,6 +59,7 @@ const Products = () => {
     limitData,
     isDrawerOpen,
     priceLists,
+    setIsUpdate,
   } = useContext(SidebarContext);
 
   // Filters hook - uses SidebarContext under the hood
@@ -78,6 +81,7 @@ const Products = () => {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [pendingBarcode, setPendingBarcode] = useState(null);
   const [selectedPriceListId, setSelectedPriceListId] = useState(null);
+  const [rivhitSyncing, setRivhitSyncing] = useState(false);
 
   // State for checkbox
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -178,6 +182,43 @@ const Products = () => {
     setServiceId(null);
     setPendingBarcode(barcode);
     toggleDrawer();
+  };
+
+  // סנכרון ריווחית — קורא לראוט בבקאנד. dryRun=true: בדיקה (לא כותב), dryRun=false: כתיבה אמיתית.
+  const handleRivhitSync = async (dryRun) => {
+    if (rivhitSyncing) return;
+    if (!dryRun) {
+      const ok = window.confirm(
+        "סנכרון אמיתי יכתוב למסד הנתונים: יעדכן מוצרים קיימים ויוסיף מוצרים חדשים שנמצאים בריווחית.\n\nלהמשיך?"
+      );
+      if (!ok) return;
+    }
+
+    setRivhitSyncing(true);
+    try {
+      const res = await RivhitSyncServices.syncProducts({ dryRun });
+      const s = res?.summary || {};
+
+      // הודעת toast מסכמת
+      if (s.aborted) {
+        notifyError(s.abortReason || "הסנכרון בוטל ע״י safety cap");
+      } else if (dryRun) {
+        notifySuccess(
+          `בדיקה הושלמה: ${s.updated?.length || 0} עדכונים + ${s.newInRivhit?.length || 0} מוצרים חדשים. דוח מלא נשלח באימייל. אם תקין — הרץ "סנכרון אמיתי".`
+        );
+      } else {
+        const updated = s.bulkResult?.modifiedCount ?? 0;
+        const created = s.createdCount ?? 0;
+        notifySuccess(`סנכרון הסתיים: ${updated} עודכנו, ${created} נוצרו. רענן את הרשימה.`);
+        setIsUpdate(true);
+      }
+    } catch (err) {
+      const msg = err?.response?.data?.message?.he || err?.response?.data?.message?.en
+        || err?.message || "שגיאה בסנכרון";
+      notifyError(typeof msg === "string" ? msg : "שגיאה בסנכרון");
+    } finally {
+      setRivhitSyncing(false);
+    }
   };
 
   // Reset pending barcode when drawer closes
@@ -310,6 +351,16 @@ const Products = () => {
                   ),
                   onClick: downloadProductImages,
                   disabled: !data?.products || data.products.length === 0
+                },
+                {
+                  label: (
+                    <div className="flex items-center gap-1.5 text-red-700 dark:text-red-300">
+                      <FiRefreshCw size={17} className={rivhitSyncing ? "animate-spin" : ""} />
+                      סנכרון ריווחית — אמיתי (LIVE)
+                    </div>
+                  ),
+                  onClick: () => handleRivhitSync(false),
+                  disabled: rivhitSyncing
                 },
                 {
                   label: (

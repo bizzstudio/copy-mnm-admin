@@ -102,6 +102,25 @@ const PriceListDrawer = ({ id }) => {
                                                 <Error errorName={errors.name} />
                                             </div>
                                         </div>
+
+                                        {/* מזהה מחירון בריווחית (לסנכרון יומי) */}
+                                        <div className="flex flex-col gap-1 col-span-12">
+                                            <LabelArea label={t("RivhitPriceListId")} />
+                                            <div className="col-span-12">
+                                                <InputArea
+                                                    register={register}
+                                                    required={false}
+                                                    label={t("RivhitPriceListId")}
+                                                    name="rivhitPriceListId"
+                                                    type="number"
+                                                    placeholder={t("RivhitPriceListIdPlaceholder")}
+                                                />
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {t("RivhitPriceListIdHint")}
+                                                </p>
+                                                <Error errorName={errors.rivhitPriceListId} />
+                                            </div>
+                                        </div>
                                         <div className="flex flex-col gap-1 col-span-12">
                                             <LabelArea label={t("ImportPricesByFile")} />
                                             <div>

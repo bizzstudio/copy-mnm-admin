@@ -58,6 +58,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
     prices,
     handlePriceChange,
     priceLists,
+    requiresAdminReview,
   } = useProductSubmit(id, pendingBarcode, onBarcodeUsed);
 
   const slug = watch("slug");
@@ -162,6 +163,33 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-2 pb-28 sm:pb-32 w-full grid grid-cols-12 gap-5 items-start content-start">
+
+              {/* אזהרה: מוצר שנוצר אוטומטית מסנכרון ריווחית ועדיין דורש השלמת פרטים */}
+              {requiresAdminReview && (
+                <div className="col-span-12">
+                  <div
+                    role="alert"
+                    className="border border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-700 rounded-md px-4 py-3 flex items-start gap-3"
+                  >
+                    <span className="text-red-600 dark:text-red-400 text-xl leading-none">⚠️</span>
+                    <div className="flex-1">
+                      <div className="font-semibold text-red-700 dark:text-red-300 mb-1">
+                        מוצר זה נוצר אוטומטית מסנכרון ריווחית — נדרשת השלמה
+                      </div>
+                      <div className="text-sm text-red-700 dark:text-red-300">
+                        אנא השלימו <strong>קטגוריה</strong> ו<strong>תמונה</strong>, ולאחר מכן לחצו על "סמן כנבדק" כדי להסיר את האזהרה. עד אז המוצר מוצג באתר במצב חלקי.
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setValue("requiresAdminReview", false, { shouldDirty: true })}
+                        className="mt-3 inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
+                      >
+                        ✓ סמן כנבדק (יישמר בשמירה הבאה)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* פרטים בסיסיים */}
               <div className="col-span-12">

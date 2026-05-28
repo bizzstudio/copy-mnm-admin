@@ -78,6 +78,10 @@ const sidebar = [
         name: "CashierOrders",
       },
       {
+        path: "/agent-orders",
+        name: "AgentOrders",
+      },
+      {
         path: "/statuses",
         name: "Statuses",
       },
@@ -88,6 +92,12 @@ const sidebar = [
     path: "/our-staff",
     icon: FiUser,
     name: "OurStaff",
+  },
+
+  {
+    path: "/agents",
+    icon: FiTarget,
+    name: "Agents",
   },
 
   {

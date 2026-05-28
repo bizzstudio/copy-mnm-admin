@@ -37,6 +37,8 @@ const Messages = lazy(() => import("@/pages/Messages"));
 const Blogs = lazy(() => import("@/pages/Blogs"));
 const PriceLists = lazy(() => import("@/pages/PriceLists"));
 const FormSubmissions = lazy(() => import("@/pages/FormSubmissions"));
+const Agents = lazy(() => import("@/pages/Agents"));
+const AgentOrders = lazy(() => import("@/pages/AgentOrders"));
 
 /*
 //  * ⚠ These are internal routes!
@@ -192,6 +194,16 @@ const routes = [
     path: "/forms/submissions",
     component: FormSubmissions,
     title: "FormsSubmissionsPageTitle",
+  },
+  {
+    path: "/agents",
+    component: Agents,
+    title: "AgentsPageTitle",
+  },
+  {
+    path: "/agent-orders",
+    component: AgentOrders,
+    title: "AgentOrdersPageTitle",
   },
 ];
 

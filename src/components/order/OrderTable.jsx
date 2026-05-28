@@ -12,7 +12,7 @@ import useUtilsFunction from "@/hooks/useUtilsFunction";
 import PrintReceipt from "@/components/form/others/PrintReceipt";
 import SelectStatus from "@/components/form/selectOption/SelectStatus";
 
-const OrderTable = ({ orders, isCashierOrders = false }) => {
+const OrderTable = ({ orders, isCashierOrders = false, isAgentOrders = false }) => {
   // console.log('globalSetting',globalSetting)
   const { t } = useTranslation();
   const { showDateTimeFormat, currency, getNumberTwo } = useUtilsFunction();
@@ -40,7 +40,56 @@ const OrderTable = ({ orders, isCashierOrders = false }) => {
               </span>
             </TableCell>
 
-            {isCashierOrders ? (
+            {isAgentOrders ? (
+              <>
+                {/* סוכן */}
+                <TableCell className="text-center max-w-[10vw] overflow-hidden truncate"
+                  title={order?.agent?.name || 'לא זמין'}>
+                  <span className="text-sm font-semibold">{order?.agent?.name || 'לא זמין'}</span>
+                </TableCell>
+
+                {/* שם לקוח (מ-mainCustomer או user_info) */}
+                <TableCell className="text-center max-w-[10vw] overflow-hidden truncate"
+                  title={order?.mainCustomer?.name || order?.user_info?.name || 'לא זמין'}>
+                  <span className="text-sm">{order?.mainCustomer?.name || order?.user_info?.name || 'לא זמין'}</span>
+                </TableCell>
+
+                {/* טלפון לקוח */}
+                <TableCell className="text-center">
+                  <span className="text-sm">{order?.mainCustomer?.phone || order?.user_info?.contact || 'לא זמין'}</span>
+                </TableCell>
+
+                {/* כמות מוצרים */}
+                <TableCell className="text-center">
+                  <span className="text-sm">{order?.cart?.length || 0}</span>
+                </TableCell>
+
+                {/* הנחת סוכן */}
+                <TableCell className="text-center">
+                  <span className="text-sm">
+                    {order?.agentDiscountPercent ? `${order.agentDiscountPercent}%` : '-'}
+                  </span>
+                </TableCell>
+
+                {/* סכום סופי */}
+                <TableCell className="text-center">
+                  <span className="text-sm font-semibold">
+                    {currency}
+                    {getNumberTwo(order?.total)}
+                  </span>
+                </TableCell>
+
+                {/* סטטוס */}
+                <TableCell className="text-center">
+                  <span
+                    className="text-xs px-2 py-1 rounded-full text-white"
+                    style={{ background: order?.status?.color || "#6b7280" }}
+                  >
+                    {order?.status?.heName || order?.status?.name || "—"}
+                  </span>
+                </TableCell>
+              </>
+            ) : isCashierOrders ? (
               <>
                 {/* קופאי */}
                 <TableCell className="text-center max-w-[10vw] overflow-hidden truncate"
@@ -135,7 +184,9 @@ const OrderTable = ({ orders, isCashierOrders = false }) => {
 
             <TableCell className="text-center flex justify-center">
               <div className="flex justify-between items-center">
-                <PrintReceipt orderId={order._id} isCashierOrder={isCashierOrders} />
+                {!isAgentOrders && (
+                  <PrintReceipt orderId={order._id} isCashierOrder={isCashierOrders} />
+                )}
 
                 <span className="p-2 cursor-pointer text-gray-400 hover:text-customGreen-dark">
                   <Link to={isCashierOrders ? `/cashier-order/${order._id}` : `/order/${order._id}`}>

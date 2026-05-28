@@ -57,6 +57,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
       weight: null,
       weightUnit: "",
       managementNotes: "",
+      requiresAdminReview: false,
     },
   });
 
@@ -70,6 +71,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
   const isComplementaryProduct = watch("isComplementaryProduct");
   const manageStock = watch("manageStock");
   const slug = watch("slug");
+  const requiresAdminReview = watch("requiresAdminReview");
 
   // מוצר חדש: פטור ממע״מ רק כשקטגוריה מזוהה כפירות/ירקות; אחרת ברירת מחדל חייב במע״מ
   useEffect(() => {
@@ -134,13 +136,15 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
 
         tag: tag || [],
 
-        prices: prices.map(p => ({
-          priceList: p.priceList,
-          price: Number(p.price) || 0,
-          salePrice: p.salePrice ? Number(p.salePrice) : null,
-          warehousePrice: p.warehousePrice ? Number(p.warehousePrice) : null,
-          purchaseLimit: p.purchaseLimit ? Number(p.purchaseLimit) : null
-        })),
+        prices: prices
+          .filter(p => p.priceList)
+          .map(p => ({
+            priceList: p.priceList,
+            price: Number(p.price) || 0,
+            salePrice: p.salePrice ? Number(p.salePrice) : null,
+            warehousePrice: p.warehousePrice ? Number(p.warehousePrice) : null,
+            purchaseLimit: p.purchaseLimit ? Number(p.purchaseLimit) : null
+          })),
 
         kashrut: kashrut || [],
         supplier: data.supplier || "",
@@ -152,6 +156,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         weight: data.weight ? Number(data.weight) : null,
         weightUnit: data.weightUnit || "",
         managementNotes: data.managementNotes || "",
+        requiresAdminReview: !!data.requiresAdminReview,
       };
 
       console.log("productData :>>", productData);
@@ -248,6 +253,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
               weight: res.weight || null,
               weightUnit: res.weightUnit || "",
               managementNotes: res.managementNotes || "",
+              requiresAdminReview: res.requiresAdminReview === true,
             });
 
             if (res.categories && Array.isArray(res.categories)) {
@@ -389,6 +395,7 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
     setPrices,
     handlePriceChange,
     priceLists,
+    requiresAdminReview,
   };
 };
 

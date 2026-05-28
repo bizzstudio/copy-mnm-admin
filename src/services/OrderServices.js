@@ -55,6 +55,24 @@ const OrderServices = {
     );
   },
 
+  getAllAgentOrders: async ({
+    customerName,
+    page = 1,
+    limit = 100,
+    startDate,
+    endDate,
+    type,
+  } = {}) => {
+    const params = new URLSearchParams();
+    if (customerName) params.set("customerName", customerName);
+    if (page) params.set("page", page);
+    if (limit) params.set("limit", limit);
+    if (startDate) params.set("startDate", startDate);
+    if (endDate) params.set("endDate", endDate);
+    if (type) params.set("type", type);
+    return requests.get(`/orders/agent-orders?${params.toString()}`);
+  },
+
   getAllOrdersTwo: async ({ invoice, body, headers }) => {
     const searchInvoice = invoice !== null ? invoice : "";
     return requests.get(`/orders/all?invoice=${searchInvoice}`, body, headers);
