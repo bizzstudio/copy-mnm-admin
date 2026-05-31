@@ -20,6 +20,7 @@ import Tabs from "@/components/common/Tabs";
 import CustomerPersonalDetails from "@/components/customer/CustomerPersonalDetails";
 import CustomerOrders from "@/components/customer/CustomerOrders";
 import CustomerDocuments from "@/components/customer/CustomerDocuments";
+import CustomerContracts from "@/components/customer/CustomerContracts";
 import ImportResultsModal from "@/components/modal/ImportResultsModal";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
@@ -343,6 +344,16 @@ const CustomerPage = () => {
                     onDocumentsFetch={handleDocumentsFetch}
                 />
             ),
+        },
+        {
+            id: "contracts",
+            label: (
+                <span className="flex gap-1.5 items-center justify-center">
+                    <BiFile size={17} />
+                    <span className="md:block hidden">הסכמים</span>
+                </span>
+            ),
+            content: <CustomerContracts customerId={id} />,
         },
         {
             id: "permittedProducts",
