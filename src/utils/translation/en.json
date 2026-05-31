@@ -55,6 +55,11 @@
   "Quote": "Quote",
   "AgentDiscount": "Agent discount",
   "ImportAgentPricing": "Import Agent Pricing",
+  "ImportErrorsTitle": "Failed import rows",
+  "DownloadErrorsExcel": "Download errors Excel",
+  "ErrorReason": "Error reason",
+  "ImportSucceeded": "Valid",
+  "NoErrors": "No errors",
 
   "Selected items": "Selected items",
   "minValue": "Minimum value is {{min}}",

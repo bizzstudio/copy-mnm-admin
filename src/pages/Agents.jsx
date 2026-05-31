@@ -19,6 +19,7 @@ import PageTitle from "@/components/Typography/PageTitle";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import AgentDrawer from "@/components/drawer/AgentDrawer";
 import AgentTable from "@/components/agents/AgentTable";
+import AgentPricingImportErrorsModal from "@/components/modal/AgentPricingImportErrorsModal";
 import NotFound from "@/components/table/NotFound";
 import TableLoading from "@/components/preloader/TableLoading";
 import { notifyError, notifySuccess } from "@/utils/toast";
@@ -106,6 +107,9 @@ const Agents = () => {
   // ====================== ייבוא אקסל מחירי סוכן ======================
   const fileInputRef = useRef(null);
   const [importing, setImporting] = useState(false);
+  const [errorsModalOpen, setErrorsModalOpen] = useState(false);
+  const [importErrors, setImportErrors] = useState([]);
+  const [importSummary, setImportSummary] = useState({});
 
   const openFilePicker = () => {
     if (fileInputRef.current) {
@@ -148,7 +152,9 @@ const Agents = () => {
       );
 
       if (res?.errors?.length) {
-        console.warn("Import errors:", res.errors);
+        setImportErrors(res.errors);
+        setImportSummary(summary);
+        setErrorsModalOpen(true);
       }
     } catch (err) {
       const msg =
@@ -158,6 +164,14 @@ const Agents = () => {
         err?.message ||
         "שגיאה בייבוא";
       notifyError(msg);
+      // השרת מחזיר errors גם בכישלון 400 — נציג גם אז
+      const errs = err?.response?.data?.errors;
+      const summary = err?.response?.data?.summary;
+      if (Array.isArray(errs) && errs.length) {
+        setImportErrors(errs);
+        setImportSummary(summary || {});
+        setErrorsModalOpen(true);
+      }
       console.error("Pricing import error:", err);
     } finally {
       setImporting(false);
@@ -171,6 +185,13 @@ const Agents = () => {
       <MainDrawer maxWidth="560px">
         <AgentDrawer id={serviceId} />
       </MainDrawer>
+
+      <AgentPricingImportErrorsModal
+        isOpen={errorsModalOpen}
+        onClose={() => setErrorsModalOpen(false)}
+        errors={importErrors}
+        summary={importSummary}
+      />
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>

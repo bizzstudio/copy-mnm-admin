@@ -55,6 +55,11 @@
   "Quote": "הצעת מחיר",
   "AgentDiscount": "הנחת סוכן",
   "ImportAgentPricing": "ייבוא אקסל מחירי סוכן",
+  "ImportErrorsTitle": "שורות שגויות בייבוא",
+  "DownloadErrorsExcel": "הורד אקסל שגויים",
+  "ErrorReason": "סיבת השגיאה",
+  "ImportSucceeded": "תקינים",
+  "NoErrors": "אין שגיאות",
 
   "Selected items": "הפריטים שנבחרו",
   "minValue": "הערך המינימלי הוא {{min}}",
