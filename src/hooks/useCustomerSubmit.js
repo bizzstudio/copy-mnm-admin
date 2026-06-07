@@ -103,6 +103,7 @@ const useCustomerSubmit = (customerId, customer) => {
         institutionType: customer.institutionType || "",
         priceList: getDefaultPriceList(customer.priceList),
         paymentTerms: customer.paymentTerms || "current",
+        noShipping: customer.noShipping || false,
         mainRivhitCustomerNumber: customer.externalCustomerId
           ? String(customer.externalCustomerId)
           : "",
@@ -121,6 +122,7 @@ const useCustomerSubmit = (customerId, customer) => {
       institutionType: "",
       priceList: getDefaultPriceListId(),
       paymentTerms: "current",
+      noShipping: false,
       mainRivhitCustomerNumber: "",
       subCustomers: [createEmptySubCustomer()],
     };
@@ -257,6 +259,7 @@ const useCustomerSubmit = (customerId, customer) => {
         priceList: finalPriceList,
         paymentTerms: data.paymentTerms,
         institutionType: data.institutionType || undefined,
+        noShipping: !!data.noShipping,
         subCustomers: subCustomersToSend,
       };
 

@@ -36,7 +36,7 @@ const useCategorySubmit = (id, data) => {
 
   // console.log("resData", resData);
 
-  const onSubmit = async ({ name, description, slug, sortOrder }) => {
+  const onSubmit = async ({ name, description, slug, sortOrder, rivhitGroupId }) => {
     try {
       setIsSubmitting(true);
 
@@ -71,6 +71,10 @@ const useCategorySubmit = (id, data) => {
         status: published ? "show" : "hide",
         lang: language,
         sortOrder: Number.isFinite(orderNum) ? orderNum : 0,
+        rivhitGroupId:
+          rivhitGroupId === "" || rivhitGroupId === undefined || rivhitGroupId === null
+            ? null
+            : Number(rivhitGroupId),
       };
 
       // console.log("category submit", categoryData);
@@ -116,6 +120,7 @@ const useCategorySubmit = (id, data) => {
       setValue("parentName");
       setValue("description");
       setValue("sortOrder", 0);
+      setValue("rivhitGroupId", "");
       setValue("icon");
       setImageUrl("");
       setColoredImageUrl("");
@@ -160,6 +165,7 @@ const useCategorySubmit = (id, data) => {
             setColoredImageUrl(res.coloredIcon);
             setPublished(res.status === "show" ? true : false);
             setValue("sortOrder", res.sortOrder ?? 0);
+            setValue("rivhitGroupId", res.rivhitGroupId ?? "");
           }
         } catch (err) {
           notifyError(err ? err.response.data.message : err.message);

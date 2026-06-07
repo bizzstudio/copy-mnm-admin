@@ -281,6 +281,23 @@ const CategoryDrawer = ({ id, data }) => {
                         />
                       </div>
                     </div>
+
+                    {/* מזהה קבוצת ריווחית (לשיוך אוטומטי של מוצרים חדשים מסנכרון ריווחית) */}
+                    <div className="flex flex-col gap-1 md:col-span-6 col-span-12">
+                      <LabelArea label={t('RivhitGroupId')} />
+                      <div className="col-span-12">
+                        <Input
+                          {...register('rivhitGroupId')}
+                          type="number"
+                          step="1"
+                          placeholder={t('RivhitGroupIdPlaceholder')}
+                          className="w-full"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {t('RivhitGroupIdHint')}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </CollapsibleSection>
               </div>

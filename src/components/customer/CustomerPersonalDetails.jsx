@@ -196,6 +196,22 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                     />
                                     <Error errorName={errors.mainRivhitCustomerNumber} />
                                 </div>
+
+                                {/* ללא משלוח – איסוף עצמי, ללא חיוב משלוח */}
+                                <div className="flex flex-col">
+                                    <LabelArea label={t("NoShipping") || "ללא משלוח"} />
+                                    <label className="inline-flex items-center gap-2 cursor-pointer mt-2">
+                                        <input
+                                            type="checkbox"
+                                            {...register("noShipping")}
+                                            className="w-5 h-5 rounded border-gray-300 text-mainColor focus:ring-mainColor cursor-pointer"
+                                        />
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                                            {t("NoShippingHint") || "הזמנות הלקוח יהיו באיסוף עצמי וללא חיוב משלוח"}
+                                        </span>
+                                    </label>
+                                    <Error errorName={errors.noShipping} />
+                                </div>
                             </div>
 
                             {/* סעיף תת-לקוחות */}
