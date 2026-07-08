@@ -6,20 +6,75 @@
 
 /* Custom Theme - Tailwind v4 */
 @theme {
-    /* Colors */
-    --color-mainColor-superLight: #f2f4fa;
-    --color-mainColor-light: #7a90cc;
-    --color-mainColor: #3961ce;
-    --color-mainColor-DEFAULT: #3961ce;
-    --color-mainColor-dark: #f21e27;
+    /* =========================================================
+       Brand — Violet (iCount-inspired)
+       Legacy token names kept so existing `mainColor` classes
+       re-skin automatically. `-dark` = darker/hover shade of
+       the primary (NOT a danger red).
+       ========================================================= */
+    --color-mainColor-superLight: #f5f1fe; /* violet 50  — soft tint bg      */
+    --color-mainColor-light:      #9573ec; /* violet 400 — light text/border */
+    --color-mainColor:            #6c3ee0; /* violet 600 — brand             */
+    --color-mainColor-DEFAULT:    #6c3ee0;
+    --color-mainColor-dark:       #5c2fd1; /* violet 700 — hover / active    */
+
+    /* Full violet scale for new components */
+    --color-primary-50:  #f5f1fe;
+    --color-primary-100: #ebe3fd;
+    --color-primary-200: #d6c7fb;
+    --color-primary-300: #b69ef4;
+    --color-primary-400: #9573ec;
+    --color-primary-500: #7c4deb;
+    --color-primary-600: #6c3ee0;
+    --color-primary-700: #5827b8;
+    --color-primary-800: #45208f;
+    --color-primary-900: #341a6b;
+
+    /* =========================================================
+       Accent — Amber (the "orange dot"; nods to the product)
+       ========================================================= */
+    --color-accent-50:  #fef4e4;
+    --color-accent-100: #fde7c2;
+    --color-accent-300: #f8c069;
+    --color-accent:     #f2941b;
+    --color-accent-500: #f2941b;
+    --color-accent-700: #c56e08;
+
+    /* =========================================================
+       Neutrals — violet-biased, chosen not defaulted
+       ========================================================= */
+    --color-ink:         #1c1a2e; /* strongest text / data      */
+    --color-head:        #453f63; /* headings — soft indigo-grey */
+    --color-body:        #4a4761; /* body text                  */
+    --color-muted:       #8a87a0; /* captions / placeholders    */
+    --color-line:        #eae8f4; /* hairline border            */
+    --color-line-strong: #ded9ee; /* input border               */
+    --color-canvas:      #f5f4fa; /* app background             */
+    --color-surface:     #ffffff; /* cards / panels             */
+    --color-surface-2:   #fbfaff; /* subtle raised surface      */
+
+    /* =========================================================
+       Semantic — state only (kept separate from the accent)
+       ========================================================= */
+    --color-success:    #16a34a;
+    --color-success-bg: #e7f6ed;
+    --color-warning:    #e9930b;
+    --color-warning-bg: #fdf1dc;
+    --color-danger:     #e11d48;
+    --color-danger-bg:  #fce7ec;
+    --color-info:       #2e7de0;
+    --color-info-bg:    #e6f0fc;
 
     /* Font Family */
     --font-family-sans: "Assistant", sans-serif;
     --font-family-serif: "Inter", sans-serif;
 
-    /* Box Shadow - using custom properties */
+    /* Box Shadow — softer, violet-tinted */
     --shadow-around: 0 4px 8px 4px rgba(0, 0, 0, 0.05);
     --shadow-bottom: 0 5px 6px -7px rgba(0, 0, 0, 0.6), 0 2px 4px -5px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 1px 2px rgba(28, 20, 60, 0.05);
+    --shadow-soft: 0 6px 20px -8px rgba(70, 40, 140, 0.20), 0 2px 6px -2px rgba(28, 20, 60, 0.06);
+    --shadow-float: 0 20px 45px -18px rgba(70, 40, 140, 0.35), 0 8px 20px -12px rgba(28, 20, 60, 0.14);
     --shadow-up-sm: 0 -1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-up: 0 -1px 3px 0 rgba(0, 0, 0, 0.1), 0 -1px 2px -1px rgba(0, 0, 0, 0.1);
     --shadow-up-md: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.1);

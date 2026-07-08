@@ -56,7 +56,7 @@ const ViewAttribute = ({ attribute }) => {
           id="view"
           Icon={FiZoomIn}
           title="View Attribute"
-          bgColor="#3961ce"
+          bgColor="#6c3ee0"
         />
       </div>
     </>

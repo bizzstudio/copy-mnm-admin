@@ -1,1 +1,0 @@
-import{j as o}from"./index-C1goNCb7.js";const x=({id:r,name:t,type:n,handleClick:s,isChecked:c,disabled:e})=>o.jsx(o.Fragment,{children:o.jsx("input",{id:r,name:t,type:n,onChange:s,checked:c,disabled:e,className:e?"opacity-50 cursor-not-allowed":""})});export{x as C};
