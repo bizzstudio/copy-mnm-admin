@@ -64,8 +64,8 @@ const useLoginSubmit = () => {
             dispatch({ type: "USER_LOGIN", payload: res });
             Cookies.set("adminInfo", JSON.stringify(res), {
               expires: cookieTimeOut,
-              sameSite: "None",
-              secure: true,
+              sameSite: "Lax",
+              secure: false,
             });
             navigate("/dashboard", { replace: true });
             window.location.reload();
@@ -105,8 +105,8 @@ const useLoginSubmit = () => {
           if (res?.trustedToken) {
             Cookies.set("trustedDevice", res.trustedToken, {
               expires: 30,
-              sameSite: "None",
-              secure: true,
+              sameSite: "Lax",
+              secure: false,
             });
           }
 
@@ -115,8 +115,8 @@ const useLoginSubmit = () => {
             dispatch({ type: "USER_LOGIN", payload: res });
             Cookies.set("adminInfo", JSON.stringify(res), {
               expires: cookieTimeOut,
-              sameSite: "None",
-              secure: true,
+              sameSite: "Lax",
+              secure: false,
             });
             navigate("/dashboard", { replace: true });
             window.location.reload();
@@ -137,8 +137,8 @@ const useLoginSubmit = () => {
             dispatch({ type: "USER_LOGIN", payload: res });
             Cookies.set("adminInfo", JSON.stringify(res), {
               expires: cookieTimeOut,
-              sameSite: "None",
-              secure: true,
+              sameSite: "Lax",
+              secure: false,
             });
             navigate("/", { replace: true });
           }

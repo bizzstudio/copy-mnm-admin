@@ -57,10 +57,10 @@ export default defineConfig({
           scope: ".",
           start_url: ".",
           id: ".",
-          short_name: "MNM - ייבוא שיווק והפצה",
-          name: "MNM - ייבוא שיווק והפצה",
+          short_name: "BizzExpo",
+          name: "BizzExpo",
           description:
-            "MNM - ייבוא שיווק והפצה",
+            "BizzExpo",
           icons: [
             {
               src: "favicon.ico",

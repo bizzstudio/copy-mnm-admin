@@ -347,7 +347,7 @@ const InvoiceForDownload = ({
               >
                 <Image
                   src={logoDark}
-                  alt="MNM - ייבוא שיווק והפצה"
+                  alt="BizzExpo"
                   style={{
                     width: 90,
                     alignItems: "right",

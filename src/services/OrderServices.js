@@ -136,6 +136,25 @@ const OrderServices = {
   getBestSellerProductChart: async () => {
     return requests.get("/orders/best-seller/chart");
   },
+
+  // כל נתוני דשבורד המכירות בקריאה אחת
+  getSalesDashboard: async ({
+    startDate,
+    endDate,
+    priceList,
+    agent,
+    branch,
+    channel,
+  } = {}) => {
+    const params = new URLSearchParams();
+    if (startDate) params.set("startDate", startDate);
+    if (endDate) params.set("endDate", endDate);
+    if (priceList) params.set("priceList", priceList);
+    if (agent) params.set("agent", agent);
+    if (branch) params.set("branch", branch);
+    if (channel) params.set("channel", channel);
+    return requests.get(`/orders/sales-dashboard?${params.toString()}`);
+  },
 };
 
 export default OrderServices;
