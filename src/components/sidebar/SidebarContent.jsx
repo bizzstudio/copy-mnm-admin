@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Avatar, WindmillContext } from "@windmill/react-ui";
 import Cookies from "js-cookie";
-import logo from "/logo.png";
+import Logo from "@/components/common/Logo";
 
 // Icons
 import { IoLogOutOutline } from "react-icons/io5";
@@ -80,12 +80,8 @@ const SidebarContent = () => {
   return (
     <div className="flex flex-col h-full pb-4 text-gray-500 dark:text-gray-400">
       {/* לוגו בחלק העליון */}
-      <div className="flex justify-center border-b border-gray-200 dark:border-gray-700 p-2">
-        <img
-          src={logo}
-          alt="Logo"
-          className="w-auto object-contain"
-        />
+      <div className="flex justify-center border-b border-gray-200 dark:border-gray-700 p-4">
+        <Logo size="md" />
       </div>
 
       {/* תפריט ניווט - גדל לפי הצורך */}

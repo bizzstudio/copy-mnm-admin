@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import Error from "@/components/form/others/Error";
 import LabelArea from "@/components/form/selectOption/LabelArea";
 import AdminServices from "@/services/AdminServices";
-import logo from "/logo.png";
+import Logo from "@/components/common/Logo";
 import notifyApiResponse from "@/utils/notifyApiResponse";
 import CMButton from "@/components/form/button/CMButton";
 import { t } from "i18next";
@@ -49,12 +49,7 @@ const ResetPassword = () => {
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
         <div className="flex flex-col overflow-y-auto md:flex-row">
           <div className="w-full md:h-auto md:w-1/2 flex flex-col items-center justify-center md:ps-12 md:pe-2 md:pt-0 pt-10 px-6">
-            <img
-              aria-hidden="true"
-              className="object-contain w-full h-full md:max-w-none max-w-[150px]"
-              src={logo}
-              alt="Logo"
-            />
+            <Logo size="lg" />
           </div>
           <main className="flex items-center justify-center p-6 md:p-12 md:w-1/2">
             <div className="w-full">

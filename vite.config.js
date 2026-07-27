@@ -50,8 +50,8 @@ export default defineConfig({
       ],
       manifest: [
         {
-          theme_color: "#f69435",
-          background_color: "#f69435",
+          theme_color: "#2f4bb5",
+          background_color: "#ffffff",
           display: "standalone",
           orientation: "portrait",
           scope: ".",
@@ -63,28 +63,18 @@ export default defineConfig({
             "BizzExpo",
           icons: [
             {
-              src: "favicon.ico",
-              sizes: "48x48",
-              type: "image/x-icon",
+              src: "/bizzexpo-icon.svg",
+              sizes: "any",
+              type: "image/svg+xml",
             },
             {
-              src: "/icon-192x192.png",
+              src: "/bizzexpo-icon-192.png",
               sizes: "192x192",
               type: "image/png",
               purpose: "maskable",
             },
             {
-              src: "/icon-256x256.png",
-              sizes: "256x256",
-              type: "image/png",
-            },
-            {
-              src: "/icon-384x384.png",
-              sizes: "384x384",
-              type: "image/png",
-            },
-            {
-              src: "/icon-512x512.png",
+              src: "/bizzexpo-icon-512.png",
               sizes: "512x512",
               type: "image/png",
             },

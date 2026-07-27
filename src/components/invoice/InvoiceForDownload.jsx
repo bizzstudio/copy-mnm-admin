@@ -9,7 +9,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 import { useTranslation } from "react-i18next";
-import logoDark from "@/assets/img/logo/logo-color.png";
+import logoDark from "@/assets/img/logo/bizzexpo-logo.png";
 import AddressFormat from "../AddressFormat";
 import { getOrderLineVatBreakdown } from "@/utils/orderLineVat";
 

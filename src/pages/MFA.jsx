@@ -7,7 +7,7 @@ import { Input } from "@windmill/react-ui";
 // Internal import
 import Error from "@/components/form/others/Error";
 import LabelArea from "@/components/form/selectOption/LabelArea";
-import logo from "/logo.png";
+import Logo from "@/components/common/Logo";
 import useLoginSubmit from "@/hooks/useLoginSubmit";
 import CMButton from "@/components/form/button/CMButton";
 
@@ -35,12 +35,9 @@ const MFA = () => {
         <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col w-full max-w-xl bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
                 {/* Hero Section - Logo */}
-                <img
-                    aria-hidden="true"
-                    className="object-contain sm:w-3/5 h-auto mx-auto p-6"
-                    src={logo}
-                    alt="Logo"
-                />
+                <div className="flex justify-center p-6">
+            <Logo size="lg" />
+          </div>
                 
                 {/* Form Section */}
                 <main className="flex items-center justify-center p-6 sm:p-8 md:p-12 md:pt-0 sm:pt-0 pt-0">
