@@ -14,8 +14,8 @@
        ========================================================= */
     --color-mainColor-superLight: #f5f1fe; /* violet 50  — soft tint bg      */
     --color-mainColor-light:      #9573ec; /* violet 400 — light text/border */
-    --color-mainColor:            #6c3ee0; /* violet 600 — brand             */
-    --color-mainColor-DEFAULT:    #6c3ee0;
+    --color-mainColor:            #3b6fd4; /* violet 600 — brand             */
+    --color-mainColor-DEFAULT:    #3b6fd4;
     --color-mainColor-dark:       #5c2fd1; /* violet 700 — hover / active    */
 
     /* Full violet scale for new components */
@@ -25,7 +25,7 @@
     --color-primary-300: #b69ef4;
     --color-primary-400: #9573ec;
     --color-primary-500: #7c4deb;
-    --color-primary-600: #6c3ee0;
+    --color-primary-600: #3b6fd4;
     --color-primary-700: #5827b8;
     --color-primary-800: #45208f;
     --color-primary-900: #341a6b;
