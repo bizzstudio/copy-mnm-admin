@@ -91,9 +91,15 @@ const LocationStockCard = ({ locations = [], loading, currency }) => {
                     />
                   </span>
 
-                  {/* ניצולת מוצגת רק כשהוגדרה קיבולת למיקום */}
+                  {/* ניצולת מוצגת רק כשהוגדרה קיבולת למיקום.
+                      מעל 100% = גלישה מעבר לקיבולת, ולכן מודגש ולא מוסתר. */}
                   {l.fillPct !== null && l.fillPct !== undefined && (
-                    <span className="shrink-0 text-[11px] text-gray-400">
+                    <span
+                      className={`shrink-0 text-[11px] ${l.fillPct > 100
+                        ? "font-semibold text-rose-600 dark:text-rose-400"
+                        : "text-gray-400"
+                        }`}
+                    >
                       {Math.round(l.fillPct)}% מהקיבולת
                     </span>
                   )}
