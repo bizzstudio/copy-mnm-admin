@@ -121,11 +121,10 @@ const Dashboard = () => {
     }
 
     if (profitComparable === false) {
+      // ניסוח ממוקד-פעולה: מה חסר ואיפה, ולא "שגיאה"
+      const gap = 100 - (Number(previousCostCoverage) || 0);
       notes.push(
-        `כיסוי עלות שונה מהתקופה הקודמת (${formatPercent(
-          costCoverage,
-          0
-        )} מול ${formatPercent(previousCostCoverage, 0)}) — ההשוואה אינה אמינה`
+        `חסרים מחירי עלות ב-${formatPercent(gap, 0)} ממכירות התקופה הקודמת`
       );
     }
 
@@ -164,11 +163,7 @@ const Dashboard = () => {
           title="רווח גולמי"
           value={formatMoney(kpi?.grossProfit?.value, currency)}
           changePct={kpi?.grossProfit?.changePct}
-          emptyLabel={
-            kpi?.grossProfit?.comparable === false
-              ? "השוואה לא אמינה"
-              : "אין נתוני השוואה"
-          }
+          emptyLabel="ללא השוואה לתקופה הקודמת"
           Icon={FiTrendingUp}
           tone="emerald"
           loading={loading}
