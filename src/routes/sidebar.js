@@ -142,6 +142,11 @@ const sidebar = [
         outside: "likutApp",
       },
       {
+        name: "ViewAgentsApp",
+        path: "https://demoagent.bizzstudio.co.il",
+        outside: "agentsApp",
+      },
+      {
         path: "/store/customization",
         name: "StoreCustomization",
       },

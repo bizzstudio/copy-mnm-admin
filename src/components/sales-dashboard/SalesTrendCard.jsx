@@ -16,12 +16,14 @@ const densify = (rows = [], from, to) => {
   let cursor = dayjs(from).startOf("day");
   const last = dayjs(to).startOf("day");
 
-  // תקרת ביטחון — טווח ארוך במיוחד לא יתקע את הדפדפן
+  // תקרת ביטחון מעל MAX_RANGE_DAYS שבשרת (731), כדי שלא תיחתך נקודה אמיתית
+  const MAX_POINTS = 800;
+
   while (cursor.isBefore(last) || cursor.isSame(last)) {
     const key = cursor.format("YYYY-MM-DD");
     out.push({ date: key, total: byDate.get(key) || 0 });
     cursor = cursor.add(1, "day");
-    if (out.length > 730) break;
+    if (out.length >= MAX_POINTS) break;
   }
   return out;
 };

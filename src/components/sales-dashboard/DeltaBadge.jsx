@@ -6,7 +6,7 @@ import { formatPercent } from "@/utils/dashboardFormat";
  * חיווי שינוי מול התקופה הקודמת.
  * changePct === null פירושו שאין בסיס להשוואה (לא היו נתונים בתקופה הקודמת).
  */
-const DeltaBadge = ({ changePct, label = "לעומת התקופה הקודמת", invert = false }) => {
+const DeltaBadge = ({ changePct, label = "לעומת התקופה הקודמת" }) => {
   if (changePct === null || changePct === undefined) {
     return (
       <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
@@ -16,14 +16,13 @@ const DeltaBadge = ({ changePct, label = "לעומת התקופה הקודמת",
   }
 
   const isUp = changePct >= 0;
-  const isGood = invert ? !isUp : isUp;
   const Icon = isUp ? FiArrowUpRight : FiArrowDownRight;
 
   return (
     <p className="mt-2 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
       <span
         className={`flex items-center gap-0.5 font-semibold ${
-          isGood
+          isUp
             ? "text-emerald-600 dark:text-emerald-400"
             : "text-rose-600 dark:text-rose-400"
         }`}

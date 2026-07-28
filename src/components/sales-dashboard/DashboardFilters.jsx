@@ -1,5 +1,5 @@
 // src/components/sales-dashboard/DashboardFilters.jsx
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiCalendar, FiChevronDown, FiFilter, FiRotateCcw } from "react-icons/fi";
 
 const PRESETS = [
@@ -31,9 +31,10 @@ const FilterSelect = ({ value, onChange, placeholder, options, disabled }) => (
         </option>
       ))}
     </select>
+    {/* ב-RTL הצ'ברון בצד שמאל — end-3 תואם ל-pe-8 של השדה */}
     <FiChevronDown
       size={15}
-      className="pointer-events-none absolute inset-y-0 start-3 my-auto text-gray-400"
+      className="pointer-events-none absolute inset-y-0 end-3 my-auto text-gray-400"
     />
   </div>
 );
@@ -55,8 +56,28 @@ const DashboardFilters = ({
   onReset,
 }) => {
   const [openPanel, setOpenPanel] = useState(null);
+  const barRef = useRef(null);
 
   const toggle = (panel) => setOpenPanel((cur) => (cur === panel ? null : panel));
+
+  // סגירת החלונית בלחיצה בחוץ או ב-Escape — אחרת היא נשארת פתוחה מעל התוכן
+  useEffect(() => {
+    if (!openPanel) return;
+
+    const onPointerDown = (e) => {
+      if (barRef.current && !barRef.current.contains(e.target)) setOpenPanel(null);
+    };
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setOpenPanel(null);
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [openPanel]);
 
   const rangeLabel =
     startDate && endDate
@@ -69,7 +90,7 @@ const DashboardFilters = ({
   const extraFilters = priceList ? 1 : 0;
 
   return (
-    <div className="mb-6 flex flex-wrap items-center gap-2">
+    <div ref={barRef} className="mb-6 flex flex-wrap items-center gap-2">
       {/* טווח תאריכים */}
       <div className="relative">
         <button type="button" onClick={() => toggle("dates")} className={controlClass}>

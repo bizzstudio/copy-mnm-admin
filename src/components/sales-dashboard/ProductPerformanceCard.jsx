@@ -22,6 +22,13 @@ const marginTone = (pct) => {
 const ProductPerformanceCard = ({ products = [], loading, currency }) => {
   const { showingTranslateValue } = useUtilsFunction();
 
+  // כותרת המוצר מגיעה כאובייקט רב-לשוני, אבל בהזמנות ישנות היא יכולה להיות
+  // מחרוזת רגילה — showingTranslateValue מחזיר undefined במקרה כזה.
+  const productTitle = (title) => {
+    if (typeof title === "string") return title;
+    return showingTranslateValue(title) || title?.he || title?.en || "—";
+  };
+
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-xs dark:border-gray-700 dark:bg-gray-800">
       <h2 className="mb-4 text-base font-semibold text-gray-800 dark:text-gray-100">
@@ -68,7 +75,7 @@ const ProductPerformanceCard = ({ products = [], loading, currency }) => {
                         )}
                       </span>
                       <span className="font-medium text-gray-700 dark:text-gray-200">
-                        {showingTranslateValue(p.title) || "—"}
+                        {productTitle(p.title)}
                       </span>
                     </div>
                   </td>

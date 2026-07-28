@@ -162,8 +162,10 @@ const styles = StyleSheet.create({
     // backgroundColor:'#F2FCF9',
   },
   logo: {
-    width: 64,
-    height: 25,
+    // יחס הלוגו 1200x263 (4.56:1) — גובה קבוע היה מועך אותו
+    width: 82,
+    height: 18,
+    objectFit: "contain",
     bottom: 5,
     right: 10,
     marginBottom: 10,

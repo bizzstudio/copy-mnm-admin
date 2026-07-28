@@ -33,7 +33,7 @@ const sliceLabelsPlugin = {
       const pct = ((Number(values[i]) || 0) / total) * 100;
       if (pct < 4) return;
 
-      const { x, y } = arc.tooltipPosition();
+      const { x, y } = arc.getCenterPoint();
       ctx.fillStyle = "#ffffff";
       ctx.fillText(`${Math.round(pct)}%`, x, y);
     });
