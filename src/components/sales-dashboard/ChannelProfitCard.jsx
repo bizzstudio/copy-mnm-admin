@@ -101,7 +101,8 @@ const ChannelProfitCard = ({ channels = [], totalProfit = 0, loading, currency }
             </div>
           </div>
 
-          <ul className="w-full space-y-2.5">
+          {/* הרוחב מוגבל כדי שהאחוז יישאר צמוד לתווית ולא ייזרק לקצה הכרטיס */}
+          <ul className="w-full max-w-[220px] space-y-2.5">
             {channels.map((c, i) => (
               <li key={c.key} className="flex items-center gap-2 text-sm">
                 <span
@@ -118,7 +119,7 @@ const ChannelProfitCard = ({ channels = [], totalProfit = 0, loading, currency }
                     {formatMoney(c.profit, currency)}
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                <span className="shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
                   {formatPercent(c.share, 0)}
                 </span>
               </li>

@@ -107,13 +107,30 @@ const Dashboard = () => {
 
   const kpi = data?.kpi;
 
-  // חיווי אמינות לכרטיס הרווח: כמה מהמכירות מכוסות בנתוני עלות
+  // חיווי אמינות לכרטיס הרווח.
+  // הרווח מחושב רק על מוצרים שיש להם מחיר עלות, ולכן חשוב להראות
+  // גם את הכיסוי וגם מתי ההשוואה בין התקופות לא אמינה בגללו.
   const profitNote = useMemo(() => {
-    const coverage = data?.costCoverage;
-    if (coverage === undefined || coverage === null) return null;
-    if (coverage >= 99) return null;
-    return `מחושב על ${formatPercent(coverage, 0)} מהמכירות (יתר המוצרים ללא מחיר עלות)`;
-  }, [data?.costCoverage]);
+    if (!data) return null;
+
+    const { costCoverage, previousCostCoverage, profitComparable } = data;
+    const notes = [];
+
+    if (typeof costCoverage === "number" && costCoverage < 99) {
+      notes.push(`מחושב על ${formatPercent(costCoverage, 0)} מהמכירות`);
+    }
+
+    if (profitComparable === false) {
+      notes.push(
+        `כיסוי עלות שונה מהתקופה הקודמת (${formatPercent(
+          costCoverage,
+          0
+        )} מול ${formatPercent(previousCostCoverage, 0)}) — ההשוואה אינה אמינה`
+      );
+    }
+
+    return notes.length ? notes.join(" · ") : null;
+  }, [data]);
 
   return (
     <div className="mx-auto flex h-fit w-full flex-col overflow-x-hidden px-5 sm:px-4 lg:px-20">
@@ -147,6 +164,11 @@ const Dashboard = () => {
           title="רווח גולמי"
           value={formatMoney(kpi?.grossProfit?.value, currency)}
           changePct={kpi?.grossProfit?.changePct}
+          emptyLabel={
+            kpi?.grossProfit?.comparable === false
+              ? "השוואה לא אמינה"
+              : "אין נתוני השוואה"
+          }
           Icon={FiTrendingUp}
           tone="emerald"
           loading={loading}

@@ -5,7 +5,16 @@ import DeltaBadge from "./DeltaBadge";
 /**
  * כרטיס מדד עליון: כותרת, ערך גדול, שינוי מול התקופה הקודמת ואייקון מודגש.
  */
-const KpiCard = ({ title, value, changePct, Icon, tone = "blue", loading, note }) => {
+const KpiCard = ({
+  title,
+  value,
+  changePct,
+  Icon,
+  tone = "blue",
+  loading,
+  note,
+  emptyLabel,
+}) => {
   const tones = {
     blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
     emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
@@ -32,9 +41,11 @@ const KpiCard = ({ title, value, changePct, Icon, tone = "blue", loading, note }
         <p className="mt-1.5 truncate text-2xl font-bold text-gray-800 dark:text-gray-100">
           {value}
         </p>
-        <DeltaBadge changePct={changePct} />
+        <DeltaBadge changePct={changePct} emptyLabel={emptyLabel} />
         {note && (
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">{note}</p>
+          <p className="mt-1 text-xs leading-snug text-gray-400 dark:text-gray-500">
+            {note}
+          </p>
         )}
       </div>
 

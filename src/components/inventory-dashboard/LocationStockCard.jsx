@@ -4,6 +4,7 @@ import { FiAlertTriangle, FiHome, FiShoppingBag, FiTruck } from "react-icons/fi"
 
 import {
   LOCATION_TYPE_COLORS,
+  STOCK_STATUS_COLORS,
   formatMoney,
   formatNumber,
   formatUnits,
@@ -24,7 +25,7 @@ const LocationStockCard = ({ locations = [], loading, currency }) => {
 
   return (
     <div className="flex h-full flex-col rounded-xl border border-gray-100 bg-white p-5 shadow-xs dark:border-gray-700 dark:bg-gray-800">
-      <div className="mb-4 flex items-baseline justify-between gap-2">
+      <div className="mb-1 flex items-baseline justify-between gap-2">
         <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100">
           מלאי לפי מיקום
         </h2>
@@ -32,6 +33,18 @@ const LocationStockCard = ({ locations = [], loading, currency }) => {
           {formatNumber(locations.length)} מיקומים פעילים
         </span>
       </div>
+
+      {/* מקרא — בלעדיו הפס והמספר הצהוב לא מסבירים את עצמם */}
+      {!loading && locations.length > 0 && (
+        <p className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-400">
+          <span>הפס — ניצולת מול קיבולת המיקום</span>
+          <span aria-hidden="true">·</span>
+          <span className="flex items-center gap-1">
+            <FiAlertTriangle size={11} className="text-amber-500" />
+            מוצרים שדורשים חידוש שם
+          </span>
+        </p>
+      )}
 
       {loading ? (
         <Skeleton count={5} height={40} />
@@ -47,6 +60,19 @@ const LocationStockCard = ({ locations = [], loading, currency }) => {
             const Icon = TYPE_ICONS[l.type] || FiHome;
             const color = LOCATION_TYPE_COLORS[l.type];
             const alerts = (l.outRows || 0) + (l.lowRows || 0);
+
+            /* הפס מציג בדיוק את מה שכתוב לצידו.
+               קודם הוא הציג נתח מול המיקום הגדול ביותר בזמן שהטקסט הציג
+               ניצולת מול הקיבולת — שני מדדים שונים באותה שורה, ולכן מיקום
+               ב-110% מהקיבולת נראה עם פס כמעט ריק. */
+            const hasCapacity = l.fillPct !== null && l.fillPct !== undefined;
+            const overCapacity = hasCapacity && l.fillPct > 100;
+
+            // בלי קיבולת מוגדרת אין ניצולת לחשב, ואז מוצג נתח מסך המלאי —
+            // עם תווית אחרת, כדי ששני המדדים לא יתחזו זה לזה.
+            const barPct = hasCapacity
+              ? Math.min(100, l.fillPct)
+              : (l.units / maxUnits) * 100;
 
             return (
               <li key={l.id}>
@@ -85,27 +111,41 @@ const LocationStockCard = ({ locations = [], loading, currency }) => {
                     <span
                       className="block h-full rounded-full transition-all"
                       style={{
-                        width: `${Math.max(2, (l.units / maxUnits) * 100)}%`,
-                        backgroundColor: color,
+                        width: `${Math.max(2, barPct)}%`,
+                        // גלישה מעבר לקיבולת נצבעת באדום, אחרת פס מלא
+                        // ב-100% נראה זהה למיקום שמלא בדיוק
+                        backgroundColor: overCapacity
+                          ? STOCK_STATUS_COLORS.out
+                          : color,
                       }}
                     />
                   </span>
 
-                  {/* ניצולת מוצגת רק כשהוגדרה קיבולת למיקום.
-                      מעל 100% = גלישה מעבר לקיבולת, ולכן מודגש ולא מוסתר. */}
-                  {l.fillPct !== null && l.fillPct !== undefined && (
-                    <span
-                      className={`shrink-0 text-[11px] ${l.fillPct > 100
-                        ? "font-semibold text-rose-600 dark:text-rose-400"
-                        : "text-gray-400"
-                        }`}
-                    >
-                      {Math.round(l.fillPct)}% מהקיבולת
-                    </span>
-                  )}
+                  <span
+                    className={`shrink-0 text-[11px] ${overCapacity
+                      ? "font-semibold text-rose-600 dark:text-rose-400"
+                      : "text-gray-400"
+                      }`}
+                    title={
+                      hasCapacity
+                        ? `${formatUnits(l.units)} מתוך קיבולת של ${formatNumber(
+                          l.capacityUnits
+                        )} יח׳`
+                        : "לא הוגדרה קיבולת למיקום — מוצג הנתח מסך המלאי"
+                    }
+                  >
+                    {hasCapacity
+                      ? `${Math.round(l.fillPct)}% מהקיבולת`
+                      : `${Math.round(barPct)}% מסך המלאי`}
+                  </span>
 
                   {alerts > 0 && (
-                    <span className="flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                    <span
+                      title={`${formatNumber(
+                        alerts
+                      )} מוצרים דורשים חידוש במיקום הזה (אזלו או מתחת לסף)`}
+                      className="flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                    >
                       <FiAlertTriangle size={11} />
                       {formatNumber(alerts)}
                     </span>
