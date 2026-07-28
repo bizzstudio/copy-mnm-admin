@@ -3,6 +3,7 @@ import { lazy } from "react";
 // use lazy for better code splitting
 const StatusInvoice = lazy(()=>import("@/pages/StatusInvoice"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const StockDashboard = lazy(() => import("@/pages/StockDashboard"));
 const Attributes = lazy(() => import("@/pages/Attributes"));
 const ChildAttributes = lazy(() => import("@/pages/ChildAttributes"));
 const Products = lazy(() => import("@/pages/Products"));
@@ -55,6 +56,10 @@ const routes = [
   {
     path: "/dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/stock-dashboard",
+    component: StockDashboard,
   },
   {
     path: "/products",

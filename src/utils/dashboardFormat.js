@@ -41,6 +41,20 @@ export const CHANNEL_COLORS = [
 // גוני הפסים בהתפלגות הלקוחות החוזרים
 export const BAR_COLORS = ["#2f4bb5", "#4a7fe0", "#7fb3e8", "#a9cdf2"];
 
+// דשבורד המלאי — צבע לכל סוג מיקום, באותה משפחה של פלטת הערוצים
+export const LOCATION_TYPE_COLORS = {
+  warehouse: "#2f4bb5",
+  store: "#5b8def",
+  truck: "#8ed8dd",
+};
+
+// מצב מלאי: תקין / מתחת לסף / אזל
+export const STOCK_STATUS_COLORS = {
+  ok: "#4a7fe0",
+  low: "#e8a13f",
+  out: "#e8636f",
+};
+
 export const TREND_COLORS = {
   current: "#3b6fd4",
   currentFill: "rgba(59, 111, 212, 0.10)",

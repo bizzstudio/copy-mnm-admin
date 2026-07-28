@@ -8,6 +8,7 @@ import {
   FiGlobe,
   FiTarget,
   FiFileText,
+  FiPackage,
 } from "react-icons/fi";
 import { FaRegWindowRestore } from "react-icons/fa6";
 import { GoDependabot } from "react-icons/go";
@@ -26,6 +27,12 @@ const sidebar = [
     path: "/dashboard", // the url
     icon: FiGrid, // icon
     name: "Dashboard", // name that appear in Sidebar
+  },
+
+  {
+    path: "/stock-dashboard",
+    icon: FiPackage,
+    name: "StockDashboard",
   },
 
   {
