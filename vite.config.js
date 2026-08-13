@@ -95,6 +95,25 @@ export default defineConfig({
   },
 
   resolve: {
+    /**
+     * ONE React, however many packages ask for it.
+     *
+     * `@bizzexpo/shared` is linked with `file:../bizzexpo-shared`, and that
+     * directory has its own `node_modules/react` (React is a devDependency there
+     * so the package can build and test itself). Without this line the bundle
+     * ends up with TWO copies: the app's, and the one reached through the link.
+     *
+     * React keeps the state of the currently-rendering component in a module
+     * level variable, so a hook called from the second copy reads a dispatcher
+     * that is `null` — which surfaces as
+     *
+     *     Cannot read properties of null (reading 'useId')
+     *
+     * and a blank page. The message names a hook and points at the shared
+     * package, so it reads like a bug in that component; it is not. Nothing is
+     * wrong with the code on either side, only with there being two Reacts.
+     */
+    dedupe: ["react", "react-dom"],
     alias: {
       // eslint-disable-next-line no-undef
       "@": path.resolve(__dirname, "./src/"),

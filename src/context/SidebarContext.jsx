@@ -147,6 +147,20 @@ export const SidebarProvider = ({ children }) => {
       }
     };
 
+    /**
+     * A BizzStudio session skips all three.
+     *
+     * Statuses, price lists and payment types are one TENANT's data, and a
+     * platform operator is not inside a tenant — the requests answer 401 and 404
+     * because they correctly cannot say whose statuses to return. Nothing broke
+     * when they ran, but the console filled with failures that look like a
+     * misconfigured server, and the first thing anyone does with a blank screen
+     * is read the console. Not asking is both quieter and more honest.
+     */
+    const info = Cookies.get("adminInfo");
+    const role = info ? JSON.parse(info)?.role : null;
+    if (role === "superadmin" || role === "platform-admin") return;
+
     facthStatusesData();
     fetchPriceLists();
     fetchPaymentTypes();
