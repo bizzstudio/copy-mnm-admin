@@ -76,15 +76,19 @@ const SidebarContent = () => {
 
   let filteredSidebar = sidebar.filter((route) => {
     /**
-     * For BizzStudio the menu is ONLY its own screens — and for everyone else it
-     * is only the tenant's. It is not a matter of tidiness: every other entry
-     * here opens one TENANT's data, and a platform session is not inside a
-     * tenant, so those pages render empty and fill the console with 404s. A menu
-     * item that cannot work is worse than a missing one, because it invites the
-     * click and then looks broken.
+     * BizzStudio sees EVERYTHING — its own screens and every tenant's.
+     *
+     * The tenant screens are not empty for a platform session: `authenticate`
+     * puts a `super-admin` role in the request context, `buildTenantFilter`
+     * answers that with no filter at all, and the ordinary product, order and
+     * customer lists come back holding every tenant's rows with `tenantId` on
+     * each one saying whose it is. Same screens, one extra column — rather than
+     * a second console that reimplements each of them and drifts.
+     *
+     * Only the reverse is hidden: a tenant's staff never see the platform
+     * entries, because the server refuses `/api/platform/*` to them anyway.
      */
-    if (isPlatformUser) return route.platformOnly === true;
-    if (route.platformOnly) return false;
+    if (route.platformOnly && !isPlatformUser) return false;
 
     // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
     const restrictedRoutes = [

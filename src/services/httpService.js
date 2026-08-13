@@ -27,8 +27,24 @@ instance.interceptors.request.use(function (config) {
   // console.log('Admin Http Services Cookie Read : ' + company);
   // let companyName = JSON.stringify(company);
 
+  /**
+   * BizzStudio's chosen tenant, attached to every request.
+   *
+   * A platform session reads the tenant screens UNFILTERED, so without this the
+   * only view available is "all customers at once". `buildTenantFilter` narrows
+   * to a single tenant when it is given one — but only for a context the server
+   * marked `super-admin` itself during authentication. Setting this cookie as a
+   * tenant admin changes nothing at all: the value is dropped without comment.
+   *
+   * Sent as a query parameter rather than a header because that is what
+   * `tenantContextMiddleware` already reads, and because it then shows up in
+   * access logs beside the request it changed the meaning of.
+   */
+  const filterTenant = Cookies.get("bzFilterTenant");
+
   return {
     ...config,
+    params: filterTenant ? { ...(config.params || {}), tenantId: filterTenant } : config.params,
     headers: {
       authorization: adminInfo ? `Bearer ${adminInfo.token}` : null,
       company: company ? company : null,
