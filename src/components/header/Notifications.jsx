@@ -298,21 +298,6 @@ const Notifications = () => {
 
     // פונקציה לטעינת התראות עם דפדוף
     const fetchNotifications = async (page) => {
-        /**
-         * A BizzStudio session has no notifications to fetch.
-         *
-         * Notifications belong to ONE tenant, and a platform operator is not
-         * inside one — so `/api/notification` answers 404, correctly, because it
-         * cannot say whose. Guarded here rather than at the call site because
-         * this is reached from mount, from paging and from the bell itself, and
-         * each retry added another 404 to a console that ended up with dozens of
-         * them. A page that looks broken is the first thing anyone reports, and
-         * these were pure noise sitting on top of a screen that worked.
-         */
-        const info = Cookies.get("adminInfo");
-        const role = info ? JSON.parse(info)?.role : null;
-        if (role === "superadmin" || role === "platform-admin") return;
-
         // מניעת טעינה כפולה במקרה שטעינה כבר מתבצעת
         if (isLoadingNotifications) return;
 

@@ -38,12 +38,6 @@ const Messages = lazy(() => import("@/pages/Messages"));
 const Blogs = lazy(() => import("@/pages/Blogs"));
 const PriceLists = lazy(() => import("@/pages/PriceLists"));
 const FormSubmissions = lazy(() => import("@/pages/FormSubmissions"));
-
-// BizzStudio's platform screens — see the note at their route entries below.
-const PlatformTenants = lazy(() => import("@/pages/platform/Tenants"));
-const PlatformTenantWizard = lazy(() => import("@/pages/platform/TenantWizard"));
-const PlatformTenantSettings = lazy(() => import("@/pages/platform/TenantSettings"));
-const PlatformModules = lazy(() => import("@/pages/platform/PlatformModules"));
 const Agents = lazy(() => import("@/pages/Agents"));
 const AgentOrders = lazy(() => import("@/pages/AgentOrders"));
 
@@ -215,40 +209,6 @@ const routes = [
     path: "/agent-orders",
     component: AgentOrders,
     title: "AgentOrdersPageTitle",
-  },
-
-  /**
-   * BizzStudio's own screens — the tenant list, the creation wizard, one
-   * tenant's settings, and the module catalogue.
-   *
-   * They sit in the ORDINARY admin, not a separate console. There is one app to
-   * build, deploy and keep working, and a super-admin who is already looking at
-   * a tenant's data does not have to change tabs to change its plan.
-   *
-   * Hidden from a tenant's staff by the sidebar, which asks `usePlatformRole`.
-   * That is UX only, and deliberately so: the server refuses every
-   * `/api/platform/*` call that does not carry a platform token, so a tenant
-   * admin who types the URL by hand reaches a screen that can load nothing.
-   */
-  {
-    path: "/platform/tenants",
-    component: PlatformTenants,
-    title: "לקוחות",
-  },
-  {
-    path: "/platform/tenants/new",
-    component: PlatformTenantWizard,
-    title: "לקוח חדש",
-  },
-  {
-    path: "/platform/tenants/:id",
-    component: PlatformTenantSettings,
-    title: "הגדרות לקוח",
-  },
-  {
-    path: "/platform/modules",
-    component: PlatformModules,
-    title: "מודולים",
   },
 ];
 

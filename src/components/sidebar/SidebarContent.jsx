@@ -59,37 +59,8 @@ const SidebarContent = () => {
     setProfileOpen(!profileOpen);
   };
 
-  /**
-   * BizzStudio's entries are hidden from everyone else.
-   *
-   * `'superadmin'` (one word) is the PLATFORM role, as stored on `PlatformUser`
-   * and checked by the server. It is not MNM's `'Super Admin'`, which is a role
-   * inside one tenant and confers nothing here — a customer may call their own
-   * manager whatever they like.
-   *
-   * This is presentation only. `/api/platform/*` refuses any request without a
-   * platform token, so a hidden item and a forbidden endpoint cannot disagree in
-   * the direction that matters.
-   */
-  const isPlatformUser =
-    adminInfo?.role === "superadmin" || adminInfo?.role === "platform-admin";
-
+  // סינון הקישורים לפי תפקיד המשתמש
   let filteredSidebar = sidebar.filter((route) => {
-    /**
-     * BizzStudio sees EVERYTHING — its own screens and every tenant's.
-     *
-     * The tenant screens are not empty for a platform session: `authenticate`
-     * puts a `super-admin` role in the request context, `buildTenantFilter`
-     * answers that with no filter at all, and the ordinary product, order and
-     * customer lists come back holding every tenant's rows with `tenantId` on
-     * each one saying whose it is. Same screens, one extra column — rather than
-     * a second console that reimplements each of them and drifts.
-     *
-     * Only the reverse is hidden: a tenant's staff never see the platform
-     * entries, because the server refuses `/api/platform/*` to them anyway.
-     */
-    if (route.platformOnly && !isPlatformUser) return false;
-
     // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
     const restrictedRoutes = [
       // "Admins"

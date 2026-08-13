@@ -3,7 +3,6 @@ import AdminServices from "@/services/AdminServices";
 import StatusServices from "@/services/StatusService";
 import PriceListServices from "@/services/PriceListServices";
 import CustomerServices from "@/services/CustomerServices";
-import PlatformServices from "@/services/PlatformServices";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -147,20 +146,6 @@ export const SidebarProvider = ({ children }) => {
       }
     };
 
-    /**
-     * A BizzStudio session skips all three.
-     *
-     * Statuses, price lists and payment types are one TENANT's data, and a
-     * platform operator is not inside a tenant — the requests answer 401 and 404
-     * because they correctly cannot say whose statuses to return. Nothing broke
-     * when they ran, but the console filled with failures that look like a
-     * misconfigured server, and the first thing anyone does with a blank screen
-     * is read the console. Not asking is both quieter and more honest.
-     */
-    const info = Cookies.get("adminInfo");
-    const role = info ? JSON.parse(info)?.role : null;
-    if (role === "superadmin" || role === "platform-admin") return;
-
     facthStatusesData();
     fetchPriceLists();
     fetchPaymentTypes();
@@ -181,24 +166,6 @@ export const SidebarProvider = ({ children }) => {
     refetchStatuses();
   }, [isUpdate]);
 
-  /**
-   * Every page a signed-OUT visitor is allowed to be on.
-   *
-   * This provider wraps the whole app, sign-in screens included, so the check
-   * below runs on them too. It used to compare against the single string
-   * "/login", which meant every OTHER public page — the platform sign-in, the
-   * password reset, the two-factor step — ran a token validation, found no
-   * cookie, and bounced the visitor to /login through `window.location`. That is
-   * a full page load outside the router, so it looks exactly like "the address I
-   * typed sends me back to the old screen".
-   */
-  const PUBLIC_PATHS = [
-    "/login",
-    "/platform/login",
-    "/forgot-password",
-    "/mfa",
-  ];
-
   // ווידוא שהטוקן עדיין תקין
   useEffect(() => {
     const validateToken = async () => {
@@ -215,40 +182,20 @@ export const SidebarProvider = ({ children }) => {
           return;
         }
 
-        /**
-         * A BizzStudio session is checked against the PLATFORM endpoint.
-         *
-         * `/admin/validate-token` is a tenant route, and `authenticate` refuses a
-         * token whose `typ` is not the one that route accepts — which is the
-         * escalation fix doing its job. Sending a platform token there returns a
-         * refusal, and the code below reads any refusal as "session expired",
-         * deletes the cookie and redirects. The effect was that signing in as
-         * BizzStudio worked and then logged itself out on the next render.
-         */
-        const isPlatform =
-          adminInfo.role === "superadmin" || adminInfo.role === "platform-admin";
-
-        const ok = isPlatform
-          ? Boolean(await PlatformServices.me())
-          : (await AdminServices.validateToken()) === true;
-
-        if (!ok) {
+        const data = await AdminServices.validateToken();
+        if (data !== true) {
           Cookies.remove("adminInfo");
-          window.location.pathname = isPlatform ? "/platform/login" : "/login";
+          window.location.pathname = "/login";
         }
       } catch (error) {
         console.error("Error validating token:", error);
         Cookies.remove("adminInfo");
         window.location.pathname = "/login";
       }
-    };
+    }
 
-    // רק אם לא נמצאים בעמוד ציבורי
-    const path = window.location.pathname;
-    const isPublic =
-      PUBLIC_PATHS.includes(path) || path.startsWith("/reset-password");
-
-    if (!isPublic) {
+    // רק אם לא נמצאים בעמוד לוגין
+    if (window.location.pathname !== "/login") {
       validateToken();
     }
   }, []);

@@ -73,25 +73,6 @@ const Login = () => {
                   {t("ForgotPassword")}
                 </Link>
               </p>
-
-              {/*
-                The way out for BizzStudio.
-
-                This screen is the fallback for the catch-all route and for
-                `PrivateRoute`, so it is where you land on a hostname that
-                belongs to no tenant — where it cannot possibly work. The
-                submit handler already redirects on a 404, but only after
-                someone has typed a password and pressed the button. A visible
-                link means nobody has to fail first to find the right door.
-              */}
-              <p className="mt-2 w-full text-end">
-                <Link
-                  className="text-xs text-gray-400 dark:text-gray-500 hover:underline"
-                  to="/platform/login"
-                >
-                  כניסת מנהלי פלטפורמה
-                </Link>
-              </p>
             </div>
           </main>
         </div>
