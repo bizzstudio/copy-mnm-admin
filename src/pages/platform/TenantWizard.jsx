@@ -107,7 +107,7 @@ export default function TenantWizard() {
         moduleKeys: form.moduleKeys,
         firstAdmin: form.firstAdmin,
       });
-      navigate(`/tenants/${created.tenant._id}/settings`);
+      navigate(`/platform/tenants/${created.tenant._id}`);
     } catch (err) {
       setError(err.displayMessage);
       setSaving(false);

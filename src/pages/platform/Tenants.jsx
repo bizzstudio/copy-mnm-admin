@@ -59,7 +59,7 @@ export default function Tenants() {
         title="לקוחות"
         description="כל הלקוחות של bizzstudio. פריסה אחת, בסיס נתונים אחד."
         actions={
-          <Button onClick={() => navigate('/tenants/new')} iconStart="＋">
+          <Button onClick={() => navigate('/platform/tenants/new')} iconStart="＋">
             הוסף לקוח
           </Button>
         }
@@ -94,7 +94,7 @@ export default function Tenants() {
         <EmptyState
           title="עדיין אין לקוחות"
           description="צרו את הלקוח הראשון. הוא יקבל ארבע כתובות שעובדות מיד, בלי להמתין ל-DNS."
-          action={<Button onClick={() => navigate('/tenants/new')}>הוסף לקוח</Button>}
+          action={<Button onClick={() => navigate('/platform/tenants/new')}>הוסף לקוח</Button>}
         />
       )}
 
@@ -148,7 +148,7 @@ export default function Tenants() {
                     </div>
                   </Td>
                   <Td>
-                    <Link to={`/tenants/${t.id}/settings`}>
+                    <Link to={`/platform/tenants/${t.id}`}>
                       <Button variant="secondary" size="sm">הגדרות</Button>
                     </Link>
                   </Td>

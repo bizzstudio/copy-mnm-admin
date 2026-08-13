@@ -68,7 +68,7 @@ export default function TenantSettings() {
         <ContextBanner
           title={`הגדרות הלקוח: ${tenant.nameHe}`}
           subtitle={`מזהה: ${tenant.slug} · אתם עורכים חשבון של לקוח אחר`}
-          action={<Button variant="secondary" size="sm" onClick={() => navigate('/tenants')}>חזרה לרשימה</Button>}
+          action={<Button variant="secondary" size="sm" onClick={() => navigate('/platform/tenants')}>חזרה לרשימה</Button>}
         />
       </div>
 
