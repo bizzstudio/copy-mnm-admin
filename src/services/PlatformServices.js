@@ -26,6 +26,9 @@ const PlatformServices = {
   /** Issue a one-shot impersonation ticket. Needs the ACTOR's own operation password. */
   impersonate: (id, body) => http.post(`/platform/tenants/${id}/impersonate`, body),
 
+  /** "Is this platform session still good?" — the platform side of validate-token. */
+  me: () => http.get('/platform/me'),
+
   listModules: (kind) => http.get('/platform/modules', { params: kind ? { kind } : {} }),
   createModule: (body) => http.post('/platform/modules', body),
   updateModule: (key, body) => http.patch(`/platform/modules/${key}`, body),
