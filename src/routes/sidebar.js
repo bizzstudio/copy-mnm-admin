@@ -206,6 +206,29 @@ const sidebar = [
     name: "Forms",
     path: "/forms/submissions",
   },
+
+  /**
+   * BizzStudio only. `platformOnly` is read by the sidebar component, which asks
+   * `usePlatformRole` and drops these entries for anyone else.
+   *
+   * Hiding a menu item is a COURTESY, never the control. The server refuses
+   * every `/api/platform/*` call that does not carry a platform token, so a
+   * tenant admin who guesses the URL gets a screen with nothing in it — which is
+   * the honest outcome, and the reason it is safe to keep one app for both
+   * audiences instead of building a second console.
+   */
+  {
+    icon: FiGlobe,
+    name: "לקוחות",
+    path: "/platform/tenants",
+    platformOnly: true,
+  },
+  {
+    icon: FiPackage,
+    name: "מודולים",
+    path: "/platform/modules",
+    platformOnly: true,
+  },
 ];
 
 export default sidebar;

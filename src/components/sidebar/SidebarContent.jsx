@@ -59,8 +59,24 @@ const SidebarContent = () => {
     setProfileOpen(!profileOpen);
   };
 
-  // סינון הקישורים לפי תפקיד המשתמש
+  /**
+   * BizzStudio's entries are hidden from everyone else.
+   *
+   * `'superadmin'` (one word) is the PLATFORM role, as stored on `PlatformUser`
+   * and checked by the server. It is not MNM's `'Super Admin'`, which is a role
+   * inside one tenant and confers nothing here — a customer may call their own
+   * manager whatever they like.
+   *
+   * This is presentation only. `/api/platform/*` refuses any request without a
+   * platform token, so a hidden item and a forbidden endpoint cannot disagree in
+   * the direction that matters.
+   */
+  const isPlatformUser =
+    adminInfo?.role === "superadmin" || adminInfo?.role === "platform-admin";
+
   let filteredSidebar = sidebar.filter((route) => {
+    if (route.platformOnly && !isPlatformUser) return false;
+
     // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
     const restrictedRoutes = [
       // "Admins"
