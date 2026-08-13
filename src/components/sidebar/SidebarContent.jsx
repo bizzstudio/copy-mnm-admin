@@ -75,7 +75,16 @@ const SidebarContent = () => {
     adminInfo?.role === "superadmin" || adminInfo?.role === "platform-admin";
 
   let filteredSidebar = sidebar.filter((route) => {
-    if (route.platformOnly && !isPlatformUser) return false;
+    /**
+     * For BizzStudio the menu is ONLY its own screens — and for everyone else it
+     * is only the tenant's. It is not a matter of tidiness: every other entry
+     * here opens one TENANT's data, and a platform session is not inside a
+     * tenant, so those pages render empty and fill the console with 404s. A menu
+     * item that cannot work is worse than a missing one, because it invites the
+     * click and then looks broken.
+     */
+    if (isPlatformUser) return route.platformOnly === true;
+    if (route.platformOnly) return false;
 
     // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
     const restrictedRoutes = [
