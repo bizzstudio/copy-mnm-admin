@@ -21,6 +21,26 @@ const useLoginSubmit = () => {
   const location = useLocation();
   const lang = Cookies.get("i18next");
 
+  /**
+   * A 404 from a sign-in call does not mean "wrong password". It means THIS
+   * HOSTNAME BELONGS TO NO TENANT, so a tenant sign-in cannot succeed on it
+   * whatever is typed.
+   *
+   * The platform's own address is deliberately registered to no customer, and
+   * this screen is what BOTH the catch-all route and `PrivateRoute` fall back
+   * to — so anyone who opens the admin there lands on a form that can only
+   * fail, retypes the password, fails again, and has nothing on the page
+   * suggesting a way out. The only sign-in that works on a tenant-less host is
+   * the platform one, so go there rather than reporting an error.
+   *
+   * @returns {boolean} whether it handled the error and the caller should stop.
+   */
+  const goToPlatformIfNoTenant = (err) => {
+    if (err?.response?.status !== 404) return false;
+    navigate("/platform/login", { replace: true });
+    return true;
+  };
+
   const {
     register,
     handleSubmit,
@@ -72,6 +92,7 @@ const useLoginSubmit = () => {
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });
@@ -123,6 +144,7 @@ const useLoginSubmit = () => {
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });
@@ -144,6 +166,7 @@ const useLoginSubmit = () => {
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });
