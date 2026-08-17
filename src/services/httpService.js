@@ -99,6 +99,43 @@ export const genericError = () =>
   LANG() === "he" ? "אירעה שגיאה" : "Something went wrong";
 
 /**
+ * AN HTML BODY IS NOT A SUCCESSFUL API CALL, WHATEVER THE STATUS SAYS.
+ *
+ * `baseURL` is same-origin (`/api`), so every call depends on the web server in
+ * front of the app forwarding `/api/*` to the backend. When that forward is
+ * missing, the SPA fallback answers instead — `try_files … /index.html` /
+ * `RewriteRule … index.html` — and the request comes back **200 with
+ * index.html in the body**. axios has nothing to complain about: it was a 2xx.
+ *
+ * So `responseBody` hands the caller a STRING OF HTML where it expected an
+ * object, and every field read off it is `undefined`. In `useLoginSubmit` that
+ * means `res.step` and `res.token` are both missing, neither branch runs, and
+ * signing in does *nothing at all* — no toast, no navigation, no error. The one
+ * place the truth appeared was the network tab, as `Content-Type: text/html`.
+ *
+ * Rejecting here converts that silence into the message the operator needs: the
+ * API is not wired up, which is a deployment fault and not a wrong password.
+ * `responseType` is checked because the blob downloads legitimately receive
+ * non-JSON, and a PDF must not be turned into an error.
+ */
+instance.interceptors.response.use((res) => {
+  const contentType = res.headers?.["content-type"] || "";
+  const expectsJson = !res.config?.responseType || res.config.responseType === "json";
+
+  if (expectsJson && contentType.includes("text/html")) {
+    const err = new Error(`Expected JSON from ${res.config?.url}, got text/html`);
+    err.response = res;
+    err.displayMessage =
+      LANG() === "he"
+        ? "השרת החזיר דף HTML במקום תשובת API — ההפניה של /api לשרת אינה מוגדרת"
+        : "The server returned HTML instead of an API response — /api is not proxied to the backend";
+    return Promise.reject(err);
+  }
+
+  return res;
+});
+
+/**
  * Attach `displayMessage` to every rejection.
  *
  * The platform screens are all written as `.catch((err) => setError(err.displayMessage))`
@@ -109,6 +146,10 @@ export const genericError = () =>
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
+    // Interceptors run in registration order, so a rejection raised by the guard
+    // above arrives here with its message already chosen — keep it.
+    if (err.displayMessage) return Promise.reject(err);
+
     err.displayMessage = err.response
       ? extractMessage(err.response.data, err.response.status) || genericError()
       : LANG() === "he"
