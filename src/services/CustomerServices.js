@@ -17,14 +17,14 @@ const CustomerServices = {
   addAllCustomers: async (body) => {
     return requests.post("/customer/add/all", body);
   },
-  // user create
-  createCustomer: async (body) => {
-    return requests.post(`/customer/create`, body);
-  },
-
-  filterCustomer: async (email) => {
-    return requests.post(`/customer/filter/${email}`);
-  },
+  /**
+   * `createCustomer` and `filterCustomer` were here, posting to
+   * `/customer/create` and `/customer/filter/:email`. NEITHER ENDPOINT EXISTS —
+   * admin-side creation is `/customer/admin/create` — and no component called
+   * either. Removed rather than repointed, because a service method reads as an
+   * available capability and the next person to want one would have spent an
+   * afternoon on a 404.
+   */
 
   getCustomerById: async (id) => {
     return requests.get(`/customer/${id}`);

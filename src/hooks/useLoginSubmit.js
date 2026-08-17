@@ -21,6 +21,54 @@ const useLoginSubmit = () => {
   const location = useLocation();
   const lang = Cookies.get("i18next");
 
+  /**
+   * A 404 from a sign-in call does not mean "wrong password". It means THIS
+   * HOSTNAME BELONGS TO NO TENANT, so a tenant sign-in cannot succeed on it
+   * whatever is typed.
+   *
+   * The platform's own address is deliberately registered to no customer, and
+   * this screen is what BOTH the catch-all route and `PrivateRoute` fall back
+   * to — so anyone who opens the admin there lands on a form that can only
+   * fail, retypes the password, fails again, and has nothing on the page
+   * suggesting a way out. The only sign-in that works on a tenant-less host is
+   * the platform one, so go there rather than reporting an error.
+   *
+   * @returns {boolean} whether it handled the error and the caller should stop.
+   */
+  const goToPlatformIfNoTenant = (err) => {
+    if (err?.response?.status !== 404) return false;
+    navigate("/platform/login", { replace: true });
+    return true;
+  };
+
+  /**
+   * `{ token, refreshToken, user: {…} }` → the flat object the app already reads.
+   *
+   * `/auth/login` nests the account under `user`, where `/admin/login` returned
+   * its fields at the top level. Rather than chase `adminInfo.role` →
+   * `adminInfo.user.role` through the components that read it, the shape is
+   * normalised at the ONE place the cookie is written. The cookie is the app's
+   * contract with itself; the endpoint's response is not.
+   */
+  const flattenSession = (res) => ({
+    ...res.user,
+    _id: res.user?.id ?? res.user?._id,
+    token: res.token,
+    refreshToken: res.refreshToken,
+  });
+
+  const startSession = (res) => {
+    const session = flattenSession(res);
+    dispatch({ type: "USER_LOGIN", payload: session });
+    Cookies.set("adminInfo", JSON.stringify(session), {
+      expires: 30,
+      sameSite: "Lax",
+      secure: false,
+    });
+    navigate("/dashboard", { replace: true });
+    window.location.reload();
+  };
+
   const {
     register,
     handleSubmit,
@@ -61,17 +109,11 @@ const useLoginSubmit = () => {
           // 2) אם דילגנו על האימות דו שלבי (מכשיר מוכר) – מתנהגים כמו היום
           if (res?.token) {
             notifyApiResponse(res, true);
-            dispatch({ type: "USER_LOGIN", payload: res });
-            Cookies.set("adminInfo", JSON.stringify(res), {
-              expires: cookieTimeOut,
-              sameSite: "Lax",
-              secure: false,
-            });
-            navigate("/dashboard", { replace: true });
-            window.location.reload();
+            startSession(res);
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });
@@ -112,17 +154,11 @@ const useLoginSubmit = () => {
 
           if (res?.token) {
             notifySuccess(t("MFASuccess"));
-            dispatch({ type: "USER_LOGIN", payload: res });
-            Cookies.set("adminInfo", JSON.stringify(res), {
-              expires: cookieTimeOut,
-              sameSite: "Lax",
-              secure: false,
-            });
-            navigate("/dashboard", { replace: true });
-            window.location.reload();
+            startSession(res);
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });
@@ -144,6 +180,7 @@ const useLoginSubmit = () => {
           }
         })
         .catch((err) => {
+          if (goToPlatformIfNoTenant(err)) return setLoading(false);
           notifyApiResponse(err, false);
           setLoading(false);
         });

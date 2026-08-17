@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 // Internal import
 import { SidebarContext } from "@/context/SidebarContext";
 import CategoryServices from "@/services/CategoryServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { notifyError } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 // import useTranslationValue from "./useTranslationValue";
 
 const useCategorySubmit = (id, data) => {
@@ -84,21 +86,27 @@ const useCategorySubmit = (id, data) => {
         const res = await CategoryServices.updateCategory(id, categoryData);
         setIsUpdate(true);
         setIsSubmitting(false);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeDrawer();
         reset();
       } else {
         const res = await CategoryServices.addCategory(categoryData);
         setIsUpdate(true);
         setIsSubmitting(false);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeDrawer();
       }
       return;
 
     } catch (err) {
       setIsSubmitting(false);
-      notifyError(err ? err?.response?.data?.message : err?.message);
+      /**
+       * The tree rules answer 400 with a reason — a parent that no longer exists, a
+       * move into one's own sub-category, a taken slug. Reading only
+       * `response.data.message` dropped the ones the shared error handler wraps, so
+       * a refused move reported nothing and looked like a save that did not stick.
+       */
+      notifyApiResponse(err, false);
       closeDrawer();
     }
   };

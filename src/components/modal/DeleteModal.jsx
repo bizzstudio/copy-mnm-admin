@@ -20,6 +20,13 @@ import DeliveryServices from "@/services/DeliveryServices";
 import RegionServices from "@/services/RegionServices";
 import OfferServices from "@/services/OfferServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+/**
+ * The five catalogue resources answer with a BILINGUAL `{ he, en }` message now that
+ * their writes go through `/api/admin/*`. `notifySuccess` would hand that object
+ * straight to react-toastify; `notifyApiResponse` resolves it to the operator's
+ * language. The rows still on MNM's routes keep `notifySuccess(res.message)`.
+ */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 import StatusServices from "@/services/StatusService";
 import PopupServices from "@/services/PopupServices";
 import BlogServices from "@/services/BlogServices";
@@ -43,7 +50,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
             ids: ids,
           });
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsCheck([]);
           setServiceId();
           closeModal();
@@ -51,7 +58,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
         } else {
           const res = await ProductServices.deleteProduct(id);
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setServiceId();
           closeModal();
           setIsSubmitting(false);
@@ -64,7 +71,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
             ids: ids,
           });
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsCheck([]);
           setServiceId();
           closeModal();
@@ -72,7 +79,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
         } else {
           const res = await CouponServices.deleteCoupon(id);
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setServiceId();
           closeModal();
           setIsSubmitting(false);
@@ -87,7 +94,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
           });
           //  console.log('delete many category res',res)
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsCheck([]);
           setServiceId();
           closeModal();
@@ -101,7 +108,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
           // console.log('delete modal open',id)
           const res = await CategoryServices.deleteCategory(id);
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           closeModal();
           setServiceId();
           setIsSubmitting(false);
@@ -119,7 +126,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
 
         const res = await CategoryServices.deleteCategory(id);
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeModal();
         setServiceId();
         setIsSubmitting(false);
@@ -267,14 +274,14 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
             ids: ids,
           });
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsCheck([]);
           closeModal();
           setIsSubmitting(false);
         } else {
           const res = await OfferServices.deleteOffer(id);
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setServiceId();
           closeModal();
           setIsSubmitting(false);
@@ -364,6 +371,9 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
       }
 
       if (location.pathname === "/price-lists") {
+        // The server refuses this too (`catalogController.priceLists.guardDelete`).
+        // Checking here as well is not redundant: it is the difference between the
+        // operator being told before the modal acts and after.
         if (ids) {
           // Check if any of the selected price lists is default
           const priceLists = await PriceListServices.getAllPriceLists();
@@ -380,7 +390,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
             ids: ids,
           });
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsCheck([]);
           setServiceId();
           closeModal();
@@ -396,7 +406,7 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId }) => {
 
           const res = await PriceListServices.deletePriceList(id);
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setServiceId();
           closeModal();
           setIsSubmitting(false);

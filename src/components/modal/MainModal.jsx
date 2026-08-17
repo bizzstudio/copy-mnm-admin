@@ -13,6 +13,8 @@ import ProductServices from "@/services/ProductServices";
 import CategoryServices from "@/services/CategoryServices";
 import { SidebarContext } from "@/context/SidebarContext";
 import { notifySuccess, notifyError } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 
 const MainModal = ({ id, title }) => {
@@ -26,9 +28,9 @@ const MainModal = ({ id, title }) => {
       ProductServices.deleteProduct(id)
         .then((res) => {
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
         })
-        .catch((err) => notifyError(err.message));
+        .catch((err) => notifyApiResponse(err, false));
       closeModal();
       setServiceId();
     }
@@ -37,9 +39,9 @@ const MainModal = ({ id, title }) => {
       CategoryServices.deleteCategory(id)
         .then((res) => {
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
         })
-        .catch((err) => notifyError(err.message));
+        .catch((err) => notifyApiResponse(err, false));
       closeModal();
       setServiceId();
     }
@@ -58,9 +60,9 @@ const MainModal = ({ id, title }) => {
       CouponServices.deleteCoupon(id)
         .then((res) => {
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
         })
-        .catch((err) => notifyError(err.message));
+        .catch((err) => notifyApiResponse(err, false));
       closeModal();
       setServiceId();
     }

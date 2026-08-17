@@ -11,6 +11,8 @@ import CurrencyServices from "@/services/CurrencyServices";
 import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 
 const useBulkActionSubmit = (ids, lang = "en", childId) => {
   const [children, setChildren] = useState("");
@@ -55,7 +57,18 @@ const useBulkActionSubmit = (ids, lang = "en", childId) => {
         productType: [isFoodItem ? "food" : "others"],
         show: data.show,
         status: published ? "show" : "hide",
-        tag: JSON.stringify(tag),
+        /**
+         * The ARRAY, not `JSON.stringify(tag)`.
+         *
+         * `tag` is `[String]` on the schema and the product drawer posts an array.
+         * The stringified version reached mongoose as one long string and was cast
+         * to an array containing it — so a bulk edit replaced a product's tags with
+         * a single tag reading `["fruit","sale"]`. With no tags chosen it wrote the
+         * literal `[]`, which is why MNM's handler had a line skipping that exact
+         * string; sending the real array needs no such exception, and an empty one
+         * is dropped as "not part of this edit".
+         */
+        tag,
       };
 
       // language data
@@ -102,14 +115,14 @@ const useBulkActionSubmit = (ids, lang = "en", childId) => {
         // console.log("productData", productData);
         const res = await ProductServices.updateManyProducts(productData);
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeBulkDrawer();
       }
 
       if (location.pathname === "/coupons") {
         const res = await CouponServices.updateManyCoupons(couponData);
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeBulkDrawer();
       }
 
@@ -135,7 +148,7 @@ const useBulkActionSubmit = (ids, lang = "en", childId) => {
       ) {
         const res = await CategoryServices.updateManyCategory(categoryData);
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeBulkDrawer();
       }
 

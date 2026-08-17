@@ -6,7 +6,9 @@ import { useLocation } from "react-router-dom";
 // Internal import
 import { SidebarContext } from "@/context/SidebarContext";
 import ProductServices from "@/services/ProductServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { notifyError } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 import useUtilsFunction from "./useUtilsFunction";
 import { categorySuggestsFruitsVegetablesVatFree } from "@/utils/productFruitsVegetablesVat";
 
@@ -165,20 +167,26 @@ const useProductSubmit = (id, pendingBarcode = null, onBarcodeUsed = null) => {
         const res = await ProductServices.updateProduct(id, productData);
         if (res) {
           setIsUpdate(true);
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
           setIsSubmitting(false);
           closeDrawer();
         }
       } else {
         const res = await ProductServices.addProduct(productData);
         setIsUpdate(true);
-        notifySuccess("מוצר נוסף בהצלחה!");
+        notifyApiResponse(res, true);
         setIsSubmitting(false);
         closeDrawer();
       }
     } catch (err) {
       setIsSubmitting(false);
-      notifyError(err?.response?.data?.message || err?.message);
+      /**
+       * `err.displayMessage` — set by the response interceptor — already unwraps
+       * both envelopes. Reading `response.data.message` by hand missed the one the
+       * shared error handler produces, which is where a duplicate slug arrives as a
+       * 409: the drawer reported "undefined" for the single most common failure.
+       */
+      notifyApiResponse(err, false);
     }
   };
 

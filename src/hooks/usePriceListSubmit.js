@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 // Internal import
 import { SidebarContext } from "@/context/SidebarContext";
 import PriceListServices from "@/services/PriceListServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { notifyError } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 
 const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows = () => {}) => {
     const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
@@ -39,17 +41,17 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
 
                 setIsUpdate(true);
                 setIsSubmitting(false);
-                notifySuccess(res.message);
+                notifyApiResponse(res, true);
                 closeDrawer();
             } else {
                 const res = await PriceListServices.addPriceList(priceListData);
                 setIsUpdate(true);
                 setIsSubmitting(false);
-                notifySuccess(res.message);
+                notifyApiResponse(res, true);
                 closeDrawer();
             }
         } catch (err) {
-            notifyError(err?.response?.data?.message || err?.message);
+            notifyApiResponse(err, false);
             setIsSubmitting(false);
         }
     };

@@ -15,6 +15,7 @@ import he from "@/assets/img/flags/Flag_of_Israel.svg";
 import { AdminContext } from "@/context/AdminContext";
 import { SidebarContext } from "@/context/SidebarContext";
 import Notifications from "./Notifications";
+import TenantPicker from "@/components/platform/TenantPicker";
 import { FiUsers } from "react-icons/fi";
 import { GoMoon } from "react-icons/go";
 import { MdOutlineWbSunny } from "react-icons/md";
@@ -134,6 +135,14 @@ const Header = () => {
                 onChange={handleLanguageChange}
               />
             </li> */}
+
+            {/*
+              Whose data is on screen. Renders nothing for a tenant's staff,
+              who only ever see their own — the question does not arise for them.
+            */}
+            <li className="me-2">
+              <TenantPicker />
+            </li>
 
             {/* <!-- Notifications menu --> */}
             {adminInfo && <Notifications />}

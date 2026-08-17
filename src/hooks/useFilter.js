@@ -19,6 +19,8 @@ import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
 import SettingServices from "@/services/SettingServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 import { applyDefaultIsVatFreeForProductImportRow } from "@/utils/productFruitsVegetablesVat";
 import useAsync from "@/hooks/useAsync";
 import useUtilsFunction from "./useUtilsFunction";
@@ -474,9 +476,9 @@ const useFilter = (data) => {
       // return notifyError("This option disabled for this option!");
       ProductServices.addAllProducts(newProducts.map(applyDefaultIsVatFreeForProductImportRow))
         .then((res) => {
-          notifySuccess(res.message);
+          notifyApiResponse(res, true);
         })
-        .catch((err) => notifyError(err.message));
+        .catch((err) => notifyApiResponse(err, false));
     }
   };
   const handleSelectFile = (e) => {
@@ -767,11 +769,14 @@ const useFilter = (data) => {
             .then((res) => {
               setLoading(false);
               setIsUpdate(true);
-              notifySuccess(res.message);
+              notifyApiResponse(res, true);
             })
             .catch((err) => {
               setLoading(false);
-              notifyError(err ? err.response.data.message : err.message);
+              // `err.response.data` throws on a network failure — there is no
+              // response. The interceptor has already put a readable message on the
+              // error itself, in both cases.
+              notifyApiResponse(err, false);
             });
         } else {
           notifyError("Please enter valid data!");
@@ -818,11 +823,11 @@ const useFilter = (data) => {
             .then((res) => {
               setLoading(false);
               setIsUpdate(true);
-              notifySuccess(res.message);
+              notifyApiResponse(res, true);
             })
             .catch((err) => {
               setLoading(false);
-              notifyError(err ? err.response.data.message : err.message);
+              notifyApiResponse(err, false);
             });
         } else {
           notifyError("Please enter valid data!");
