@@ -8,10 +8,15 @@ const pickExportErrorMessage = (payload) => {
     return null;
 };
 
+/**
+ * Reads and the two file operations stay on `/price-list/*`; the CRUD writes moved to
+ * `/admin/price-lists/*`, which refuses to delete the DEFAULT list — a rule this file
+ * used to enforce only by checking before it opened the delete modal.
+ */
 const PriceListServices = {
     // Add a new price list
     addPriceList: async (body) => {
-        return requests.post("/price-list/add", body);
+        return requests.post("/admin/price-lists", body);
     },
 
     // Get all price lists
@@ -26,7 +31,7 @@ const PriceListServices = {
 
     // Update a price list by ID
     updatePriceList: async (id, body) => {
-        return requests.put(`/price-list/${id}`, body);
+        return requests.patch(`/admin/price-lists/${id}`, body);
     },
 
     // Import prices by barcode for a specific price list
@@ -62,12 +67,12 @@ const PriceListServices = {
 
     // Delete a price list by ID
     deletePriceList: async (id) => {
-        return requests.delete(`/price-list/${id}`);
+        return requests.delete(`/admin/price-lists/${id}`);
     },
 
     // Delete multiple price lists by IDs
     deleteManyPriceLists: async (body) => {
-        return requests.patch(`/price-list/delete-many`, body);
+        return requests.delete(`/admin/price-lists/bulk`, body);
     }
 };
 

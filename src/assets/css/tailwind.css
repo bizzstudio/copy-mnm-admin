@@ -1,6 +1,28 @@
 /* TailwindCss */
 @import "tailwindcss";
 
+/* =========================================================
+   The tenant-themed token set, shared with the other apps.
+   -----------------------------------------------------------------
+   Supplies `brand-*`, `surface`, `border`, `text`, `text-muted`,
+   `radius-input` / `radius-card` and the semantic states — each one a
+   `var(--bz-…)` that `buildThemeVars()` fills in at runtime. That is what
+   lets ONE admin build render in every customer's own colours.
+
+   It does not collide with the violet `@theme` block below: nothing in the
+   ported screens uses `bg-surface` or `accent-*`, and everything the platform
+   screens use (`text-text-muted`, `border-border`, `rounded-input`,
+   `rounded-card`, `text-brand-600`) exists only here.
+   ========================================================= */
+@import "@bizzexpo/shared/theme.css";
+
+/* Tailwind skips node_modules when scanning for class names, and the shared
+   package is linked in there. Without this line every utility used INSIDE the
+   shared components is missing from the stylesheet and the platform screens
+   render as unstyled markup — which looks like a failed import, not a missing
+   scan path. Path is relative to THIS file. */
+@source "../../../../bizzexpo-shared/src/ui";
+
 /* Dark Mode Variant - Tailwind v4 */
 @variant dark (&:where(.dark, .dark *));
 

@@ -19,6 +19,7 @@ const Login = lazy(() => import("@/pages/Login"));
 const ForgetPassword = lazy(() => import("@/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const MFA = lazy(() => import("@/pages/MFA"));
+const PlatformLogin = lazy(() => import("@/pages/platform/PlatformLogin"));
 const Page404 = lazy(() => import("@/pages/404"));
 
 const App = () => {
@@ -62,6 +63,15 @@ const App = () => {
             <Route path="/forgot-password" element={<ForgetPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/mfa" element={<MFA />} />
+
+            {/*
+              BizzStudio's own door. Outside `PrivateRoute` because the whole
+              point is that the caller has no session yet, and separate from
+              `/login` because a platform account lives in a different collection
+              and signs with a different secret — one form guessing between the
+              two would make "wrong password" and "wrong door" the same answer.
+            */}
+            <Route path="/platform/login" element={<PlatformLogin />} />
 
             {/* נתיב פרטי עם נתיבים מקוננים */}
             <Route

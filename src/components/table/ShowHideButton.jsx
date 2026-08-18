@@ -11,6 +11,8 @@ import CurrencyServices from "@/services/CurrencyServices";
 import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 import AdminServices from "@/services/AdminServices";
 import PopupServices from "@/services/PopupServices";
 
@@ -33,7 +35,7 @@ const ShowHideButton = ({ id, status, category, currencyStatusName }) => {
           status: newStatus,
         });
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
       }
 
       if (location.pathname === "/products") {
@@ -41,7 +43,7 @@ const ShowHideButton = ({ id, status, category, currencyStatusName }) => {
           status: newStatus,
         });
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
       }
 
       if (location.pathname === "/languages") {
@@ -91,7 +93,7 @@ const ShowHideButton = ({ id, status, category, currencyStatusName }) => {
           status: newStatus,
         });
         setIsUpdate(true);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
       }
 
       if (location.pathname === "/our-staff") {

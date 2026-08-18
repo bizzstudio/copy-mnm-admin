@@ -182,10 +182,11 @@ const OrderInvoice = () => {
                 label={t("Entry Code")}
                 value={data?.user_info?.address?.entryCode}
               />
-              {data?.user_info?.priceList && (
+              {/* `priceListId` — see the note in InvoiceForPrint. */}
+              {data?.priceListId && (
                 <InfoField
                   label={t("Customer Price List")}
-                  value={data?.user_info?.priceList?.name}
+                  value={data?.priceListId?.name}
                   className="md:col-span-2 lg:col-span-3"
                 />
               )}

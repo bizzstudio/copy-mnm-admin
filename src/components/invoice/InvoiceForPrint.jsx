@@ -113,10 +113,14 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
             label={t("Entry Code")}
             value={data?.user_info?.address?.entryCode}
           />
-          {data?.user_info?.priceList && (
+          {/* `priceListId` — the order records the list it was priced against, and
+              the server populates that path now. It used to live inside `user_info`,
+              which is where the customer's contact details go, not a pricing
+              decision. */}
+          {data?.priceListId && (
             <InfoField
               label={t("Customer Price List")}
-              value={data?.user_info?.priceList?.name}
+              value={data?.priceListId?.name}
               className="col-span-3"
             />
           )}

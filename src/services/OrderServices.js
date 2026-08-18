@@ -27,7 +27,7 @@ const OrderServices = {
     const searchCities = cities && cities.length > 0 ? cities.join(",") : "";
 
     return requests.get(
-      `/orders?customerName=${searchName}&statuses=${searchStatuses}&day=${searchDay}&page=${page}&limit=${limit}&startDate=${startD}&endDate=${endD}&method=${searchMethod}&cities=${searchCities}`,
+      `/admin/orders?customerName=${searchName}&statuses=${searchStatuses}&day=${searchDay}&page=${page}&limit=${limit}&startDate=${startD}&endDate=${endD}&method=${searchMethod}&cities=${searchCities}`,
       body,
       headers
     );
@@ -70,31 +70,23 @@ const OrderServices = {
     if (startDate) params.set("startDate", startDate);
     if (endDate) params.set("endDate", endDate);
     if (type) params.set("type", type);
-    return requests.get(`/orders/agent-orders?${params.toString()}`);
+    return requests.get(`/admin/orders/agent-orders?${params.toString()}`);
   },
 
-  getAllOrdersTwo: async ({ invoice, body, headers }) => {
-    const searchInvoice = invoice !== null ? invoice : "";
-    return requests.get(`/orders/all?invoice=${searchInvoice}`, body, headers);
-  },
-
-  getRecentOrders: async ({
-    page = 1,
-    limit = 8,
-    startDate = "1:00",
-    endDate = "23:59",
-  }) => {
-    return requests.get(
-      `/orders/recent?page=${page}&limit=${limit}&startDate=${startDate}&endDate=${endDate}`
-    );
-  },
-
+  /**
+   * `getAllOrdersTwo` and `getRecentOrders` were here, calling `/orders/all` and
+   * `/orders/recent`. No component used either, and NEITHER ENDPOINT HAS EVER
+   * EXISTED — there is no such route in the server, before or after the move.
+   * Removed rather than repointed: a service method reads as an available
+   * capability, and the next person to want "recent orders" would have called it
+   * and spent the afternoon on a 404.
+   */
   getOrderCustomer: async (id, body) => {
-    return requests.get(`/orders/customer/${id}`, body);
+    return requests.get(`/admin/orders/customer/${id}`, body);
   },
 
   getOrderById: async (id, body) => {
-    return requests.get(`/orders/${id}`, body);
+    return requests.get(`/admin/orders/${id}`, body);
   },
 
   getCashierOrderById: async (id, body) => {
@@ -102,11 +94,11 @@ const OrderServices = {
   },
 
   updateOrder: async (id, body, headers) => {
-    return requests.put(`/orders/${id}`, body, headers);
+    return requests.put(`/admin/orders/${id}`, body, headers);
   },
 
   deleteOrder: async (id) => {
-    return requests.delete(`/orders/${id}`);
+    return requests.delete(`/admin/orders/${id}`);
   },
 
   getDashboardOrdersData: async ({
@@ -115,26 +107,26 @@ const OrderServices = {
     endDate = "23:59",
   }) => {
     return requests.get(
-      `/orders/dashboard?page=${page}&limit=${limit}&endDate=${endDate}`
+      `/admin/orders/dashboard?page=${page}&limit=${limit}&endDate=${endDate}`
     );
   },
 
   getDashboardAmount: async () => {
-    return requests.get("/orders/dashboard-amount");
+    return requests.get("/admin/orders/dashboard-amount");
   },
 
   getDashboardCount: async () => {
-    return requests.get("/orders/dashboard-count");
+    return requests.get("/admin/orders/dashboard-count");
   },
 
   getDashboardRecentOrder: async ({ page = 1, limit = 8 }) => {
     return requests.get(
-      `/orders/dashboard-recent-order?page=${page}&limit=${limit}`
+      `/admin/orders/dashboard-recent-order?page=${page}&limit=${limit}`
     );
   },
 
   getBestSellerProductChart: async () => {
-    return requests.get("/orders/best-seller/chart");
+    return requests.get("/admin/orders/best-seller/chart");
   },
 
   // כל נתוני דשבורד המכירות בקריאה אחת
@@ -153,7 +145,7 @@ const OrderServices = {
     if (agent) params.set("agent", agent);
     if (branch) params.set("branch", branch);
     if (channel) params.set("channel", channel);
-    return requests.get(`/orders/sales-dashboard?${params.toString()}`);
+    return requests.get(`/admin/orders/sales-dashboard?${params.toString()}`);
   },
 };
 

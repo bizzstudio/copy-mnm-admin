@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 // Internal import
 import { SidebarContext } from "@/context/SidebarContext";
 import CouponServices from "@/services/CouponServices";
-import { notifyError, notifySuccess } from "@/utils/toast";
+import { notifyError } from "@/utils/toast";
+/** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
+import notifyApiResponse from "@/utils/notifyApiResponse";
 // import useTranslationValue from "./useTranslationValue";
 import useUtilsFunction from "./useUtilsFunction";
 
@@ -62,17 +64,17 @@ const useCouponSubmit = (id) => {
         const res = await CouponServices.updateCoupon(id, couponData);
         setIsUpdate(true);
         setIsSubmitting(false);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeDrawer();
       } else {
         const res = await CouponServices.addCoupon(couponData);
         setIsUpdate(true);
         setIsSubmitting(false);
-        notifySuccess(res.message);
+        notifyApiResponse(res, true);
         closeDrawer();
       }
     } catch (err) {
-      notifyError(err?.response?.data?.message || err?.message);
+      notifyApiResponse(err, false);
       setIsSubmitting(false);
       closeDrawer();
     }
@@ -115,15 +117,32 @@ const useCouponSubmit = (id) => {
             setResData(res);
             setValue("title", res.title[language ? language : "en"]);
             setValue("productType", res.productType);
-            setValue("couponCode", res.couponCode);
+            /**
+             * THE READ SIDE OF THE RENAME. `models/Coupon.js` moved `couponCode` to
+             * `code`, `discountType: {type, value}` to a String plus `discountValue`,
+             * and `timesIsUsed` to `usedCount` — this hook was still asking for the
+             * old names and getting `undefined` for every one of them.
+             *
+             * The blank code and amount in the edit drawer were the visible half. The
+             * damaging half was the toggle: `res.discountType?.type` on a String is
+             * undefined, so it read as "not percentage" and the next save wrote
+             * `fixed` — editing a 10% coupon's title turned it into ₪10 off, quietly.
+             *
+             * The old names are still accepted on the way in (the server translates
+             * them), which is why the write path did not have to change with this.
+             */
+            const storedDiscountType =
+              typeof res.discountType === "string"
+                ? res.discountType
+                : res.discountType?.type;
+
+            setValue("couponCode", res.code ?? res.couponCode);
             setValue("endTime", dayjs(res.endTime).format("YYYY-MM-DD HH:mm"));
-            setValue("discountPercentage", res.discountType?.value);
+            setValue("discountPercentage", res.discountValue ?? res.discountType?.value);
             setValue("minimumAmount", res.minimumAmount);
-            setValue("usageCount", res.timesIsUsed);
+            setValue("usageCount", res.usedCount ?? res.timesIsUsed);
             setPublished(res.status === "show" ? true : false);
-            setDiscountType(
-              res.discountType?.type === "percentage" ? true : false
-            );
+            setDiscountType(storedDiscountType === "percentage");
             setImageUrl(res.logo);
           }
         } catch (err) {
