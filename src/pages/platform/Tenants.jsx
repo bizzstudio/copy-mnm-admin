@@ -56,11 +56,11 @@ export default function Tenants() {
   return (
     <div>
       <PageHeading
-        title="לקוחות"
-        description="כל הלקוחות של bizzstudio. פריסה אחת, בסיס נתונים אחד."
+        title="משתמשי מערכת"
+        description="כל הארגונים שמשתמשים במערכת. פריסה אחת, בסיס נתונים אחד."
         actions={
           <Button onClick={() => navigate('/platform/tenants/new')} iconStart="＋">
-            הוסף לקוח
+            הוסף משתמש מערכת
           </Button>
         }
       />
@@ -84,7 +84,7 @@ export default function Tenants() {
         </Field>
       </div>
 
-      {error && <Alert tone="danger" title="שגיאה בטעינת הלקוחות">{error}</Alert>}
+      {error && <Alert tone="danger" title="שגיאה בטעינת משתמשי המערכת">{error}</Alert>}
 
       {tenants === null && !error && (
         <div className="flex justify-center p-10"><Spinner size="lg" /></div>
@@ -92,9 +92,9 @@ export default function Tenants() {
 
       {tenants?.length === 0 && (
         <EmptyState
-          title="עדיין אין לקוחות"
-          description="צרו את הלקוח הראשון. הוא יקבל ארבע כתובות שעובדות מיד, בלי להמתין ל-DNS."
-          action={<Button onClick={() => navigate('/platform/tenants/new')}>הוסף לקוח</Button>}
+          title="עדיין אין משתמשי מערכת"
+          description="צרו את משתמש המערכת הראשון. הוא יקבל ארבע כתובות שעובדות מיד, בלי להמתין ל-DNS."
+          action={<Button onClick={() => navigate('/platform/tenants/new')}>הוסף משתמש מערכת</Button>}
         />
       )}
 
@@ -103,7 +103,7 @@ export default function Tenants() {
           <Table>
             <thead>
               <tr>
-                <Th>לקוח</Th>
+                <Th>משתמש מערכת</Th>
                 <Th>מזהה</Th>
                 <Th>מותג</Th>
                 <Th>סטטוס</Th>

@@ -17,7 +17,7 @@ const CustomerOrder = lazy(() => import("@/pages/CustomerOrder"));
 const CustomerPage = lazy(() => import("@/pages/CustomerPage"));
 const CustomerAdd = lazy(() => import("@/pages/CustomerAdd"));
 const Orders = lazy(() => import("@/pages/Orders"));
-const CashierOrders = lazy(() => import("@/pages/CashierOrders"));
+const OrderChannelRedirect = lazy(() => import("@/pages/OrderChannelRedirect"));
 const CashierOrderInvoice = lazy(() => import("@/pages/CashierOrderInvoice"));
 const Statuses = lazy(() => import("@/pages/Statuses"));
 const OrderInvoice = lazy(() => import("@/pages/OrderInvoice"));
@@ -39,13 +39,23 @@ const Blogs = lazy(() => import("@/pages/Blogs"));
 const PriceLists = lazy(() => import("@/pages/PriceLists"));
 const FormSubmissions = lazy(() => import("@/pages/FormSubmissions"));
 
+/* המסכים החדשים: רווחיות, ליקוט, רכש, ערוצים, משלוח ומסמכים. */
+const ProfitReport = lazy(() => import("@/pages/ProfitReport"));
+const AccountingDocuments = lazy(() => import("@/pages/AccountingDocuments"));
+const AccountingSettings = lazy(() => import("@/pages/AccountingSettings"));
+const PickingBoard = lazy(() => import("@/pages/PickingBoard"));
+const StockLocations = lazy(() => import("@/pages/StockLocations"));
+const Suppliers = lazy(() => import("@/pages/Suppliers"));
+const GoodsReceipt = lazy(() => import("@/pages/GoodsReceipt"));
+const SalesChannels = lazy(() => import("@/pages/SalesChannels"));
+const ShippingProviders = lazy(() => import("@/pages/ShippingProviders"));
+
 // BizzStudio's platform screens — see the note at their route entries below.
 const PlatformTenants = lazy(() => import("@/pages/platform/Tenants"));
 const PlatformTenantWizard = lazy(() => import("@/pages/platform/TenantWizard"));
 const PlatformTenantSettings = lazy(() => import("@/pages/platform/TenantSettings"));
 const PlatformModules = lazy(() => import("@/pages/platform/PlatformModules"));
 const Agents = lazy(() => import("@/pages/Agents"));
-const AgentOrders = lazy(() => import("@/pages/AgentOrders"));
 
 /*
 //  * ⚠ These are internal routes!
@@ -136,9 +146,17 @@ const routes = [
     path: "/orders",
     component: Orders,
   },
+  /**
+   * שני הנתיבים האלה הם כעת פילטר על מסך ההזמנות המאוחד, לא מסכים בפני עצמם.
+   * נשארים רשומים כדי שסימנייה ישנה תגיע למקום הנכון ולא ל-404.
+   */
   {
     path: "/cashier-orders",
-    component: CashierOrders,
+    component: OrderChannelRedirect,
+  },
+  {
+    path: "/agent-orders",
+    component: OrderChannelRedirect,
   },
   {
     path: "/cashier-order/:id",
@@ -206,15 +224,61 @@ const routes = [
     component: FormSubmissions,
     title: "FormsSubmissionsPageTitle",
   },
+
+  /* ── המסכים החדשים ────────────────────────────────────────────────────────
+   * הסינון בסיידבר לפי `moduleKey` הוא נוחות בלבד — הנתיבים עצמם רשומים תמיד,
+   * כי השרת הוא זה שמסרב: `requireModule` מחזיר 404 לבקשה של מודול כבוי, ומסך
+   * ריק הוא התוצאה הכנה למי שהקליד כתובת ידנית.
+   */
+  {
+    path: "/reports/profit",
+    component: ProfitReport,
+    title: "ProfitReports",
+  },
+  {
+    path: "/documents",
+    component: AccountingDocuments,
+    title: "AccountingDocuments",
+  },
+  {
+    path: "/accounting/settings",
+    component: AccountingSettings,
+    title: "AccountingSettings",
+  },
+  {
+    path: "/picking",
+    component: PickingBoard,
+    title: "PickingManagement",
+  },
+  {
+    path: "/stock-locations",
+    component: StockLocations,
+    title: "StockLocations",
+  },
+  {
+    path: "/suppliers",
+    component: Suppliers,
+    title: "Suppliers",
+  },
+  {
+    path: "/goods-receipt",
+    component: GoodsReceipt,
+    title: "GoodsReceipt",
+  },
+  {
+    path: "/channels",
+    component: SalesChannels,
+    title: "SalesChannels",
+  },
+  {
+    path: "/shipping",
+    component: ShippingProviders,
+    title: "ShippingProviders",
+  },
   {
     path: "/agents",
     component: Agents,
     title: "AgentsPageTitle",
-  },
-  {
-    path: "/agent-orders",
-    component: AgentOrders,
-    title: "AgentOrdersPageTitle",
   },
 
   /**
@@ -230,20 +294,28 @@ const routes = [
    * `/api/platform/*` call that does not carry a platform token, so a tenant
    * admin who types the URL by hand reaches a screen that can load nothing.
    */
+  /**
+   * "משתמשי מערכת" ולא "לקוחות": ברמת המוצר אלה הארגונים שמשתמשים במערכת, ואילו
+   * "לקוחות" הוא כבר תפוס — הוא הלקוחות של הלקוח, במסך /customers.
+   *
+   * ה-path נשאר `/platform/tenants`. שינוי שלו היה שובר סימניות, את
+   * `routeCoverage.test.js` ואת כל הקישורים הפנימיים, בשביל טקסט שהמשתמש
+   * ממילא לא רואה בכתובת.
+   */
   {
     path: "/platform/tenants",
     component: PlatformTenants,
-    title: "לקוחות",
+    title: "משתמשי מערכת",
   },
   {
     path: "/platform/tenants/new",
     component: PlatformTenantWizard,
-    title: "לקוח חדש",
+    title: "משתמש מערכת חדש",
   },
   {
     path: "/platform/tenants/:id",
     component: PlatformTenantSettings,
-    title: "הגדרות לקוח",
+    title: "הגדרות משתמש מערכת",
   },
   {
     path: "/platform/modules",

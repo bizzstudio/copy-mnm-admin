@@ -16,6 +16,7 @@ import App from "@/App";
 import myTheme from "@/assets/theme/myTheme";
 import { AdminProvider } from "@/context/AdminContext";
 import { SidebarProvider } from "@/context/SidebarContext";
+import { ModulesProvider } from "@/context/ModulesContext";
 import ThemeSuspense from "@/components/theme/ThemeSuspense";
 import store from "@/reduxStore/store";
 import "@/i18n";
@@ -35,11 +36,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SidebarProvider>
-          <Suspense fallback={<ThemeSuspense />}>
-            <Windmill usePreferences theme={myTheme}>
-              <App />
-            </Windmill>
-          </Suspense>
+          {/*
+            מודולי הלקוח נטענים פעם אחת, מעל הראוטר — הסיידבר, ובהמשך גם מסכים
+            שמגודרים לפי מודול, קוראים את אותה תשובה ולא כל אחד את שלו.
+          */}
+          <ModulesProvider>
+            <Suspense fallback={<ThemeSuspense />}>
+              <Windmill usePreferences theme={myTheme}>
+                <App />
+              </Windmill>
+            </Suspense>
+          </ModulesProvider>
         </SidebarProvider>
       </PersistGate>
     </Provider>

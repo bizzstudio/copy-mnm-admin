@@ -1,0 +1,1 @@
+import{j as s,f as n}from"./index-CVR3KhDg.js";const m=({register:e,defaultValue:t,required:o,name:r,label:a,type:p,placeholder:i})=>s.jsx(s.Fragment,{children:s.jsx(n.Input,{...e(`${r}`,{required:o?!1:`${a} is required!`}),defaultValue:t,type:p,placeholder:i,name:r,autoComplete:"new-password",className:"ml-2 p-2"})});export{m as I};
