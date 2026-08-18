@@ -1,1 +1,0 @@
-import{a as i,n as o}from"./toast-YK6jaNEL.js";import{w as r,x as f}from"./index-C7R_s1Jv.js";const n=(a,s=!1)=>{if(s){const t=r(a?.data??a);t&&i(t);return}o(a?.displayMessage||r(a?.response?.data??a?.data??a,a?.response?.status)||f())};export{n};

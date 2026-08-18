@@ -5,6 +5,7 @@ import {
   PageHeading, Alert, Badge, Spinner,
 } from '@bizzexpo/shared/ui';
 import { buildThemeVars, DEFAULT_THEME } from '@bizzexpo/shared';
+import PageContainer from '@/components/common/PageContainer';
 import PlatformServices from '@/services/PlatformServices';
 import { useUser } from '@/hooks/usePlatformRole';
 
@@ -123,7 +124,8 @@ export default function TenantWizard() {
   };
 
   return (
-    <div>
+    // A one-column form reads badly at 1280px; it wants a narrower measure.
+    <PageContainer maxWidth="max-w-4xl">
       <PageHeading title="לקוח חדש" description="הלקוח יקבל ארבע כתובות שעובדות מיד — אפשר להדגים אותו ביום הראשון." />
 
       {/* progress */}
@@ -402,6 +404,6 @@ export default function TenantWizard() {
           </Button>
         )}
       </div>
-    </div>
+    </PageContainer>
   );
 }
