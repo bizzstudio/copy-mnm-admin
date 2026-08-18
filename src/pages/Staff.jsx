@@ -32,6 +32,18 @@ import useToggleDrawer from "@/hooks/useToggleDrawer";
 import DeleteModal from "@/components/modal/DeleteModal";
 import CustomPagination from "@/components/table/CustomPagination";
 
+/**
+ * משתמשי המערכת של הלקוח — האנשים שעובדים בתוך חשבון אחד, ולא הלקוחות
+ * של bizzstudio — אלה יושבים ב-`/platform/tenants`.
+ *
+ * ── למה אין כאן שער ──────────────────────────────────────────────────────
+ * המסך הוא כעת תת-פריט תחת "הגדרות", בלי `platformOnly`, כי הוספת עובד
+ * היא פעולה שוטפת של המנהל אצל הלקוח. שער סופר-אדמין שהיה כאן קודם היה
+ * מחזיר אותו ל-`/dashboard` — כלומר פריט תפריט שנראה שבור.
+ *
+ * השרת מסכים: `GET /api/admin` ואחיו מוגנים ב-`isAdmin`, שמקבל גם טוקן
+ * של מנהל אצל הלקוח. תפריט ושרת עונים כאן אותו דבר, וזו הנקודה.
+ */
 const Staff = () => {
   const { state } = useContext(AdminContext);
   const { adminInfo } = state;

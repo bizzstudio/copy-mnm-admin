@@ -1,4 +1,12 @@
-import React from "react";
+// src/pages/Orders.jsx
+//
+// מסך ההזמנות. אחד, לכל הערוצים.
+//
+// היו שלושה — /orders, /cashier-orders, /agent-orders — שכל אחד מהם שאל endpoint
+// אחר, הציג עמודות אחרות וסיכם אחרת. הם אותו אובייקט משלוש דלתות, והפרדתם היא
+// הסיבה שלשאלה "כמה הזמנות היו אתמול" לא הייתה תשובה אחת. עמודת "מקור" מחליפה
+// אותם, והפילטר שלה הוא מה שהופך את שני הנתיבים הישנים ל-redirect.
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -12,29 +20,38 @@ import {
   TableHeader,
   Select as SelectReactSelect,
 } from "@windmill/react-ui";
-import { useContext, useState } from "react";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import exportFromJSON from "export-from-json";
-import Select, { components } from "react-select";
 
 // Internal import
 import { notifyError } from "@/utils/toast";
 import useAsync from "@/hooks/useAsync";
-import useFilter from "@/hooks/useFilter";
 import OrderServices from "@/services/OrderServices";
+import StatusServices from "@/services/StatusService";
+import DeliveryServices from "@/services/DeliveryServices";
 import NotFound from "@/components/table/NotFound";
 import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
-import OrderTable from "@/components/order/OrderTable";
+import { useModules } from "@/context/ModulesContext";
+import UnifiedOrderTable from "@/components/order/UnifiedOrderTable";
+import { SOURCE_META } from "@/components/order/OrderSource";
 import TableLoading from "@/components/preloader/TableLoading";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
-import StatusServices from "@/services/StatusService";
-import DeliveryServices from "@/services/DeliveryServices";
-import CheckBox from "@/components/form/others/CheckBox";
 import SelectWithCheckbox from "@/components/form/SelectWithCheckbox";
 import CustomPagination from "@/components/table/CustomPagination";
+
+const PAGE_SIZE = 100;
+
+/** ערוץ שהמודול שלו כבוי לא מוצג כאפשרות — אין ולא יהיו בו הזמנות. */
+const SOURCE_MODULE = {
+  store: "store",
+  agent: "agents",
+  cashier: "cashier",
+  admin: null,
+};
 
 const Orders = () => {
   const {
@@ -46,46 +63,69 @@ const Orders = () => {
     setEndDate,
     startDate,
     currentPage,
+    setCurrentPage,
     searchText,
     searchRef,
     method,
     setMethod,
+    source,
+    setSource,
     setStartDate,
     setSearchText,
     handleChangePage,
     handleSubmitForAll,
-    resultsPerPage,
     setCities,
     cities,
   } = useContext(SidebarContext);
 
   const { t } = useTranslation();
+  const { isModuleEnabled } = useModules();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [loadingExport, setLoadingExport] = useState(false);
+  const [startDateInput, setStartDateInput] = useState("");
+  const [endDateInput, setEndDateInput] = useState("");
+
+  /**
+   * `?source=agent` בכתובת הוא מה שמחזיק את /agent-orders ו-/cashier-orders בחיים
+   * כ-redirect: סימנייה ישנה נוחתת על אותו מסך עם הפילטר כבר מוגדר, במקום על 404.
+   *
+   * הכתובת היא המקור, לא ה-state — כך "שתף לי את הרשימה הזו" עובד.
+   */
+  const urlSource = searchParams.get("source") || "";
+  useEffect(() => {
+    if (urlSource !== source) setSource(urlSource);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSource]);
+
+  const handleSourceChange = (e) => {
+    const next = e.target.value;
+    setCurrentPage(1);
+    setSource(next);
+    if (next) searchParams.set("source", next);
+    else searchParams.delete("source");
+    setSearchParams(searchParams, { replace: true });
+  };
 
   const { data, loading, error } = useAsync(() =>
     OrderServices.getAllOrders({
       day: time,
-      cities: cities,
-      method: method,
-      statuses: statuses,
+      cities,
+      method,
+      source,
+      statuses,
       page: currentPage,
-      endDate: endDate,
-      startDate: startDate,
-      limit: 100,
+      endDate,
+      startDate,
+      limit: PAGE_SIZE,
       customerName: searchText,
     })
   );
-  // console.log('Orders :>> ', data);
 
   const { data: statusData } = useAsync(StatusServices.getAllStatuses);
   const { data: cityData } = useAsync(DeliveryServices.getAllDeliveries);
 
   const { currency, getNumber, getNumberTwo } = useUtilsFunction();
-  const { dataTable, serviceData } = useFilter(data?.orders);
-
-  const [startDateInput, setStartDateInput] = useState("");
-  const [endDateInput, setEndDateInput] = useState("");
 
   const handleDownloadOrders = async () => {
     try {
@@ -93,42 +133,44 @@ const Orders = () => {
       const res = await OrderServices.getAllOrders({
         page: 1,
         day: time,
-        method: method,
-        statuses: statuses,
-        endDate: endDate,
-        download: true,
-        startDate: startDate,
-        limit: data?.totalDoc,
+        method,
+        source,
+        statuses,
+        endDate,
+        startDate,
+        cities,
+        // הייצוא מוריד את מה שהמסך מציג, ולא רק את העמוד הנוכחי
+        limit: Math.max(data?.totalDoc || 0, 1),
         customerName: searchText,
       });
 
       const exportData = res?.orders?.map((order) => ({
-        _id: order._id,
-        invoice: order.invoice,
-        subTotal: getNumberTwo(order.subTotal),
+        orderNumber: order.orderNumber || order.invoice,
+        source: order.source,
+        customerName: order.customerName,
+        customerPhone: order.customerPhone,
+        agentOrCashier: order.agentName || order.cashierName || "",
+        city: order.cityName || "",
         shippingCost: getNumberTwo(order.shippingCost),
-        discount: getNumberTwo(order?.discount),
+        discount: getNumberTwo(order.discount),
         total: getNumberTwo(order.total),
         paymentMethod: order.paymentMethod,
-        status: order.status,
-        user_info: `${order?.user_info?.name} ${order?.user_info?.lastName}`,
+        status: order.status?.heName || order.status?.name || "",
         createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
       }));
 
       exportFromJSON({
-        data: exportData,
+        data: exportData || [],
         fileName: "orders",
         exportType: exportFromJSON.types.csv,
       });
-      setLoadingExport(false);
     } catch (err) {
+      notifyError(err?.displayMessage || err?.message);
+    } finally {
       setLoadingExport(false);
-      notifyError(err?.response?.data?.message || err?.message);
     }
   };
 
-  // handle reset field
   const handleResetField = () => {
     setTime("");
     setMethod("");
@@ -136,16 +178,18 @@ const Orders = () => {
     setEndDate("");
     setStartDate("");
     setSearchText("");
-    searchRef.current.value = "";
+    if (searchRef.current) searchRef.current.value = "";
     setStartDateInput("");
     setEndDateInput("");
     setCities([]);
+    setSource("");
+    searchParams.delete("source");
+    setSearchParams(searchParams, { replace: true });
   };
 
-  // handle limit change
   const handleLimitChange = (e) => {
     const value = e.target.value;
-    let startDate, endDate;
+    let start, end;
 
     const today = new Date();
     const year = today.getFullYear();
@@ -153,83 +197,85 @@ const Orders = () => {
 
     switch (value) {
       case "thisMonth":
-        startDate = new Date(year, month, 1);
-        endDate = today;
+        start = new Date(year, month, 1);
+        end = today;
         break;
       case "lastMonth":
         if (month === 0) {
-          // אם זה ינואר, החודש הקודם הוא דצמבר של השנה הקודמת
-          startDate = new Date(year - 1, 11, 1);
-          endDate = new Date(year - 1, 11, 31);
+          start = new Date(year - 1, 11, 1);
+          end = new Date(year - 1, 11, 31);
         } else {
-          startDate = new Date(year, month - 1, 1);
-          endDate = new Date(year, month, 0); // היום האחרון בחודש הקודם
+          start = new Date(year, month - 1, 1);
+          end = new Date(year, month, 0);
         }
         break;
       case "thisYear":
-        startDate = new Date(year, 0, 1);
-        endDate = today;
+        start = new Date(year, 0, 1);
+        end = today;
         break;
       case "7":
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 6); // התחלת 7 ימים אחורה מהיום
-        endDate = today;
+        start = new Date(today);
+        start.setDate(today.getDate() - 6);
+        end = today;
         break;
       case "30":
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 30); // התחלת 30 ימים אחורה מהיום
-        endDate = today;
+        start = new Date(today);
+        start.setDate(today.getDate() - 30);
+        end = today;
         break;
       default:
         setTime(value);
         return;
     }
 
-    // יצירת תאריך בפורמט מקומי לשדות התאריכים
     const formatDateToLocal = (date) => {
       const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-      return localDate.toISOString().split('T')[0];
+      return localDate.toISOString().split("T")[0];
     };
 
-    setStartDate(startDate);
-    setEndDate(endDate);
-    setStartDateInput(formatDateToLocal(startDate));
-    setEndDateInput(formatDateToLocal(endDate));
+    setStartDate(start);
+    setEndDate(end);
+    setStartDateInput(formatDateToLocal(start));
+    setEndDateInput(formatDateToLocal(end));
   };
 
-  const handleStatusChange = (selectedOptions) => {
-    const selectedStatuses = selectedOptions.map(option => option.value);
-    setStatuses(selectedStatuses);
-  };
+  const handleStatusChange = (selectedOptions) =>
+    setStatuses(selectedOptions.map((option) => option.value));
 
-  const handleCityChange = (selectedOptions) => {
-    const selectedCities = selectedOptions.map(option => option.value);
-    setCities(selectedCities);
-  };
+  const handleCityChange = (selectedOptions) =>
+    setCities(selectedOptions.map((option) => option.value));
 
-  const statusOptions = statusData.map(status => ({
+  const statusOptions = (statusData || []).map((status) => ({
     value: status.name,
     label: status.heName,
-    isSelected: statuses.includes(status.name)
+    isSelected: statuses.includes(status.name),
   }));
 
-  const cityOptions = cityData.map(cityObj => ({
+  const cityOptions = (cityData || []).map((cityObj) => ({
     value: cityObj?.city?._id,
     label: cityObj?.city?.city_name_he,
-    isSelected: cities.includes(cityObj?.city?._id)
+    isSelected: cities.includes(cityObj?.city?._id),
   }));
 
+  const availableSources = Object.keys(SOURCE_META).filter((key) =>
+    isModuleEnabled(SOURCE_MODULE[key])
+  );
+
+  /** ספירה לכל ערוץ, מאותה שאילתה שהחזירה את השורות — לא קריאה שנייה. */
+  const countBySource = Object.fromEntries(
+    (data?.bySource || []).map((row) => [row._id, row.count])
+  );
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
-      <PageTitle>{t("Orders")}</PageTitle>
+      <PageTitle>{t("AllOrders")}</PageTitle>
 
       <Card className="min-w-0 shadow-xs bg-white dark:bg-gray-800 mb-5">
         <CardBody>
           <form onSubmit={handleSubmitForAll}>
             <div className="grid gap-4 lg:gap-4 xl:gap-6 md:gap-2 md:grid-cols-6 py-2">
-              {/* חיפוש */}
               <div title={t("SearchOrder")} className="col-span-2">
+                <Label>{t("SearchOrderLabel")}</Label>
                 <Input
                   ref={searchRef}
                   type="search"
@@ -238,7 +284,21 @@ const Orders = () => {
                 />
               </div>
 
+              {/* מקור ההזמנה — הפילטר שהחליף שני מסכים */}
               <div className="flex flex-col">
+                <Label>{t("OrderSource")}</Label>
+                <SelectReactSelect value={source} onChange={handleSourceChange}>
+                  <option value="">{t("AllSources")}</option>
+                  {availableSources.map((key) => (
+                    <option key={key} value={key}>
+                      {t(SOURCE_META[key].labelKey)}
+                      {countBySource[key] ? ` (${countBySource[key]})` : ""}
+                    </option>
+                  ))}
+                </SelectReactSelect>
+              </div>
+
+              <div className="flex flex-col justify-end">
                 <SelectWithCheckbox
                   placeholder={t("selectStatus")}
                   options={statusOptions}
@@ -246,8 +306,7 @@ const Orders = () => {
                 />
               </div>
 
-              {/* סינון על פי ערים */}
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-end">
                 <SelectWithCheckbox
                   placeholder={t("Delivery Destination")}
                   options={cityOptions}
@@ -255,8 +314,7 @@ const Orders = () => {
                 />
               </div>
 
-              {/* סינון על פי זמן */}
-              <div>
+              <div className="flex flex-col justify-end">
                 <SelectReactSelect onChange={handleLimitChange}>
                   <option value="Order limits" defaultValue hidden>
                     {t("Orderlimits")}
@@ -268,33 +326,9 @@ const Orders = () => {
                   <option value="30">{t("DaysOrders30")}</option>
                 </SelectReactSelect>
               </div>
-
-              {/* הורדת הזמנות */}
-              <div>
-                {loadingExport ? (
-                  <Button disabled={true} type="button" className="h-12 w-full">
-                    <img src={spinnerLoadingImage} alt="Loading" width={20} height={10} />{" "}
-                    <span className="font-serif ml-2 font-light">Processing</span>
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleDownloadOrders}
-                    disabled={data?.orders?.length <= 0 || loadingExport}
-                    type="button"
-                    className={`${(data?.orders?.length <= 0 || loadingExport) &&
-                      "opacity-50 cursor-not-allowed bg-customGreen-dark"
-                      } flex items-center justify-center h-12 w-full`}
-                  >
-                    <IoCloudDownloadOutline className="me-1" />
-                    {t("DownloadAllOrders")}
-                  </Button>
-                )}
-              </div>
             </div>
 
-            <div className="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-3 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 py-2">
-
-              {/* סינון על פי תאריך התחלה */}
+            <div className="grid gap-4 lg:gap-6 xl:gap-6 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 py-2">
               <div>
                 <Label>{t("StartDate")}</Label>
                 <Input
@@ -308,7 +342,6 @@ const Orders = () => {
                 />
               </div>
 
-              {/* סינון על פי תאריך סיום */}
               <div>
                 <Label>{t("EndDate")}</Label>
                 <Input
@@ -322,9 +355,8 @@ const Orders = () => {
                 />
               </div>
 
-              {/* כפתורי סינון ואיפוס */}
-              <div className="mt-2 md:mt-0 flex items-center xl:gap-x-4 gap-x-1 grow-0 md:grow lg:grow xl:grow">
-                <div className="w-full mx-1">
+              <div className="mt-2 md:mt-0 flex items-center gap-x-2">
+                <div className="w-full">
                   <Label style={{ visibility: "hidden" }}>{t("Filter")}</Label>
                   <Button type="submit" className="h-12 w-full bg-customGreen-dark">
                     {t("Filter")}
@@ -344,96 +376,103 @@ const Orders = () => {
                 </div>
               </div>
 
+              <div className="flex items-end">
+                {loadingExport ? (
+                  <Button disabled type="button" className="h-12 w-full">
+                    <img src={spinnerLoadingImage} alt="Loading" width={20} height={10} />{" "}
+                    <span className="font-serif ml-2 font-light">Processing</span>
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleDownloadOrders}
+                    disabled={!data?.totalDoc}
+                    type="button"
+                    className={`${
+                      !data?.totalDoc && "opacity-50 cursor-not-allowed bg-customGreen-dark"
+                    } flex items-center justify-center h-12 w-full`}
+                  >
+                    <IoCloudDownloadOutline className="me-1" />
+                    {t("DownloadAllOrders")}
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </CardBody>
       </Card>
 
-      {/* נתוני הזמנות */}
       {data && (
         <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 rounded-t-lg rounded-0 mb-4">
           <CardBody>
-            <div className="flex justify-evenly">
-
-              {/* סה"כ הזמנות */}
+            <div className="flex flex-wrap justify-evenly gap-3">
               <div className="dark:text-gray-300">
-                <span className="font-medium"> {t("TotalOrder")}</span> :{" "}
+                <span className="font-medium">{t("TotalOrder")}</span> :{" "}
                 <span className="font-semibold">{getNumber(data?.totalDoc)}</span>
               </div>
               <span className="w-0.5 h-6 bg-gray-800 dark:bg-gray-300" />
 
-              {/* סה"כ משלוחים */}
               <div className="dark:text-gray-300">
-                <span className="font-medium"> {t("TotalShippingOrder")}</span> :{" "}
+                <span className="font-medium">{t("TotalShippingOrder")}</span> :{" "}
                 <span className="font-semibold">{getNumber(data?.totalShippingOrders)}</span>
               </div>
               <span className="w-0.5 h-6 bg-gray-800 dark:bg-gray-300" />
 
-              {/* סה"כ איסוף עצמי */}
               <div className="dark:text-gray-300">
-                <span className="font-medium"> {t("TotalPickupOrder")}</span> :{" "}
+                <span className="font-medium">{t("TotalPickupOrder")}</span> :{" "}
                 <span className="font-semibold">{getNumber(data?.totalPickupOrders)}</span>
               </div>
               <span className="w-0.5 h-6 bg-gray-800 dark:bg-gray-300" />
 
-              {/* סה"כ בונוסים */}
               <div className="dark:text-gray-300">
-                <span className="font-medium"> {t("TotalBonuses")}</span> :{" "}
-                <span className="font-semibold">{currency}{getNumberTwo(data?.totalBonuses)}</span>
+                <span className="font-medium">{t("TotalIncome")}</span> :{" "}
+                <span className="font-semibold">
+                  {currency}
+                  {getNumberTwo(data?.totalAmount)}
+                </span>
               </div>
+              <span className="w-0.5 h-6 bg-gray-800 dark:bg-gray-300" />
 
-              {data?.methodTotals?.length > 0 &&
-                <>
-                  <span className="w-0.5 h-6 bg-gray-800 dark:bg-gray-300"></span>
-                  {/* סה"כ הכנסות */}
-                  {data?.methodTotals?.map((el, i) => (
-                    <div key={i + 1} className="dark:text-gray-300">
-                      {el?.method && (
-                        <>
-                          <span className="font-medium"> {t("TotalIncome")}</span> :{" "}
-                          <span className="font-semibold ml-2">
-                            {currency}
-                            {getNumberTwo(el.total)}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </>}
+              <div className="dark:text-gray-300">
+                <span className="font-medium">{t("TotalBonuses")}</span> :{" "}
+                <span className="font-semibold">
+                  {currency}
+                  {getNumberTwo(data?.totalBonuses)}
+                </span>
+              </div>
             </div>
           </CardBody>
         </Card>
       )}
 
       {loading ? (
-        <TableLoading row={12} col={9} width={163} height={20} />
+        <TableLoading row={12} col={10} width={163} height={20} />
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
-      ) : serviceData?.length !== 0 ? (
+      ) : data?.orders?.length ? (
         <TableContainer className="mb-8 dark:bg-gray-900">
           <Table>
             <TableHeader>
               <tr>
                 <TableCell className="text-center">{t("InvoiceNo")}</TableCell>
+                <TableCell className="text-center">{t("OrderSource")}</TableCell>
                 <TableCell className="text-center">{t("orderCreation")}</TableCell>
-                <TableCell className="text-center">{t("orderUpdate")}</TableCell>
                 <TableCell className="text-center">{t("CustomerName")}</TableCell>
+                <TableCell className="text-center">{t("CustomerPhone")}</TableCell>
+                <TableCell className="text-center">{t("RaisedBy")}</TableCell>
                 <TableCell className="text-center">{t("ShippingMethod")}</TableCell>
                 <TableCell className="text-center">{t("AmountTbl")}</TableCell>
                 <TableCell className="text-center">{t("OderStatusTbl")}</TableCell>
-                <TableCell className="text-center">{t("satisfaction&bonus")}</TableCell>
                 <TableCell className="text-center">{t("ActionTbl")}</TableCell>
-                {/* <TableCell className="text-right">{t("InvoiceTbl")}</TableCell> */}
               </tr>
             </TableHeader>
 
-            <OrderTable orders={data?.orders} />
+            <UnifiedOrderTable orders={data.orders} />
           </Table>
 
           <TableFooter>
             <CustomPagination
               totalResults={data?.totalDoc}
-              resultsPerPage={100}
+              resultsPerPage={PAGE_SIZE}
               onChange={handleChangePage}
               label={t("Table navigation")}
               currentPage={currentPage}

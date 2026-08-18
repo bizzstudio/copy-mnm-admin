@@ -14,6 +14,8 @@ import { MdOutlineWbSunny } from "react-icons/md";
 
 // Internal import
 import sidebar from "@/routes/sidebar";
+import { filterSidebar } from "@/routes/sidebarUtils";
+import { useModules } from "@/context/ModulesContext";
 import { AdminContext } from "@/context/AdminContext";
 import SidebarSubMenu from "@/components/sidebar/SidebarSubMenu";
 import Notifications from "@/components/header/Notifications";
@@ -24,6 +26,7 @@ const SidebarContent = () => {
   const { state: adminState, dispatch } = useContext(AdminContext);
   const { adminInfo } = adminState;
   const { mode, toggleMode } = useContext(WindmillContext);
+  const { isModuleEnabled, apps } = useModules();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const menuRef = useRef();
@@ -74,28 +77,19 @@ const SidebarContent = () => {
   const isPlatformUser =
     adminInfo?.role === "superadmin" || adminInfo?.role === "platform-admin";
 
-  let filteredSidebar = sidebar.filter((route) => {
-    /**
-     * BizzStudio sees EVERYTHING — its own screens and every tenant's.
-     *
-     * The tenant screens are not empty for a platform session: `authenticate`
-     * puts a `super-admin` role in the request context, `buildTenantFilter`
-     * answers that with no filter at all, and the ordinary product, order and
-     * customer lists come back holding every tenant's rows with `tenantId` on
-     * each one saying whose it is. Same screens, one extra column — rather than
-     * a second console that reimplements each of them and drifts.
-     *
-     * Only the reverse is hidden: a tenant's staff never see the platform
-     * entries, because the server refuses `/api/platform/*` to them anyway.
-     */
-    if (route.platformOnly && !isPlatformUser) return false;
-
-    // שמות הקישורים שצריך להסתיר אם היוזר אינו "super-admin"
-    const restrictedRoutes = [
-      // "Admins"
-    ];
-
-    return !(restrictedRoutes.includes(route.name) && adminInfo?.role !== "super-admin");
+  /**
+   * הסינון עצמו יושב ב-`routes/sidebarUtils` כי הוא רקורסיבי — עץ הניווט הוא
+   * שתי רמות, וקבוצה שכל בניה סוננו צריכה להיעלם ולא להישאר כותרת ריקה.
+   *
+   * שתי שאלות נשאלות על כל פריט: למי מותר לראות אותו (`platformOnly`), ומה דלוק
+   * אצל הלקוח (`moduleKey`). עד עכשיו נשאלה רק הראשונה, ולכן פריט של מודול כבוי
+   * הופיע בתפריט והוביל למסך שהשרת מסרב לטעון — 404 מ-`requireModule` שנראה
+   * למשתמש כמו תקלה ולא כמו "לא קנית את זה".
+   */
+  let filteredSidebar = filterSidebar(sidebar, {
+    isPlatformUser,
+    isModuleEnabled,
+    apps,
   });
 
   // סינון התפריט במצב פרודקשיין

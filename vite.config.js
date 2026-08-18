@@ -1,6 +1,6 @@
 // vite.config.js
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import { VitePWA } from "vite-plugin-pwa";
 import compression from "vite-plugin-compression2";
@@ -10,7 +10,33 @@ import path from "path";
 
 dns.setDefaultResultOrder("verbatim");
 
-export default defineConfig({
+/**
+ * A FUNCTION, not an object, because the proxy target comes from `.env`.
+ *
+ * Vite loads `.env` into `import.meta.env` for CLIENT code only. This file runs
+ * in Node before that happens, and Vite does NOT put those values on
+ * `process.env` — so `process.env.VITE_APP_API_SOCKET_URL` below was `undefined`
+ * for anyone who configured the app the documented way, with a `.env` file.
+ *
+ * The symptom is not a missing proxy. http-proxy throws
+ *
+ *     Error: Must set target or forward
+ *
+ * and Vite answers the request with a bare **500 and an empty body** — so the
+ * browser shows a blank screen with a failed `/api/bootstrap`, and the obvious
+ * conclusion is that the backend is down. It is not; the request never left the
+ * dev server. It only ever worked for someone who had exported the variable in
+ * their shell, which is why it survived this long.
+ *
+ * `loadEnv(mode, cwd, "")` reads `.env`, `.env.local` and `.env.[mode]` with the
+ * same precedence the client gets. The empty prefix is deliberate: it also picks
+ * up non-`VITE_` variables, so a real shell variable still wins for CI.
+ */
+export default defineConfig(({ mode }) => {
+  // eslint-disable-next-line no-undef
+  const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
+
+  return {
   build: {
     outDir: "dist", // Set the output directory for the build files
     assetsDir: "@/assets", // Set the directory for the static assets
@@ -126,7 +152,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/": {
-        target: process.env.VITE_APP_API_SOCKET_URL,
+        /**
+         * Falls back to the default backend port rather than throwing. A missing
+         * variable then produces a connection error naming :5055 — which says
+         * "the API is not running" — instead of a 500 with no body.
+         */
+        target: env.VITE_APP_API_SOCKET_URL || "http://127.0.0.1:5055",
         changeOrigin: true,
       },
     },
@@ -162,4 +193,5 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/setupTest.js"],
   },
+  };
 });

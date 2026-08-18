@@ -1,1 +1,0 @@
-import{j as s}from"./index-i6_c75ta.js";const m=({errorName:t,className:e=""})=>s.jsx(s.Fragment,{children:t&&s.jsx("span",{className:"text-red-400 text-sm mt-2"+e,children:t.message})});export{m as E};

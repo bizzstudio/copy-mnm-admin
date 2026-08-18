@@ -2,6 +2,18 @@
 import requests from "./httpService";
 
 const OrderServices = {
+  /**
+   * THE order list — every channel, one call.
+   *
+   * `source` is what replaced the separate `/cashier-orders` and
+   * `/admin/orders/agent-orders` screens: empty means all channels, and a value
+   * narrows to one. The server unions the cashier collection in, so a caller
+   * never has to know that it is still a collection of its own.
+   *
+   * Built with `URLSearchParams` rather than string concatenation — the old form
+   * sent `customerName=null` as the literal text "null" whenever the search box
+   * was cleared, and a name containing `&` truncated the query.
+   */
   getAllOrders: async ({
     body,
     headers,
@@ -10,27 +22,25 @@ const OrderServices = {
     page = 1,
     limit = 8,
     day,
-    // source,
+    source,
     method,
     startDate,
     endDate,
     cities,
-    // download = "",
-  }) => {
-    const searchName = customerName !== null ? customerName : "";
-    const searchDay = day !== null ? day : "";
-    // const searchSource = source !== null ? source : "";
-    const searchMethod = method !== null ? method : "";
-    const startD = startDate !== null ? startDate : "";
-    const endD = endDate !== null ? endDate : "";
-    const searchStatuses = statuses && statuses.length > 0 ? statuses.join(",") : "";
-    const searchCities = cities && cities.length > 0 ? cities.join(",") : "";
+  } = {}) => {
+    const params = new URLSearchParams();
+    params.set("page", page);
+    params.set("limit", limit);
+    if (customerName) params.set("customerName", customerName);
+    if (day) params.set("day", day);
+    if (source) params.set("source", source);
+    if (method) params.set("method", method);
+    if (startDate) params.set("startDate", startDate);
+    if (endDate) params.set("endDate", endDate);
+    if (statuses?.length) params.set("statuses", statuses.join(","));
+    if (cities?.length) params.set("cities", cities.join(","));
 
-    return requests.get(
-      `/admin/orders?customerName=${searchName}&statuses=${searchStatuses}&day=${searchDay}&page=${page}&limit=${limit}&startDate=${startD}&endDate=${endD}&method=${searchMethod}&cities=${searchCities}`,
-      body,
-      headers
-    );
+    return requests.get(`/admin/orders?${params.toString()}`, body, headers);
   },
 
   getAllCashierOrders: async ({

@@ -42,6 +42,14 @@ export const SidebarProvider = ({ children }) => {
   const [statuses, setStatuses] = useState([]);
   const [statusesData, setStatusesData] = useState([]);
   const [cities, setCities] = useState([]);
+  /**
+   * מקור ההזמנה — 'store' | 'admin' | 'agent' | 'cashier', או '' לכל המקורות.
+   *
+   * יושב כאן ולא במסך עצמו כי `useAsync` כבר מקשיב ל-`source` ברשימת התלויות
+   * שלו (הוא נכתב לכך מלכתחילה ופשוט לא היה מי שיספק את הערך), ולכן שינוי הפילטר
+   * מרענן את הרשימה בלי לגעת בהוק.
+   */
+  const [source, setSource] = useState("");
   const [category, setCategory] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -267,6 +275,8 @@ export const SidebarProvider = ({ children }) => {
       value={{
         method,
         setMethod,
+        source,
+        setSource,
         isSidebarOpen,
         toggleSidebar,
         closeSidebar,

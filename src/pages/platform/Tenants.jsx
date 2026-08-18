@@ -67,18 +67,18 @@ export default function Tenants() {
   return (
     <PageContainer>
       <PageHeading
-        title="לקוחות"
-        description="כל הלקוחות של bizzstudio. פריסה אחת, בסיס נתונים אחד."
+        title="משתמשי מערכת"
+        description="כל הארגונים שמשתמשים במערכת. פריסה אחת, בסיס נתונים אחד."
         actions={
           <Button onClick={() => navigate('/platform/tenants/new')} iconStart="＋">
-            הוסף לקוח
+            הוסף משתמש מערכת
           </Button>
         }
       />
 
       {error && (
         <div className="mb-4">
-          <Alert tone="danger" title="שגיאה בטעינת הלקוחות">{error}</Alert>
+          <Alert tone="danger" title="שגיאה בטעינת משתמשי המערכת">{error}</Alert>
         </div>
       )}
 
@@ -112,7 +112,7 @@ export default function Tenants() {
 
           {tenants?.length > 0 && (
             <p className="text-sm text-text-muted">
-              {tenants.length} {tenants.length === 1 ? 'לקוח' : 'לקוחות'}
+              {tenants.length} {tenants.length === 1 ? 'משתמש מערכת' : 'משתמשי מערכת'}
             </p>
           )}
         </div>
@@ -124,11 +124,11 @@ export default function Tenants() {
         {tenants?.length === 0 && (
           <div className="p-4">
             <EmptyState
-              title={isFiltered ? 'אין לקוחות שתואמים לסינון' : 'עדיין אין לקוחות'}
+              title={isFiltered ? 'אין משתמשי מערכת שתואמים לסינון' : 'עדיין אין משתמשי מערכת'}
               description={
                 isFiltered
                   ? 'נסו שם או מזהה אחר, או אפסו את הסינון.'
-                  : 'צרו את הלקוח הראשון. הוא יקבל ארבע כתובות שעובדות מיד, בלי להמתין ל-DNS.'
+                  : 'צרו את משתמש המערכת הראשון. הוא יקבל ארבע כתובות שעובדות מיד, בלי להמתין ל-DNS.'
               }
               action={
                 isFiltered ? (
@@ -136,7 +136,7 @@ export default function Tenants() {
                     נקה סינון
                   </Button>
                 ) : (
-                  <Button onClick={() => navigate('/platform/tenants/new')}>הוסף לקוח</Button>
+                  <Button onClick={() => navigate('/platform/tenants/new')}>הוסף משתמש מערכת</Button>
                 )
               }
             />
@@ -147,7 +147,7 @@ export default function Tenants() {
           <Table className="[&_th]:px-4 [&_td]:px-4 [&_td]:py-3 [&_tbody_tr:last-child_td]:border-b-0">
             <thead>
               <tr>
-                <Th className="whitespace-nowrap">לקוח</Th>
+                <Th className="whitespace-nowrap">משתמש מערכת</Th>
                 <Th className="whitespace-nowrap">מזהה</Th>
                 <Th className="whitespace-nowrap">מותג</Th>
                 <Th className="whitespace-nowrap">סטטוס</Th>
