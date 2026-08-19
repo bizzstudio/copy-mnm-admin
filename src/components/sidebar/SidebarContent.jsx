@@ -113,6 +113,22 @@ const SidebarContent = () => {
           {filteredSidebar.map((route) =>
             route.routes ? (
               <SidebarSubMenu route={route} key={route.name} />
+            ) : route.disabled ? (
+              /* מדור שתוכנן ועוד לא נבנה. אותו טיפול שמקבל פריט מושבת בתוך ענף
+                 (`SidebarSubMenu`), כדי ש-`disabled` יתנהג אותו דבר בכל רמה. */
+              <li className="relative" key={route.name}>
+                <span
+                  className="flex gap-2 px-6 py-4 items-center w-full text-sm font-semibold text-gray-400 dark:text-gray-600 cursor-not-allowed select-none"
+                  aria-disabled="true"
+                  title={t("ComingSoonHint")}
+                >
+                  {route.icon && <route.icon className="w-5 h-5" aria-hidden="true" />}
+                  <span>{t(`${route.name}`)}</span>
+                  <span className="ms-auto text-[10px] leading-none px-1.5 py-0.5 rounded-full whitespace-nowrap bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                    {t("ComingSoonBadge")}
+                  </span>
+                </span>
+              </li>
             ) : (
               <li className="relative" key={route.name}>
                 <NavLink

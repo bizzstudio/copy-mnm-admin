@@ -1,1 +1,0 @@
-import{a as t,j as o,v as n}from"./index-wUIubC-a.js";const c={"/cashier-orders":"cashier","/agent-orders":"agent"},u=()=>{const{pathname:s,search:a}=t(),e=c[s],r=new URLSearchParams(a);return e&&r.set("source",e),o.jsx(n,{to:`/orders?${r.toString()}`,replace:!0})};export{u as default};
