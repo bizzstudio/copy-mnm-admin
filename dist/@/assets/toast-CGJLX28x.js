@@ -1,1 +1,0 @@
-import{z as r}from"./index-DtOWiHfI.js";const o=e=>r.success(e,{position:"top-center",autoClose:3e3,hideProgressBar:!1,closeOnClick:!0,pauseOnHover:!0,draggable:!0,progress:void 0,rtl:!0}),t=e=>r.error(e,{position:"top-center",autoClose:3e3,hideProgressBar:!1,closeOnClick:!0,pauseOnHover:!0,draggable:!0,progress:void 0,rtl:!0});export{o as a,t as n};

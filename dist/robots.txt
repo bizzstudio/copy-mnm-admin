@@ -1,4 +1,0 @@
-# https://www.robotstxt.org/robotstxt.html
-# Block all search engines from indexing this app
-User-agent: *
-Disallow: /
