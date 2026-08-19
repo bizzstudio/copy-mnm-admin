@@ -20,7 +20,11 @@ import { resolveOutsideHref } from "@/routes/sidebarUtils";
  */
 const collectPaths = (routes = []) =>
   routes.flatMap((child) =>
-    child.routes ? collectPaths(child.routes) : child.outside ? [] : [child.path]
+    child.routes
+      ? collectPaths(child.routes)
+      : child.outside || child.disabled
+      ? []
+      : [child.path]
   );
 
 /** `/orders?source=agent` ו-`/orders` הם אותו מסך לצורך "האם אני כאן". */
@@ -134,6 +138,33 @@ const SidebarSubMenu = ({ route, depth = 0 }) => {
             if (child.routes) {
               return (
                 <SidebarSubMenu key={child.name} route={child} depth={depth + 1} />
+              );
+            }
+
+            /**
+             * פריט שמופיע במבנה המוסכם ועדיין אין לו מסך.
+             *
+             * `span` ולא `NavLink` מושבת: קישור מושבת עדיין מקבל מיקוד מקלדת
+             * ועדיין מוכרז כקישור על ידי קורא מסך, כלומר מבטיח יעד שאינו קיים.
+             * `aria-disabled` מוסר את אותה אמירה גם למי שלא רואה את האפור.
+             */
+            if (child.disabled) {
+              return (
+                <li key={i + 1}>
+                  <span
+                    className="flex gap-1 items-center font-serif py-1 text-sm text-gray-400 dark:text-gray-600 cursor-not-allowed select-none"
+                    aria-disabled="true"
+                    title={t("ComingSoonHint")}
+                  >
+                    <span className="text-xs">
+                      <IoRemoveSharp />
+                    </span>
+                    <span>{t(`${child.name}`)}</span>
+                    <span className="ms-auto text-[10px] leading-none px-1.5 py-0.5 rounded-full whitespace-nowrap bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                      {t("ComingSoonBadge")}
+                    </span>
+                  </span>
+                </li>
               );
             }
 

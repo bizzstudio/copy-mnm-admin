@@ -16,13 +16,16 @@ import {
 } from "@windmill/react-ui";
 import { FiExternalLink } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import PageTitle from "@/components/Typography/PageTitle";
 import NotFound from "@/components/table/NotFound";
 import TableLoading from "@/components/preloader/TableLoading";
 import ReportServices from "@/services/ReportServices";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+
+/** מצב פתיחה של הטופס — גם באיפוס שאחרי מעבר בין סוגי מסמכים בתפריט. */
+const EMPTY_FILTERS = { type: "", startDate: "", endDate: "", search: "" };
 
 /**
  * מסמכים וחשבוניות.
@@ -38,10 +41,33 @@ const AccountingDocuments = () => {
   const { t } = useTranslation();
   const { showDateTimeFormat, currency, getNumberTwo } = useUtilsFunction();
 
+  /**
+   * `?type=` מגיע מהתפריט: "חשבוניות", "קבלות" וכו' הם פריטים נפרדים שמצביעים
+   * כולם לכאן עם הפילטר כבר בכתובת. המפתחות הם אלה של `DOC_TYPES` בשרת, ולכן
+   * ערך שאינו מוכר פשוט לא מחזיר שורות — במקום להיכשל.
+   */
+  const [searchParams] = useSearchParams();
+  const typeFromUrl = searchParams.get("type") || "";
+
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({ type: "", startDate: "", endDate: "", search: "" });
-  const [applied, setApplied] = useState({ type: "", startDate: "", endDate: "", search: "" });
+  const [filters, setFilters] = useState({ ...EMPTY_FILTERS, type: typeFromUrl });
+  const [applied, setApplied] = useState({ ...EMPTY_FILTERS, type: typeFromUrl });
+
+  /**
+   * מעבר בין פריטי סוגי המסמכים בתפריט הוא ניווט בתוך אותו רכיב — הוא אינו
+   * מרונדר מחדש, ולכן ערך התחלתי לבדו היה משאיר את הסוג הראשון שנבחר תקוע בכל
+   * הלחיצות הבאות.
+   *
+   * המשווה מונע טעינה כפולה בעלייה, ומכיוון שהאפקט תלוי בכתובת בלבד הוא גם לא
+   * דורס בחירה ידנית שהמשתמש עשה בטופס אחרי שהגיע לכאן.
+   */
+  useEffect(() => {
+    const seed = (prev) =>
+      prev.type === typeFromUrl ? prev : { ...EMPTY_FILTERS, type: typeFromUrl };
+    setFilters(seed);
+    setApplied(seed);
+  }, [typeFromUrl]);
 
   const load = useCallback(async () => {
     setError(null);
