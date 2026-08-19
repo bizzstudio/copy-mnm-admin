@@ -1,9 +1,12 @@
 // src/pages/ShippingProviders.jsx
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 
 import ResourcePage from "@/components/resource/ResourcePage";
 import IntegrationSettings from "@/components/integration/IntegrationSettings";
+import { ACTIVE_STATES } from "@/components/platform/platformState";
 import SupplyServices from "@/services/SupplyServices";
 
 /**
@@ -105,12 +108,28 @@ const ShippingProviders = () => {
         ]}
       />
 
+      {/**
+       * רק המובילים שכבר מחוברים — מתג דלוק וכל שדות החובה מלאים. מי שעדיין
+       * מחכה להגדרה יושב תחת "ניהול מערכת ← אינטגרציות ← שליחויות", ועובר לכאן
+       * ברגע שהוא נדלק. שני המסכים שואלים את `platformState` ולכן לא ייתכן
+       * שמוביל ייעלם משניהם או יופיע בשניהם.
+       */}
       <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
         <IntegrationSettings
           category="shipping"
+          states={ACTIVE_STATES}
           title={t("ShippingIntegrations")}
           description={t("ShippingIntegrationsDescription")}
+          emptyLabel={t("NoActiveCourierIntegrations")}
         />
+
+        <Link
+          to="/integrations/shipping"
+          className="mb-8 inline-flex items-center gap-1 self-start text-sm text-mainColor hover:underline"
+        >
+          {t("ManageCourierIntegrations")}
+          <FiArrowLeft />
+        </Link>
       </div>
     </>
   );

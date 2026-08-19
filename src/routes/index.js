@@ -43,6 +43,7 @@ const FormSubmissions = lazy(() => import("@/pages/FormSubmissions"));
 const ProfitReport = lazy(() => import("@/pages/ProfitReport"));
 const AccountingDocuments = lazy(() => import("@/pages/AccountingDocuments"));
 const AccountingSettings = lazy(() => import("@/pages/AccountingSettings"));
+const Integrations = lazy(() => import("@/pages/Integrations"));
 const PickingBoard = lazy(() => import("@/pages/PickingBoard"));
 const StockLocations = lazy(() => import("@/pages/StockLocations"));
 const Suppliers = lazy(() => import("@/pages/Suppliers"));
@@ -241,9 +242,23 @@ const routes = [
     title: "AccountingDocuments",
   },
   {
+    /**
+     * הכתובת הישנה של מסך האינטגרציות של הנהלת החשבונות. הרכיב מפנה ל-
+     * `/integrations/finance`, ונשאר רשום כדי שסימנייה לא תיפול ל-404.
+     */
     path: "/accounting/settings",
     component: AccountingSettings,
     title: "AccountingSettings",
+  },
+  {
+    /**
+     * מסך אחד לשלוש קבוצות האינטגרציה — `finance`, `shipping`, `sales-channel`.
+     * הקבוצות עצמן מוגדרות ב-`components/platform/platformState`, ולכן קבוצה
+     * רביעית היא שורה שם ופריט בסרגל, ולא מסך נוסף.
+     */
+    path: "/integrations/:group",
+    component: Integrations,
+    title: "Integrations",
   },
   {
     path: "/picking",

@@ -1,40 +1,54 @@
 // src/pages/SalesChannels.jsx
 import React, { useEffect, useState } from "react";
-import { Card, CardBody } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 
 import PageTitle from "@/components/Typography/PageTitle";
 import TableLoading from "@/components/preloader/TableLoading";
+import PlatformCard from "@/components/platform/PlatformCard";
+import IntegrationCard from "@/components/platform/IntegrationCard";
+import { isActivePlatform } from "@/components/platform/platformState";
+import useIntegrations from "@/hooks/useIntegrations";
 import ReportServices from "@/services/ReportServices";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 
 /**
  * פלטפורמות מכירה — מאיפה מגיעות ההזמנות.
  *
- * שלושה מצבים, ולא שניים. ההפרדה בין "זמין" ל"בקרוב" היא כל העניין: בלעדיה,
- * לקוח שמדליק WooCommerce רואה מתג ירוק ומחכה להזמנות שלא יגיעו — וזה לא נראה
- * כמו תקלה שמדווחים עליה, זה נראה כמו "אין הזמנות".
+ * ── שני סוגי ערוץ, כרטיס אחד ───────────────────────────────────────────────
+ * ערוץ פנימי — החנות, הקופה, הסוכנים, הבק-אופיס — הוא חלק מהמערכת ואין לו
+ * פרטי חיבור; הוא דלוק או כבוי לפי המודול שהלקוח קנה. פלטפורמה חיצונית היא
+ * מערכת של מישהו אחר, ויש לה טוקן. שניהם מרונדרים מ-`PlatformCard`, אותה
+ * מעטפת שמציירת גם חברת משלוח וגם ספק הנהלת חשבונות.
+ *
+ * ── רק החיצוניות הפעילות ───────────────────────────────────────────────────
+ * פלטפורמה חיצונית מופיעה כאן רק כשהיא באמת עובדת — מתג דלוק וכל שדות החובה
+ * מלאים. מה שעדיין מחכה להגדרה יושב תחת "ניהול מערכת ← אינטגרציות ←
+ * פלטפורמות", ועובר לכאן ברגע שמפעילים אותו. הכרטיס שעובר הוא הכרטיס המלא,
+ * כולל הטופס, כדי שלא יהיו שני מסכים שעורכים את אותו טוקן.
+ *
+ * הערוצים הפנימיים לא נעים לשום מקום: אין להם מה להגדיר, ולכן אין להם מה
+ * לחכות לו.
  */
-const STATE_STYLE = {
-  active: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
-  available: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  comingSoon: "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300",
-};
-
-const STATE_LABEL = {
-  active: "ChannelActive",
-  available: "ChannelAvailable",
-  comingSoon: "ChannelComingSoon",
-};
-
 const SalesChannels = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHe = i18n.language !== "en";
   const { showDateTimeFormat, getNumber } = useUtilsFunction();
 
   const [channels, setChannels] = useState(null);
   const [error, setError] = useState(null);
+
+  /**
+   * שתי קריאות, ובכוונה. `/admin/channels` יודע כמה הזמנות נכנסו מכל מקור אבל
+   * לא יודע דבר על אישורים — הוא לא חושף אותם ולא צריך; `/admin/integrations`
+   * יודע מה מוגדר ומה חסר אבל לא סופר הזמנות. הן מתחברות על `source === key`.
+   */
+  const {
+    items: integrations,
+    error: integrationsError,
+    reload,
+  } = useIntegrations("sales-channel");
 
   useEffect(() => {
     let alive = true;
@@ -46,10 +60,46 @@ const SalesChannels = () => {
     };
   }, []);
 
-  const groups = [
-    { kind: "internal", title: t("InternalChannels"), hint: t("InternalChannelsHint") },
-    { kind: "external", title: t("ExternalChannels"), hint: t("ExternalChannelsHint") },
-  ];
+  if (channels === null || integrations === null) {
+    return (
+      <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
+        <PageTitle>{t("SalesChannels")}</PageTitle>
+        <TableLoading row={6} col={4} width={163} height={20} />
+      </div>
+    );
+  }
+
+  const statsBySource = new Map(channels.map((c) => [c.source, c]));
+  const internal = channels.filter((c) => c.kind === "internal");
+  const activeExternal = integrations.filter(isActivePlatform);
+
+  /** מוני ההזמנות — אותו בלוק לערוץ פנימי ולפלטפורמה חיצונית. */
+  const stats = (stat) => (
+    <>
+      <dl className="flex gap-6 text-sm">
+        <div>
+          <dt className="text-xs text-gray-500 dark:text-gray-400">{t("OrdersFromChannel")}</dt>
+          <dd className="font-semibold dark:text-gray-200">{getNumber(stat?.orderCount ?? 0)}</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-gray-500 dark:text-gray-400">{t("LastOrder")}</dt>
+          <dd className="font-semibold dark:text-gray-200">
+            {stat?.lastOrderAt ? showDateTimeFormat(stat.lastOrderAt) : "—"}
+          </dd>
+        </div>
+      </dl>
+
+      {stat?.orderCount > 0 && (
+        <Link
+          to={`/orders?source=${stat.source}`}
+          className="mt-3 mb-4 inline-flex items-center gap-1 text-sm text-mainColor hover:underline"
+        >
+          {t("ViewChannelOrders")}
+          <FiArrowLeft />
+        </Link>
+      )}
+    </>
+  );
 
   return (
     <div className="w-full h-fit flex flex-col lg:px-20 sm:px-4 px-5 mx-auto overflow-x-hidden">
@@ -59,90 +109,63 @@ const SalesChannels = () => {
         {t("SalesChannelsDescription")}
       </p>
 
-      {error && <p className="mb-4 text-center text-red-500">{error}</p>}
-
-      {channels === null ? (
-        <TableLoading row={6} col={4} width={163} height={20} />
-      ) : (
-        groups.map((group) => {
-          const rows = channels.filter((c) => c.kind === group.kind);
-          if (!rows.length) return null;
-
-          return (
-            <section key={group.kind} className="mb-8">
-              <h2 className="mb-1 text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {group.title}
-              </h2>
-              <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">{group.hint}</p>
-
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {rows.map((channel) => (
-                  <Card
-                    key={channel.source}
-                    className="min-w-0 shadow-xs bg-white dark:bg-gray-800"
-                  >
-                    <CardBody>
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-gray-700 dark:text-gray-200">
-                          {channel.nameHe}
-                        </h3>
-                        <span
-                          className={`whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold ${
-                            STATE_STYLE[channel.state]
-                          }`}
-                        >
-                          {t(STATE_LABEL[channel.state])}
-                        </span>
-                      </div>
-
-                      {channel.descriptionHe && (
-                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                          {channel.descriptionHe}
-                        </p>
-                      )}
-
-                      <dl className="mt-4 flex gap-6 text-sm">
-                        <div>
-                          <dt className="text-xs text-gray-500 dark:text-gray-400">
-                            {t("OrdersFromChannel")}
-                          </dt>
-                          <dd className="font-semibold dark:text-gray-200">
-                            {getNumber(channel.orderCount)}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-xs text-gray-500 dark:text-gray-400">
-                            {t("LastOrder")}
-                          </dt>
-                          <dd className="font-semibold dark:text-gray-200">
-                            {channel.lastOrderAt ? showDateTimeFormat(channel.lastOrderAt) : "—"}
-                          </dd>
-                        </div>
-                      </dl>
-
-                      {channel.orderCount > 0 && (
-                        <Link
-                          to={`/orders?source=${channel.source}`}
-                          className="mt-4 inline-flex items-center gap-1 text-sm text-mainColor hover:underline"
-                        >
-                          {t("ViewChannelOrders")}
-                          <FiArrowLeft />
-                        </Link>
-                      )}
-
-                      {channel.state === "comingSoon" && (
-                        <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-                          {t("ChannelComingSoonHint")}
-                        </p>
-                      )}
-                    </CardBody>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          );
-        })
+      {(error || integrationsError) && (
+        <p className="mb-4 text-center text-red-500">{error || integrationsError}</p>
       )}
+
+      <section className="mb-8">
+        <h2 className="mb-1 text-lg font-semibold text-gray-700 dark:text-gray-200">
+          {t("InternalChannels")}
+        </h2>
+        <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">{t("InternalChannelsHint")}</p>
+
+        {internal.map((channel) => (
+          <PlatformCard
+            key={channel.source}
+            name={channel.nameHe}
+            description={channel.descriptionHe}
+            state={channel.state}
+          >
+            {stats(channel)}
+          </PlatformCard>
+        ))}
+      </section>
+
+      <section className="mb-8">
+        <h2 className="mb-1 text-lg font-semibold text-gray-700 dark:text-gray-200">
+          {t("ExternalChannels")}
+        </h2>
+        <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">{t("ExternalChannelsHint")}</p>
+
+        {activeExternal.length === 0 ? (
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            {t("NoActivePlatformIntegrations")}
+          </p>
+        ) : (
+          activeExternal.map((integration) => (
+            <IntegrationCard
+              key={integration.key}
+              integration={integration}
+              isHe={isHe}
+              onSaved={reload}
+            >
+              {stats(statsBySource.get(integration.key))}
+            </IntegrationCard>
+          ))
+        )}
+
+        {/**
+         * הקישור אינו קישוט: פלטפורמה שעדיין לא הוגדרה פשוט אינה כאן, ובלי
+         * אמירה מפורשת המסך נראה כאילו WooCommerce לא קיים במערכת בכלל.
+         */}
+        <Link
+          to="/integrations/sales-channel"
+          className="inline-flex items-center gap-1 text-sm text-mainColor hover:underline"
+        >
+          {t("ManagePlatformIntegrations")}
+          <FiArrowLeft />
+        </Link>
+      </section>
     </div>
   );
 };

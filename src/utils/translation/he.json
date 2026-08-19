@@ -1851,7 +1851,7 @@
   "ShippingGroup": "משלוחים",
   "DeliveryRegions": "אזורי חלוקה",
   "ShippingProviders": "חברות משלוח",
-  "PickingAndPurchasing": "ליקוט ורכש",
+  "PickingAndPurchasing": "קליטה וליקוט",
   "PickingManagement": "ניהול ליקוט",
   "GoodsReceipt": "קליטת סחורה",
   "Suppliers": "ספקים",
@@ -2043,5 +2043,16 @@
   "Automations": "אוטומציות",
   "WhatsappAutomation": "ווטסאפ",
   "ComingSoonBadge": "בקרוב",
-  "ComingSoonHint": "המסך מתוכנן ועדיין בפיתוח"
+  "ComingSoonHint": "המסך מתוכנן ועדיין בפיתוח",
+  "IntegrationComingSoon": "מוכן לחיבור",
+  "IntegrationGroupUnknown": "קבוצת האינטגרציות הזו אינה מוכרת.",
+  "AccountingIntegrationsDescription": "ספק החשבוניות וסולקי האשראי. הטוקן נשמר מוצפן ואינו מוצג שוב.",
+  "CourierIntegrationsDescription": "חברות שליחויות שממתינות להגדרה. מוביל שמופעל עובר למסך \"חברות משלוח\".",
+  "PlatformIntegrationsDescription": "פלטפורמות מכירה חיצוניות שממתינות להגדרה. פלטפורמה שמופעלת עוברת למסך \"פלטפורמות מכירה\".",
+  "AllPlatformsActive": "כל הפלטפורמות בקבוצה כבר פעילות.",
+  "ViewActivePlatforms": "לפלטפורמות הפעילות",
+  "NoActiveCourierIntegrations": "אין חברת שליחויות מחוברת.",
+  "ManageCourierIntegrations": "ניהול חיבורי שליחויות",
+  "NoActivePlatformIntegrations": "אין פלטפורמת מכירה חיצונית מחוברת.",
+  "ManagePlatformIntegrations": "ניהול חיבורי פלטפורמות"
 }
