@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addSetting, removeSetting } from "@/reduxStore/slice/settingSlice";
 import { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "@/context/SidebarContext";
+import { localizedText } from "@/utils/localized";
 
 const useUtilsFunction = () => {
   const dispatch = useDispatch();
@@ -51,12 +52,16 @@ const useUtilsFunction = () => {
     return parseFloat(value || 0).toFixed(globalSetting?.floating_number || 2);
   };
 
-  //for translation
-  const showingTranslateValue = (data) => {
-    return data !== undefined && Object?.keys(data).includes(lang)
-      ? data[lang]
-      : data?.en;
-  };
+  /**
+   * for translation
+   *
+   * Delegates to `localizedText` so that a display name which arrives as a plain
+   * STRING — which `PriceList.name` and every legacy `Category.name` still can —
+   * renders as itself instead of as `undefined`. `Object.keys("מחירון")` is
+   * `["0","1",…]`, so the previous membership test could never match `he` for a
+   * string and fell through to `data.en`. It also threw outright on `null`.
+   */
+  const showingTranslateValue = (data) => localizedText(data, lang);
 
   const showingImage = (data) => {
     return data !== undefined && data;

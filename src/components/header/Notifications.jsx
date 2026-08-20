@@ -309,7 +309,7 @@ const Notifications = () => {
          * them. A page that looks broken is the first thing anyone reports, and
          * these were pure noise sitting on top of a screen that worked.
          */
-        const info = Cookies.get("adminInfo");
+        const info = cookies.get("adminInfo");
         const role = info ? JSON.parse(info)?.role : null;
         if (role === "superadmin" || role === "platform-admin") return;
 

@@ -7,6 +7,7 @@ import { FiFilter } from "react-icons/fi";
 // Internal imports
 import CollapsibleSection from "@/components/common/CollapsibleSection";
 import SelectCategory from "@/components/form/selectOption/SelectCategory";
+import { localizedText } from "@/utils/localized";
 
 /**
  * Product Filters Component
@@ -55,7 +56,7 @@ const ProductFilters = ({
                         {priceLists && priceLists.length > 0 ? (
                             priceLists.map((priceList) => (
                                 <option key={priceList._id} value={priceList._id}>
-                                    {priceList.name}
+                                    {localizedText(priceList.name)}
                                 </option>
                             ))
                         ) : null}

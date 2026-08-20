@@ -13,6 +13,7 @@ import ProfileImageUploader from "@/components/image-uploader/ProfileImageUpload
 import City from "@/components/select/City";
 import useCustomerSubmit from "@/hooks/useCustomerSubmit";
 import { SidebarContext } from "@/context/SidebarContext";
+import { localizedText } from "@/utils/localized";
 
 const CustomerPersonalDetails = ({ customer, customerId }) => {
     const { t } = useTranslation();
@@ -155,7 +156,7 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                         <Select {...register("priceList")}>
                                             {priceLists.map((priceList) => (
                                                 <option key={priceList._id} value={priceList._id}>
-                                                    {priceList.name}
+                                                    {localizedText(priceList.name)}
                                                 </option>
                                             ))}
                                         </Select>

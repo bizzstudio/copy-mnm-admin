@@ -12,6 +12,7 @@ import {
 
 // Internal imports
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import { localizedText } from "@/utils/localized";
 import Status from "@/components/table/Status";
 import InfoField from "@/components/common/InfoField";
 import { getOrderLineVatBreakdown } from "@/utils/orderLineVat";
@@ -120,7 +121,7 @@ const InvoiceForPrint = forwardRef(({ data, globalSetting, storeCustomizationSet
           {data?.priceListId && (
             <InfoField
               label={t("Customer Price List")}
-              value={data?.priceListId?.name}
+              value={localizedText(data?.priceListId?.name)}
               className="col-span-3"
             />
           )}

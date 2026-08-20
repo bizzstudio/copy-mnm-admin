@@ -186,7 +186,7 @@ const OrderInvoice = () => {
               {data?.priceListId && (
                 <InfoField
                   label={t("Customer Price List")}
-                  value={data?.priceListId?.name}
+                  value={showingTranslateValue(data?.priceListId?.name)}
                   className="md:col-span-2 lg:col-span-3"
                 />
               )}

@@ -17,9 +17,15 @@ const MultiSelectCity = ({ setValue, cities, selectedCitiesFromUser = [] }) => {
     });
   };
 
-  // const handleRemoveCity = (cityId) => {
-  //   setSelectedCities((prev) => prev.filter((city) => city._id !== cityId));
-  // };
+  /**
+   * Restored rather than deleted: the "הסר" button below still calls it, so
+   * commenting the function out turned every click into
+   * `ReferenceError: handleRemoveCity is not defined` — a selected city could be
+   * added but never taken off the list.
+   */
+  const handleRemoveCity = (cityId) => {
+    setSelectedCities((prev) => prev.filter((city) => city._id !== cityId));
+  };
   useEffect(() => {
     if (selectedCities) {
       setValue(selectedCities)

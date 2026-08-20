@@ -23,6 +23,7 @@ import SwitchToggle from "../form/switch/SwitchToggle";
 import Uploader from "@/components/image-uploader/Uploader";
 import ParentCategory from "@/components/category/ParentCategory";
 import CollapsibleSection from "@/components/common/CollapsibleSection";
+import { localizedText } from "@/utils/localized";
 
 const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
   const { t } = useTranslation();
@@ -93,7 +94,7 @@ const ProductDrawer = ({ id, pendingBarcode, onBarcodeUsed }) => {
         key={priceList._id}
         className="p-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
       >
-        <h4 className="font-medium mb-3 text-gray-800 dark:text-gray-200">{priceList.name}</h4>
+        <h4 className="font-medium mb-3 text-gray-800 dark:text-gray-200">{localizedText(priceList.name)}</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <LabelArea label={t("Price")} />

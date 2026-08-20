@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 // Internal import
 import useUtilsFunction from "@/hooks/useUtilsFunction";
+import { localizedText } from "@/utils/localized";
 import CheckBox from "@/components/form/others/CheckBox";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import MainDrawer from "@/components/drawer/MainDrawer";
@@ -62,7 +63,7 @@ const PriceListTable = ({ isCheck, priceLists, setIsCheck, handleModalOpen }) =>
                         <TableCell className='text-center'>
                             <CheckBox
                                 type="checkbox"
-                                name={priceList?.name}
+                                name={localizedText(priceList?.name)}
                                 id={priceList._id}
                                 handleClick={handleClick}
                                 isChecked={isCheck?.includes(priceList._id)}
@@ -71,7 +72,7 @@ const PriceListTable = ({ isCheck, priceLists, setIsCheck, handleModalOpen }) =>
                         </TableCell>
 
                         <TableCell className='text-center text-sm'>
-                            {priceList.name}
+                            {localizedText(priceList.name)}
                         </TableCell>
 
                         <TableCell className='text-center'>
@@ -86,7 +87,7 @@ const PriceListTable = ({ isCheck, priceLists, setIsCheck, handleModalOpen }) =>
                                 isCheck={isCheck}
                                 handleUpdate={handleUpdate}
                                 handleModalOpen={handleModalOpen}
-                                title={priceList?.name}
+                                title={localizedText(priceList?.name)}
                                 disabled={priceList.isDefault}
                             />
                         </TableCell>

@@ -35,19 +35,24 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <AdminProvider>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SidebarProvider>
-          {/*
-            מודולי הלקוח נטענים פעם אחת, מעל הראוטר — הסיידבר, ובהמשך גם מסכים
-            שמגודרים לפי מודול, קוראים את אותה תשובה ולא כל אחד את שלו.
-          */}
-          <ModulesProvider>
+        {/*
+          מודולי הלקוח נטענים פעם אחת, מעל הראוטר — הסיידבר, ובהמשך גם מסכים
+          שמגודרים לפי מודול, קוראים את אותה תשובה ולא כל אחד את שלו.
+
+          מעל `SidebarProvider` ולא מתחתיו: ה-Provider הזה טוען בעצמו נתונים
+          שחלקם מגודר-מודול (מחירונים, שיטות תשלום מריווחית), ולכן הוא חייב
+          לקרוא `useModules()`. `ModulesProvider` עצמו תלוי רק ב-`AdminContext`
+          שנמצא מעל שניהם, כך שההיפוך הזה בטוח.
+        */}
+        <ModulesProvider>
+          <SidebarProvider>
             <Suspense fallback={<ThemeSuspense />}>
               <Windmill usePreferences theme={myTheme}>
                 <App />
               </Windmill>
             </Suspense>
-          </ModulesProvider>
-        </SidebarProvider>
+          </SidebarProvider>
+        </ModulesProvider>
       </PersistGate>
     </Provider>
   </AdminProvider>

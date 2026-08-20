@@ -34,16 +34,22 @@ const ProductDetails = () => {
 
   const { currency, showingTranslateValue, getNumberTwo } = useUtilsFunction();
 
-  // מציאת שם מחירון - priceList יכול להיות אובייקט או ID
+  /**
+   * מציאת שם מחירון - priceList יכול להיות אובייקט או ID
+   *
+   * `showingTranslateValue` ולא `.name` הגולמי: שם מחירון הוא `{ he, en }` אצל
+   * חלק מהלקוחות ומחרוזת פשוטה אצל אחרים, ואובייקט שנרנדר ישירות מפיל את המסך
+   * כולו עם React error #31.
+   */
   const getPriceListName = (priceList) => {
     // אם priceList הוא אובייקט עם name, נחזיר את ה-name ישירות
     if (typeof priceList === 'object' && priceList?.name) {
-      return priceList.name;
+      return showingTranslateValue(priceList.name);
     }
     // אם priceList הוא ID (string), נחפש אותו ב-priceLists
     if (typeof priceList === 'string') {
       const foundPriceList = priceLists?.find(pl => pl._id === priceList);
-      return foundPriceList ? foundPriceList.name : t("UnknownPriceList");
+      return foundPriceList ? showingTranslateValue(foundPriceList.name) : t("UnknownPriceList");
     }
     return t("UnknownPriceList");
   };

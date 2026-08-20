@@ -8,6 +8,7 @@ import PriceListServices from "@/services/PriceListServices";
 import { notifyError } from "@/utils/toast";
 /** Bilingual `{ he, en }` messages from `/api/admin/*` — see the note in DeleteModal. */
 import notifyApiResponse from "@/utils/notifyApiResponse";
+import { localizedText } from "@/utils/localized";
 
 const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows = () => {}) => {
     const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
@@ -69,7 +70,14 @@ const usePriceListSubmit = (id, preparedImportRows = [], clearPreparedImportRows
                 try {
                     const res = await PriceListServices.getPriceListById(id);
                     if (res) {
-                        setValue("name", res.name);
+                        /**
+                         * שם המחירון עשוי להגיע כ-`{ he, en }` (סכמת `Object`) או
+                         * כמחרוזת. בלי הפירוק הזה שדה הטקסט הציג `[object Object]`
+                         * ושמירה הייתה כותבת את המחרוזת הזו חזרה למסד — הטופס
+                         * ממילא שולח מחרוזת (`name: data.name || ''`), אז הפירוק
+                         * כאן מיישר את שני הצדדים.
+                         */
+                        setValue("name", localizedText(res.name));
                         setValue(
                             "rivhitPriceListId",
                             res.rivhitPriceListId ?? ""

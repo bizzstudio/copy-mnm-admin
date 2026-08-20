@@ -7,6 +7,7 @@ import PlatformServices from "@/services/PlatformServices";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useModules } from "@/context/ModulesContext";
 
 export const SidebarContext = createContext();
 
@@ -21,6 +22,12 @@ const sortStatusesLikeStatusesPage = (list) => {
 };
 
 export const SidebarProvider = ({ children }) => {
+  /**
+   * מגיע מ-`ModulesProvider` שנמצא מעל ה-Provider הזה ב-`main.jsx`. משמש לגידור
+   * הטעינות שמאחורי `requireModule` — ראה ההערה ב-useEffect שלמטה.
+   */
+  const { loading: modulesLoading, isModuleEnabled } = useModules();
+
   const resultsPerPage = 20;
   const searchRef = useRef("");
   const invoiceRef = useRef("");
@@ -124,6 +131,9 @@ export const SidebarProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // ממתינים לתשובת bootstrap — לפניה `isModuleEnabled` מחזיר תמיד true.
+    if (modulesLoading) return;
+
     // הגדרת הסטטוסים בעת עליית המערכת (אותו סדר כמו בעמוד הסטטוסים)
     const facthStatusesData = async () => {
       try {
@@ -148,7 +158,6 @@ export const SidebarProvider = ({ children }) => {
     const fetchPaymentTypes = async () => {
       try {
         const data = await CustomerServices.getPaymentTypes();
-        console.log("PaymentTypes :>> ", data);
         setPaymentTypes(data || []);
       } catch (error) {
         console.error("Error fetching payment types:", error);
@@ -170,9 +179,31 @@ export const SidebarProvider = ({ children }) => {
     if (role === "superadmin" || role === "platform-admin") return;
 
     facthStatusesData();
-    fetchPriceLists();
-    fetchPaymentTypes();
-  }, []);
+
+    /**
+     * A MODULE THE TENANT DOES NOT HAVE IS NOT AN ERROR TO REPORT.
+     *
+     * `/api/price-list` and `/api/rivhit/*` are both behind `requireModule`,
+     * which answers **404** for a module that is off — deliberately, so an
+     * unpurchased feature is indistinguishable from a nonexistent one. Asking
+     * for them unconditionally therefore put a red
+     *
+     *     GET …/rivhit/payment-types 404 (Not Found)
+     *     Error fetching payment types: …
+     *
+     * in the console of EVERY page, for every tenant without the Rivhit
+     * integration — the demo included. Nothing was broken; the tenant simply has
+     * no accounting integration, and the screen that would use these payment
+     * types is not reachable for them either.
+     *
+     * `isModuleEnabled` fails OPEN while bootstrap is unresolved (dev runs on
+     * `localhost`, which is not a registered domain), so waiting for `loading`
+     * to clear is what makes the check meaningful rather than always-true.
+     */
+    if (isModuleEnabled("priceLists")) fetchPriceLists();
+    if (isModuleEnabled("rivhit")) fetchPaymentTypes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modulesLoading]);
 
   // רענון רשימת הסטטוסים אחרי הוספה/עדכון סטטוס (כדי ש"העברה לליקוט" וכו' יופיעו בדרופדאון)
   useEffect(() => {

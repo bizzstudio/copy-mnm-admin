@@ -57,7 +57,7 @@ const useAgentSubmit = (id) => {
       // סיסמה — בעדכון נשלחת רק אם הוזנה.
       if (data.password) payload.password = data.password;
       if (!id && !payload.password) {
-        notifyError({ he: "סיסמה היא שדה חובה ליצירת סוכן חדש", en: "Password is required" });
+        notifyError("סיסמה היא שדה חובה ליצירת סוכן חדש");
         setIsSubmitting(false);
         return;
       }
