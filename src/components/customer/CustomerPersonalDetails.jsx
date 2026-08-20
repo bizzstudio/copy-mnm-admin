@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { Card, CardBody, Button, Select } from "@windmill/react-ui";
 import { useTranslation } from "react-i18next";
-import { BiSolidUserDetail, BiMap } from "react-icons/bi";
+import { BiSolidUserDetail, BiMap, BiIdCard } from "react-icons/bi";
 import { FiPlus, FiTrash2, FiUsers } from "react-icons/fi";
 
 // Internal import
@@ -14,6 +14,9 @@ import City from "@/components/select/City";
 import useCustomerSubmit from "@/hooks/useCustomerSubmit";
 import { SidebarContext } from "@/context/SidebarContext";
 import { localizedText } from "@/utils/localized";
+
+// נתיב השדה של איש הקשר בתת-לקוח עבור react-hook-form.
+const CONTACT_FIELD = (idx, field) => `subCustomers.${idx}.contactPerson.${field}`;
 
 const CustomerPersonalDetails = ({ customer, customerId }) => {
     const { t } = useTranslation();
@@ -212,6 +215,93 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                         </span>
                                     </label>
                                     <Error errorName={errors.noShipping} />
+                                </div>
+                            </div>
+
+                            {/* איש קשר של הלקוח הראשי */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                    <BiIdCard size={22} className="text-mainColor" />
+                                    <div>
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                            {t("ContactPerson")}
+                                        </h2>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {t("ContactPersonHint")}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("ContactFirstName")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("ContactFirstName")}
+                                            name="contactPerson.firstName"
+                                            type="text"
+                                            placeholder={t("ContactFirstName")}
+                                            isRequired={false}
+                                            autocomplete={isNewCustomer ? "off" : undefined}
+                                        />
+                                        <Error errorName={errors.contactPerson?.firstName} />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("ContactLastName")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("ContactLastName")}
+                                            name="contactPerson.lastName"
+                                            type="text"
+                                            placeholder={t("ContactLastName")}
+                                            isRequired={false}
+                                            autocomplete={isNewCustomer ? "off" : undefined}
+                                        />
+                                        <Error errorName={errors.contactPerson?.lastName} />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("ContactPhone")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("ContactPhone")}
+                                            name="contactPerson.phone"
+                                            type="tel"
+                                            placeholder="050-0000000"
+                                            isRequired={false}
+                                            autocomplete={isNewCustomer ? "off" : undefined}
+                                        />
+                                        <Error errorName={errors.contactPerson?.phone} />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("ContactEmail")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("ContactEmail")}
+                                            name="contactPerson.email"
+                                            type="email"
+                                            placeholder="contact@example.com"
+                                            isRequired={false}
+                                            autocomplete={isNewCustomer ? "off" : undefined}
+                                        />
+                                        <Error errorName={errors.contactPerson?.email} />
+                                    </div>
+
+                                    <div className="flex flex-col">
+                                        <LabelArea label={t("ContactRole")} />
+                                        <InputArea
+                                            register={register}
+                                            label={t("ContactRole")}
+                                            name="contactPerson.role"
+                                            type="text"
+                                            placeholder={t("ContactRolePlaceholder")}
+                                            isRequired={false}
+                                            autocomplete={isNewCustomer ? "off" : undefined}
+                                        />
+                                        <Error errorName={errors.contactPerson?.role} />
+                                    </div>
                                 </div>
                             </div>
 
@@ -437,6 +527,93 @@ const CustomerPersonalDetails = ({ customer, customerId }) => {
                                                                     autocomplete="section-new-customer new-password"
                                                                 />
                                                                 <Error errorName={errors?.subCustomers?.[idx]?.newPassword} />
+                                                            </div>
+                                                        </div>
+
+                                                        {/* איש קשר של תת-הלקוח */}
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                                                                <BiIdCard size={22} className="text-mainColor" />
+                                                                <div>
+                                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                                                                        {t("ContactPerson")}
+                                                                    </h3>
+                                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                                        {t("SubContactPersonHint")}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ContactFirstName")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ContactFirstName")}
+                                                                        name={CONTACT_FIELD(idx, "firstName")}
+                                                                        type="text"
+                                                                        placeholder={t("ContactFirstName")}
+                                                                        isRequired={false}
+                                                                        autocomplete="off"
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.contactPerson?.firstName} />
+                                                                </div>
+
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ContactLastName")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ContactLastName")}
+                                                                        name={CONTACT_FIELD(idx, "lastName")}
+                                                                        type="text"
+                                                                        placeholder={t("ContactLastName")}
+                                                                        isRequired={false}
+                                                                        autocomplete="off"
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.contactPerson?.lastName} />
+                                                                </div>
+
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ContactPhone")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ContactPhone")}
+                                                                        name={CONTACT_FIELD(idx, "phone")}
+                                                                        type="tel"
+                                                                        placeholder="050-0000000"
+                                                                        isRequired={false}
+                                                                        autocomplete="off"
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.contactPerson?.phone} />
+                                                                </div>
+
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ContactEmail")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ContactEmail")}
+                                                                        name={CONTACT_FIELD(idx, "email")}
+                                                                        type="email"
+                                                                        placeholder="contact@example.com"
+                                                                        isRequired={false}
+                                                                        autocomplete="off"
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.contactPerson?.email} />
+                                                                </div>
+
+                                                                <div className="flex flex-col">
+                                                                    <LabelArea label={t("ContactRole")} />
+                                                                    <InputArea
+                                                                        register={register}
+                                                                        label={t("ContactRole")}
+                                                                        name={CONTACT_FIELD(idx, "role")}
+                                                                        type="text"
+                                                                        placeholder={t("ContactRolePlaceholder")}
+                                                                        isRequired={false}
+                                                                        autocomplete="off"
+                                                                    />
+                                                                    <Error errorName={errors?.subCustomers?.[idx]?.contactPerson?.role} />
+                                                                </div>
                                                             </div>
                                                         </div>
 

@@ -18,6 +18,24 @@ const emptyAddress = {
   postalCode: "",
 };
 
+const emptyContactPerson = {
+  firstName: "",
+  lastName: "",
+  phone: "",
+  email: "",
+  role: "",
+};
+
+// איש קשר מגיע מהשרת כאובייקט חלקי (או חסר לגמרי ברשומות ישנות) —
+// מנרמלים לאובייקט מלא כדי ש-react-hook-form יקבל controlled inputs.
+const normalizeContactPerson = (contact) => ({
+  firstName: contact?.firstName || "",
+  lastName: contact?.lastName || "",
+  phone: contact?.phone || "",
+  email: contact?.email || "",
+  role: contact?.role || "",
+});
+
 const createEmptySubCustomer = () => ({
   _id: undefined,
   name: "",
@@ -32,6 +50,7 @@ const createEmptySubCustomer = () => ({
   alertAmount: "",
   alertPeriod: "",
   address: { ...emptyAddress },
+  contactPerson: { ...emptyContactPerson },
 });
 
 const useCustomerSubmit = (customerId, customer) => {
@@ -77,6 +96,7 @@ const useCustomerSubmit = (customerId, customer) => {
         newPassword: "",
         alertAmount: sc?.alertAmount != null ? String(sc.alertAmount) : "",
         alertPeriod: sc?.alertPeriod || "",
+        contactPerson: normalizeContactPerson(sc?.contactPerson),
         address:
           sc?.address && typeof sc.address === "object"
             ? {
@@ -98,6 +118,7 @@ const useCustomerSubmit = (customerId, customer) => {
         name: customer.name || "",
         email: customer.email || "",
         phone: customer.phone || "",
+        contactPerson: normalizeContactPerson(customer.contactPerson),
         customerType: "institutional",
         companyNumber: customer.companyNumber || "",
         institutionType: customer.institutionType || "",
@@ -117,6 +138,7 @@ const useCustomerSubmit = (customerId, customer) => {
       name: "",
       email: "",
       phone: "",
+      contactPerson: { ...emptyContactPerson },
       customerType: "institutional",
       companyNumber: "",
       institutionType: "",
@@ -236,6 +258,7 @@ const useCustomerSubmit = (customerId, customer) => {
                   : undefined,
               alertAmount: sc.alertAmount !== "" && sc.alertAmount != null ? Number(sc.alertAmount) : null,
               alertPeriod: ["weekly", "monthly"].includes(sc.alertPeriod) ? sc.alertPeriod : null,
+              contactPerson: normalizeContactPerson(sc.contactPerson),
             };
 
             if (sc.newPassword && String(sc.newPassword).trim()) {
@@ -254,6 +277,7 @@ const useCustomerSubmit = (customerId, customer) => {
         name: data.name,
         email: String(data.email).toLowerCase(),
         phone: data.phone || "",
+        contactPerson: normalizeContactPerson(data.contactPerson),
         customerType: data.customerType,
         companyNumber: data.companyNumber || "",
         priceList: finalPriceList,

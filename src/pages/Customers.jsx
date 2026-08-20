@@ -134,6 +134,7 @@ const Customers = () => {
                 <TableCell className="text-center">{t("CustomersName")}</TableCell>
                 <TableCell className="text-center">{t("CustomersEmail")}</TableCell>
                 <TableCell className="text-center">{t("CustomersPhone")}</TableCell>
+                <TableCell className="text-center">{t("ContactPerson")}</TableCell>
                 <TableCell className="text-center">{t("CustomerType")}</TableCell>
                 <TableCell className="text-center">{t("RivhitCustomerNumber")}</TableCell>
                 <TableCell className="text-center">{t("SubCustomers")}</TableCell>

@@ -274,14 +274,21 @@ const useFilter = (data) => {
     // User and Admin filtering
     if (searchUser) {
       // console.log('searchUser: ', searchUser)
+      const term = searchUser.toLowerCase();
       services = services.filter(
         (search) => {
           const fullName = search?.name?.trim() + " " + search?.lastName?.trim();
+          // איש הקשר גם הוא שדה שמחפשים לפיו — לרוב זוכרים את השם שלו ולא את שם החברה.
+          const contact = search?.contactPerson || {};
+          const contactName = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
           return fullName
             ?.toLowerCase()
-            .includes(searchUser.toLowerCase()) ||
-            search?.phone?.toLowerCase().includes(searchUser.toLowerCase()) ||
-            search?.email?.toLowerCase().includes(searchUser.toLowerCase())
+            .includes(term) ||
+            search?.phone?.toLowerCase().includes(term) ||
+            search?.email?.toLowerCase().includes(term) ||
+            contactName.toLowerCase().includes(term) ||
+            (contact.phone || "").toLowerCase().includes(term) ||
+            (contact.email || "").toLowerCase().includes(term)
         });
     }
     // Coupon filtering

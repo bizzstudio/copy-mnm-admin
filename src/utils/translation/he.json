@@ -2054,5 +2054,15 @@
   "NoActiveCourierIntegrations": "אין חברת שליחויות מחוברת.",
   "ManageCourierIntegrations": "ניהול חיבורי שליחויות",
   "NoActivePlatformIntegrations": "אין פלטפורמת מכירה חיצונית מחוברת.",
-  "ManagePlatformIntegrations": "ניהול חיבורי פלטפורמות"
+  "ManagePlatformIntegrations": "ניהול חיבורי פלטפורמות",
+  "ContactPerson": "איש קשר",
+  "ContactPersonHint": "האדם שפונים אליו אצל הלקוח. אינו משתמש במערכת ואין לו התחברות.",
+  "SubContactPersonHint": "אם נשאר ריק — יילקח איש הקשר של הלקוח הראשי.",
+  "ContactFirstName": "שם פרטי",
+  "ContactLastName": "שם משפחה",
+  "ContactPhone": "טלפון איש קשר",
+  "ContactEmail": "אימייל איש קשר",
+  "ContactRole": "תפקיד",
+  "ContactRolePlaceholder": "אחראי רכש",
+  "NoContactPerson": "לא הוגדר איש קשר"
 }

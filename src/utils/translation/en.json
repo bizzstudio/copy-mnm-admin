@@ -1972,5 +1972,15 @@
   "IntegrationWillBeDeleted": "Will be deleted on save",
   "IntegrationSecretsEncrypted": "Secrets are stored encrypted and never shown again",
   "IntegrationNotWiredYet": "Credentials are stored and encrypted, but the system does not call this service yet - the adapter is still being built.",
-  "IntegrationPlatformManaged": "This connection is managed by bizzstudio and cannot be changed here."
+  "IntegrationPlatformManaged": "This connection is managed by bizzstudio and cannot be changed here.",
+  "ContactPerson": "Contact Person",
+  "ContactPersonHint": "The person to reach at the customer. Not a system user and cannot log in.",
+  "SubContactPersonHint": "Leave empty to fall back to the main customer's contact person.",
+  "ContactFirstName": "First Name",
+  "ContactLastName": "Last Name",
+  "ContactPhone": "Contact Phone",
+  "ContactEmail": "Contact Email",
+  "ContactRole": "Role",
+  "ContactRolePlaceholder": "Purchasing Manager",
+  "NoContactPerson": "No contact person set"
 }

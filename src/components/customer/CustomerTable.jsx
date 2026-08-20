@@ -22,6 +22,17 @@ const CustomerTable = ({ customers, handleModalOpen }) => {
     });
   };
 
+  // שם מלא של איש הקשר; אם אין — נופלים חזרה לאיש הקשר של תת-הלקוח הראשון.
+  const getContactPerson = (mainCustomer) => {
+    const candidates = [
+      mainCustomer?.contactPerson,
+      ...(Array.isArray(mainCustomer?.subCustomers)
+        ? mainCustomer.subCustomers.map((sc) => sc?.contactPerson)
+        : []),
+    ];
+    return candidates.find((c) => c && (c.firstName || c.lastName || c.phone)) || null;
+  };
+
   const getCustomerTypeLabel = (type) => {
     if (!type) return "-";
     const typeMap = {
@@ -69,6 +80,28 @@ const CustomerTable = ({ customers, handleModalOpen }) => {
 
           <TableCell className="text-center">
             <span className="text-sm font-medium">{mainCustomer?.phone || "-"}</span>
+          </TableCell>
+
+          <TableCell className="text-center">
+            {(() => {
+              const contact = getContactPerson(mainCustomer);
+              if (!contact) {
+                return (
+                  <span className="text-sm text-gray-400">{t("NoContactPerson")}</span>
+                );
+              }
+              const fullName = `${contact.firstName || ""} ${contact.lastName || ""}`.trim();
+              return (
+                <div className="flex flex-col items-center">
+                  <span className="text-sm font-medium">{fullName || "-"}</span>
+                  {(contact.role || contact.phone) && (
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {[contact.role, contact.phone].filter(Boolean).join(" • ")}
+                    </span>
+                  )}
+                </div>
+              );
+            })()}
           </TableCell>
 
           <TableCell className="text-center">
@@ -130,7 +163,7 @@ const CustomerTable = ({ customers, handleModalOpen }) => {
 
         {isExpanded && (
           <TableRow>
-            <TableCell colSpan={9}>
+            <TableCell colSpan={10}>
               <div className="p-4 bg-gray-50 dark:bg-gray-900/30 rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                   {subCustomers.length === 0 ? (
@@ -163,6 +196,16 @@ const CustomerTable = ({ customers, handleModalOpen }) => {
                             <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                               {sc?.email || "-"} {sc?.phone ? `• ${sc.phone}` : ""}
                             </div>
+                            {sc?.contactPerson &&
+                            (sc.contactPerson.firstName ||
+                              sc.contactPerson.lastName ||
+                              sc.contactPerson.phone) ? (
+                              <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                {t("ContactPerson")}:{" "}
+                                {`${sc.contactPerson.firstName || ""} ${sc.contactPerson.lastName || ""}`.trim()}
+                                {sc.contactPerson.phone ? ` • ${sc.contactPerson.phone}` : ""}
+                              </div>
+                            ) : null}
                             {sc?.accounting?.externalCustomerId ? (
                               <div className="text-xs text-mainColor truncate">
                                 {t("RivhitCustomerNumber")} #{sc.accounting.externalCustomerId}
