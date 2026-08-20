@@ -36,7 +36,8 @@ import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
 import { useModules } from "@/context/ModulesContext";
 import UnifiedOrderTable from "@/components/order/UnifiedOrderTable";
-import { SOURCE_META } from "@/components/order/OrderSource";
+import { ORDER_SOURCES } from "@bizzexpo/shared";
+import { useOrderSourceLabel } from "@/components/order/OrderSource";
 import TableLoading from "@/components/preloader/TableLoading";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -44,14 +45,6 @@ import SelectWithCheckbox from "@/components/form/SelectWithCheckbox";
 import CustomPagination from "@/components/table/CustomPagination";
 
 const PAGE_SIZE = 100;
-
-/** ערוץ שהמודול שלו כבוי לא מוצג כאפשרות — אין ולא יהיו בו הזמנות. */
-const SOURCE_MODULE = {
-  store: "store",
-  agent: "agents",
-  cashier: "cashier",
-  admin: null,
-};
 
 const Orders = () => {
   const {
@@ -79,6 +72,7 @@ const Orders = () => {
   } = useContext(SidebarContext);
 
   const { t } = useTranslation();
+  const sourceLabel = useOrderSourceLabel();
   const { isModuleEnabled } = useModules();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -257,8 +251,14 @@ const Orders = () => {
     isSelected: cities.includes(cityObj?.city?._id),
   }));
 
-  const availableSources = Object.keys(SOURCE_META).filter((key) =>
-    isModuleEnabled(SOURCE_MODULE[key])
+  /**
+   * ערוץ שהמודול שלו כבוי לא מוצג כאפשרות — אין ולא יהיו בו הזמנות.
+   *
+   * `moduleKey: null` הוא הבק-אופיס, ו-`isModuleEnabled` מחזיר לו true: הוא קיים
+   * לכל לקוח שיש לו בכלל דרך להיכנס למסך הזה.
+   */
+  const availableSources = ORDER_SOURCES.filter((channel) =>
+    isModuleEnabled(channel.moduleKey)
   );
 
   /** ספירה לכל ערוץ, מאותה שאילתה שהחזירה את השורות — לא קריאה שנייה. */
@@ -289,9 +289,9 @@ const Orders = () => {
                 <Label>{t("OrderSource")}</Label>
                 <SelectReactSelect value={source} onChange={handleSourceChange}>
                   <option value="">{t("AllSources")}</option>
-                  {availableSources.map((key) => (
+                  {availableSources.map(({ source: key }) => (
                     <option key={key} value={key}>
-                      {t(SOURCE_META[key].labelKey)}
+                      {sourceLabel(key)}
                       {countBySource[key] ? ` (${countBySource[key]})` : ""}
                     </option>
                   ))}
